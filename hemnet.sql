@@ -1,10 +1,10 @@
-create table listing (
-	id int not null,
-	[address] nvarchar not null,
+create table dbo.listing (
+	[id] int not null identity,
+	[address] nvarchar(96) not null,
 	price int not null,
-	[description] nvarchar not null,
-	home_type nvarchar not null,
-	type_of_ownership nvarchar not null,
+	[description] nvarchar(max) not null,
+	home_type nvarchar(22) not null,
+	type_of_ownership nvarchar(11) not null,
 	rooms int null,
 	[living_area] int not null,
 	fee int null,
@@ -13,12 +13,12 @@ create table listing (
 	utilities int null,
 	number_of_visits int not null,
 	days_on_hemnet int not null
-	constraint PK_listing primary key (id)
+	constraint pk_listing primary key (id)
 );
 
-create table [image] (
+create table dbo.[image] (
 	listing_id int not null,
 	image_data varbinary(max) not null,
-	content_type nvarchar not null,
+	content_type nvarchar(9) not null,
 	foreign key (listing_id) references listing(id)
 );
