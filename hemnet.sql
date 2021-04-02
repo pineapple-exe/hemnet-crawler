@@ -1,5 +1,5 @@
-create table listing (
-	id int not null,
+create table dbo.listing (
+	id int not null identity,
 	[address] nvarchar not null,
 	price int not null,
 	[description] nvarchar not null,
@@ -16,7 +16,7 @@ create table listing (
 	constraint PK_listing primary key (id)
 );
 
-create table [image] (
+create table dbo.[image] (
 	listing_id int not null,
 	image_data varbinary(max) not null,
 	content_type nvarchar not null,
