@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HemnetCrawler.WebApp", "HemnetCrawler.WebApp\HemnetCrawler.WebApp.csproj", "{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HemnetCrawler.Data", "HemnetCrawler.Data\HemnetCrawler.Data.csproj", "{6002E44F-E8B6-466A-9B87-63F61B374B80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88CBCC7D-F571-4577-8A87-5E085ADE114F}
+	EndGlobalSection
+EndGlobal
