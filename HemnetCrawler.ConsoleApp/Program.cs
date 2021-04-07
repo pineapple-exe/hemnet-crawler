@@ -16,33 +16,18 @@ namespace HemnetCrawler.ConsoleApp
     { 
         static void Main(string[] args)
         {
+            SearchAndGather();
+        }
+
+        static void SearchAndGather()
+        {
             IWebDriver driver = new ChromeDriver
             {
                 Url = "https://www.hemnet.se/"
             };
             driver.Navigate();
-
             Thread.Sleep(1000);
-            CreateEntities(driver, CollectListingLinks(driver));
 
-            driver.Dispose();
-        }
-
-        static bool ContainsSpecificText(IWebElement element, string selector, string content)
-        {
-            List<IWebElement> matches = new List<IWebElement>();
-            matches.AddRange(element.FindElements(By.CssSelector(selector)));
-
-            foreach (IWebElement match in matches)
-            {
-                if (match.Text == content)
-                    return true;
-            }
-            return false;
-        }
-
-        static List<ListingLink> CollectListingLinks(IWebDriver driver)
-        {
             IWebElement acceptCookiesButton = driver.FindElement(By.CssSelector("button.hcl-button--primary"));
             acceptCookiesButton.Click();
             Thread.Sleep(1000);
@@ -65,6 +50,43 @@ namespace HemnetCrawler.ConsoleApp
             driver.FindElement(By.CssSelector(".js-submit-button.js-show-on-forsale")).Click();
             Thread.Sleep(5000);
 
+            string latestPage = driver.Url;
+            while (true)
+            {
+                CreateEntities(driver, CollectListingLinks(driver));
+                driver.Url = latestPage;
+                Thread.Sleep(2000);
+
+                try
+                {
+                    latestPage = driver.FindElement(By.CssSelector("a.next_page")).GetAttribute("href");
+                    driver.Url = latestPage;
+                    Thread.Sleep(2000);
+                }
+                catch (NoSuchElementException)
+                {
+                    break;
+                }
+            }
+
+            driver.Dispose();
+        }
+
+        static bool ContainsSpecificText(IWebElement element, string selector, string content)
+        {
+            List<IWebElement> matches = new List<IWebElement>();
+            matches.AddRange(element.FindElements(By.CssSelector(selector)));
+
+            foreach (IWebElement match in matches)
+            {
+                if (match.Text == content)
+                    return true;
+            }
+            return false;
+        }
+
+        static List<ListingLink> CollectListingLinks(IWebDriver driver)
+        {
             List<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.js-listing-card-link")).ToList();
             Thread.Sleep(5000);
             searchResults.RemoveAll(l => ContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
@@ -129,7 +151,7 @@ namespace HemnetCrawler.ConsoleApp
                         break;
 
                     case "Byggår":
-                        listing.ConstructionYear = int.Parse(pair.Value);
+                        listing.ConstructionYear = pair.Value;
                         break;
 
                     case "Förening":
