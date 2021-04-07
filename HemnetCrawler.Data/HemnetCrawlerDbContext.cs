@@ -3,7 +3,7 @@ using HemnetCrawler.Data.Entities;
 
 namespace HemnetCrawler.Data
 {
-    class HemnetCrawlerDbContext : DbContext
+    public class HemnetCrawlerDbContext : DbContext
     {
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HemnetCrawler.Data.Migrations
 {
@@ -12,17 +13,25 @@ namespace HemnetCrawler.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Address = table.Column<string>(type: "nvarchar(96)", maxLength: 96, nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
+                    NewConstruction = table.Column<bool>(type: "bit", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(96)", maxLength: 96, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(96)", maxLength: 96, nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: true),
+                    PricePerSquareMeter = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HomeType = table.Column<string>(type: "nvarchar(22)", maxLength: 22, nullable: false),
                     OwnershipType = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    Rooms = table.Column<int>(type: "int", nullable: false),
-                    LivingArea = table.Column<int>(type: "int", nullable: false),
-                    Fee = table.Column<int>(type: "int", nullable: false),
-                    BiArea = table.Column<int>(type: "int", nullable: false),
-                    ConstructionYear = table.Column<int>(type: "int", nullable: false),
-                    Utilities = table.Column<int>(type: "int", nullable: false),
+                    Rooms = table.Column<int>(type: "int", nullable: true),
+                    Balcony = table.Column<bool>(type: "bit", nullable: false),
+                    Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LivingArea = table.Column<double>(type: "float", nullable: true),
+                    BiArea = table.Column<double>(type: "float", nullable: true),
+                    PropertyArea = table.Column<int>(type: "int", nullable: false),
+                    Fee = table.Column<int>(type: "int", nullable: true),
+                    ConstructionYear = table.Column<int>(type: "int", nullable: true),
+                    HomeOwnersAssociation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Utilities = table.Column<int>(type: "int", nullable: true),
+                    EnergyClassification = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     Visits = table.Column<int>(type: "int", nullable: false),
                     DaysOnHemnet = table.Column<int>(type: "int", nullable: false)
                 },
@@ -38,7 +47,7 @@ namespace HemnetCrawler.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ListingID = table.Column<int>(type: "int", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false)
                 },
                 constraints: table =>
