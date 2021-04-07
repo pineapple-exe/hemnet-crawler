@@ -22,7 +22,7 @@ namespace HemnetCrawler.Data.Entities
         public double? BiArea { get; set; }
         public int PropertyArea { get; set; }
         public int? Fee { get; set; }
-        public int? ConstructionYear { get; set; }
+        public string ConstructionYear { get; set; }
         public string HomeOwnersAssociation { get; set; }
         public int? Utilities { get; set; }
         public string EnergyClassification { get; set; }
