@@ -6,11 +6,13 @@ namespace HemnetCrawler.ConsoleApp
 {
     public class ListingLink
     {
+        public int Id { get; }
         public string Href { get; }
         public bool NewConstruction { get; }
 
-        public ListingLink(string href, bool newConstruction)
+        public ListingLink(int id, string href, bool newConstruction)
         {
+            Id = id;
             Href = href;
             NewConstruction = newConstruction;
         }

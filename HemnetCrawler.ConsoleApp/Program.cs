@@ -95,9 +95,17 @@ namespace HemnetCrawler.ConsoleApp
 
             foreach (IWebElement searchResult in searchResults)
             {
+                int listingLinkId = int.Parse(searchResult.FindElement(By.CssSelector("button.listing-card__save-button")).GetAttribute("data-listing-id"));
+
+                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+                if (context.Listings.Any(l => l.HemnetId == listingLinkId))
+                {
+                    continue;
+                }
+
                 bool newConstruction = ContainsSpecificText(searchResult, ".listing-card__label--type", "Nyproduktion");
 
-                links.Add(new ListingLink(searchResult.GetAttribute("href"), newConstruction));
+                links.Add(new ListingLink(listingLinkId, searchResult.GetAttribute("href"), newConstruction));
             }
             return links;
         }
@@ -195,9 +203,10 @@ namespace HemnetCrawler.ConsoleApp
             }
         }
 
-        static void CreateListingEntity(IWebDriver driver, bool newConstruction, Listing listing)
+        static void CreateListingEntity(IWebDriver driver, ListingLink listingLink, Listing listing)
         {
-            listing.NewConstruction = newConstruction;
+            listing.HemnetId = listingLink.Id;
+            listing.NewConstruction = listingLink.NewConstruction;
 
             listing.Street = driver.FindElement(By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
             Thread.Sleep(1000);
@@ -260,7 +269,7 @@ namespace HemnetCrawler.ConsoleApp
                 HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
                 Listing listing = new Listing();
 
-                CreateListingEntity(driver, listingLink.NewConstruction, listing);
+                CreateListingEntity(driver, listingLink, listing);
                 context.Add(listing);
 
                 CreateImageEntities(driver, context, listing);
