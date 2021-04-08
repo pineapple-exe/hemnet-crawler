@@ -205,6 +205,7 @@ namespace HemnetCrawler.ConsoleApp
 
         static void CreateListingEntity(IWebDriver driver, ListingLink listingLink, Listing listing)
         {
+            listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
             listing.NewConstruction = listingLink.NewConstruction;
 

@@ -8,6 +8,7 @@ namespace HemnetCrawler.Data.Entities
     {
         public int Id { get; set; }
         public int HemnetId { get; set; }
+        public DateTimeOffset LastUpdated { get; set; }
         public bool NewConstruction { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
