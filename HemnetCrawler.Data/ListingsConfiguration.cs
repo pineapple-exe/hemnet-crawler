@@ -8,6 +8,7 @@ namespace HemnetCrawler.Data
     {
         public void Configure(EntityTypeBuilder<Listing> builder)
         {
+            builder.Property(e => e.HemnetId).IsRequired();
             builder.Property(e => e.NewConstruction).IsRequired();
             builder.Property(e => e.Street).IsRequired().HasMaxLength(96);
             builder.Property(e => e.City).IsRequired().HasMaxLength(96);
