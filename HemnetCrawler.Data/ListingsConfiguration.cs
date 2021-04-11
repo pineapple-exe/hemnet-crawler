@@ -30,7 +30,7 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.Utilities);
             builder.Property(e => e.EnergyClassification).HasMaxLength(16);
             builder.Property(e => e.Visits).IsRequired();
-            builder.Property(e => e.DaysOnHemnet).IsRequired();
+            builder.Property(e => e.Published).IsRequired();
         }
     }
 }

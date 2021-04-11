@@ -29,6 +29,6 @@ namespace HemnetCrawler.Data.Entities
         public int? Utilities { get; set; }
         public string EnergyClassification { get; set; }
         public int Visits { get; set; }
-        public int DaysOnHemnet { get; set; }
+        public DateTimeOffset Published { get; set; }
     }
 }
