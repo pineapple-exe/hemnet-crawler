@@ -17,7 +17,7 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.PricePerSquareMeter);
             builder.Property(e => e.Description).IsRequired();
             builder.Property(e => e.HomeType).IsRequired().HasMaxLength(22);
-            builder.Property(e => e.OwnershipType).IsRequired().HasMaxLength(11);
+            builder.Property(e => e.OwnershipType).IsRequired().HasMaxLength(22);
             builder.Property(e => e.Rooms);
             builder.Property(e => e.Balcony);
             builder.Property(e => e.Floor);

@@ -21,11 +21,12 @@ namespace HemnetCrawler.ConsoleApp
 
         static void SearchAndGather()
         {
-            IWebDriver driver = new ChromeDriver
+            ChromeDriver driver = new ChromeDriver
             {
                 Url = "https://www.hemnet.se/"
             };
             driver.Navigate();
+            driver.Manage().Window.Maximize();
             Thread.Sleep(1000);
 
             IWebElement acceptCookiesButton = driver.FindElement(By.CssSelector("button.hcl-button--primary"));
@@ -48,7 +49,9 @@ namespace HemnetCrawler.ConsoleApp
             Thread.Sleep(1000);
 
             driver.FindElement(By.CssSelector(".js-submit-button.js-show-on-forsale")).Click();
-            Thread.Sleep(5000);
+            Thread.Sleep(7000);
+
+            AddAgeFilter(driver);
 
             string latestPage = driver.Url;
             while (true)
@@ -70,6 +73,59 @@ namespace HemnetCrawler.ConsoleApp
             }
 
             driver.Dispose();
+        }
+
+        static double GetTotalDays(DateTimeOffset from, DateTimeOffset to)
+        {
+            double secondsDiff = (to - from).TotalSeconds;
+            int secondsPerDay = 24 * 60 * 60;
+            return secondsDiff / secondsPerDay;
+        }
+
+        static void AddAgeFilter(IWebDriver driver)
+        {
+            driver.FindElement(By.CssSelector("button.js-search-form-expand-more-filters")).Click();
+            Thread.Sleep(3000);
+
+            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+
+            DateTimeOffset lastUpdated = context.Listings.Select(listing => listing.LastUpdated).Max();
+            int daysDiff = (int)Math.Ceiling(GetTotalDays(lastUpdated, DateTimeOffset.Now));
+            
+            string ageSearchFilter;
+
+            if (daysDiff <= 1)
+            {
+                ageSearchFilter = "search_age_1d";
+            }
+            else if (daysDiff <= 3)
+            {
+                ageSearchFilter = "search_age_3d";
+            }
+            else if (daysDiff <= 7)
+            {
+                ageSearchFilter = "search_age_1w";
+            }
+            else if (daysDiff <= 14)
+            {
+                ageSearchFilter = "search_age_2w";
+            }
+            else if (daysDiff <= 28)
+            {
+                ageSearchFilter = "search_age_1m";
+            }
+            else
+            {
+                ageSearchFilter = "search_age_all";
+            }
+
+            //driver.FindElement(By.CssSelector($"#{ageSearchFilter}")).Click();
+            //driver.FindElements(By.CssSelector("li.radio-token-list__item")).Where(e => e.FindElements(By.CssSelector($"#{ageSearchFilter}")).Count() > 0).First().Click();
+            driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
+            Thread.Sleep(3000);
+
+            driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
+            Thread.Sleep(3000);
         }
 
         static bool ContainsSpecificText(IWebElement element, string selector, string content)
@@ -275,7 +331,7 @@ namespace HemnetCrawler.ConsoleApp
 
                 CreateImageEntities(driver, context, listing);
 
-                context.SaveChanges();
+                context.SaveChanges(); //smällde för att ownership hade cp värde
             }
         }
     }
