@@ -119,8 +119,6 @@ namespace HemnetCrawler.ConsoleApp
                 ageSearchFilter = "search_age_all";
             }
 
-            //driver.FindElement(By.CssSelector($"#{ageSearchFilter}")).Click();
-            //driver.FindElements(By.CssSelector("li.radio-token-list__item")).Where(e => e.FindElements(By.CssSelector($"#{ageSearchFilter}")).Count() > 0).First().Click();
             driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
             Thread.Sleep(3000);
 
@@ -239,7 +237,7 @@ namespace HemnetCrawler.ConsoleApp
                         break;
 
                     case "Dagar på Hemnet":
-                        listing.DaysOnHemnet = DigitPurist(pair.Value);
+                        listing.Published = DateTimeOffset.Now.AddDays(- DigitPurist(pair.Value));
                         break;
                 }
             }
@@ -331,7 +329,7 @@ namespace HemnetCrawler.ConsoleApp
 
                 CreateImageEntities(driver, context, listing);
 
-                context.SaveChanges(); //smällde för att ownership hade cp värde
+                context.SaveChanges();
             }
         }
     }
