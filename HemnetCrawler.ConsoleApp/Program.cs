@@ -89,8 +89,8 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            DateTimeOffset lastUpdated = context.Listings.Select(listing => listing.LastUpdated).Max();
-            int daysDiff = (int)Math.Ceiling(GetTotalDays(lastUpdated, DateTimeOffset.Now));
+            DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
+            int daysDiff = (int)Math.Ceiling(GetTotalDays(latestPublish, DateTimeOffset.Now));
             
             string ageSearchFilter;
 
