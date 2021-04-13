@@ -53,6 +53,11 @@ namespace HemnetCrawler.ConsoleApp
 
             AddAgeFilter(driver);
 
+            IWebElement sortBy = driver.FindElement(By.CssSelector("select.form-control__select"));
+            sortBy.Click();
+            ReadOnlyCollection<IWebElement> sortOptions = sortBy.FindElements(By.CssSelector("option"));
+            sortOptions.Where(o => o.Text == "Äldst först").First().Click();
+
             string latestPage = driver.Url;
             while (true)
             {
