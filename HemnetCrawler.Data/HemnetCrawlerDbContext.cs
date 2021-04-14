@@ -7,6 +7,7 @@ namespace HemnetCrawler.Data
     {
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<FinalBid> FinalBids { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -18,6 +19,7 @@ namespace HemnetCrawler.Data
         {
             modelBuilder.ApplyConfiguration(new ListingsConfiguration());
             modelBuilder.ApplyConfiguration(new ImagesConfiguration());
+            modelBuilder.ApplyConfiguration(new FinalBidConfiguration());
         }
     }
 }
