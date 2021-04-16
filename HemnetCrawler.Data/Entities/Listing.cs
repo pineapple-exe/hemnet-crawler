@@ -17,7 +17,7 @@ namespace HemnetCrawler.Data.Entities
         public string Description { get; set; }
         public string HomeType { get; set; }
         public string OwnershipType { get; set; }
-        public int? Rooms { get; set; }
+        public string Rooms { get; set; }
         public bool Balcony { get; set; }
         public string Floor { get; set; }
         public double? LivingArea { get; set; }
