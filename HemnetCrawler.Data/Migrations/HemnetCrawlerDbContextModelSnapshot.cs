@@ -24,8 +24,6 @@ namespace HemnetCrawler.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
@@ -39,6 +37,9 @@ namespace HemnetCrawler.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Fee")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HemnetId")
                         .HasColumnType("int");
 
                     b.Property<string>("HomeType")

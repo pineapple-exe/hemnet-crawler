@@ -50,7 +50,8 @@ namespace HemnetCrawler.ConsoleApp
                         break;
 
                     case "Avgift/månad":
-                        finalBid.Fee = DigitPurist(pair.Value);
+                        if (pair.Value != "kr/månad")
+                            finalBid.Fee = DigitPurist(pair.Value);
                         break;
 
                     case "Driftskostnad":
@@ -101,23 +102,27 @@ namespace HemnetCrawler.ConsoleApp
             sortBy.Click();
             options.Where(e => e.Text == "Tidigast såld/överlåten först").First().Click();
 
+            AddAgeFilterFinalBids(driver);
+
             string latestPage = driver.Url;
             List<FinalBid> finalBids = new List<FinalBid>();
+            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             while (true)
             {
                 Thread.Sleep(2000);
                 ReadOnlyCollection<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.hcl-card"));
-                IEnumerable<string> links = searchResults.Select(e => e.GetAttribute("href")).ToArray();
+                List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
+                links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-")))));
 
-                foreach(string link in links)
+                foreach (string link in links)
                 {
                     driver.Url = link;
                     Thread.Sleep(2000);
 
                     FinalBid finalBid = new FinalBid();
 
-                    finalBid.Street = driver.FindElement(By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris ", "");
+                    finalBid.Street = driver.FindElement(By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
                     finalBid.Price = DigitPurist(driver.FindElement(By.CssSelector("span.sold-property__price-value")).Text);
                     finalBid.SoldDate = DateTimeOffset.Parse(driver.FindElement(By.CssSelector("time")).GetAttribute("datetime"));
 
@@ -141,7 +146,6 @@ namespace HemnetCrawler.ConsoleApp
                     finalBids.Add(finalBid);
                 }
 
-                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
                 foreach (FinalBid finalBid in finalBids)
                 {
                     context.Add(finalBid);
@@ -151,17 +155,17 @@ namespace HemnetCrawler.ConsoleApp
 
                 driver.Url = latestPage;
                 Thread.Sleep(2000);
-
-                try
-                {
-                    latestPage = driver.FindElement(By.CssSelector("a.next_page")).GetAttribute("href");
-                    driver.Url = latestPage;
-                    Thread.Sleep(2000);
-                }
-                catch (NoSuchElementException)
-                {
-                    break;
-                }
+                break; //för test bara
+                //try
+                //{
+                //    latestPage = driver.FindElement(By.CssSelector("a.next_page")).GetAttribute("href");
+                //    driver.Url = latestPage;
+                //    Thread.Sleep(2000);
+                //}
+                //catch (NoSuchElementException)
+                //{
+                //    break;
+                //}
             }
 
             driver.Dispose();
@@ -233,6 +237,39 @@ namespace HemnetCrawler.ConsoleApp
             double secondsDiff = (to - from).TotalSeconds;
             int secondsPerDay = 24 * 60 * 60;
             return secondsDiff / secondsPerDay;
+        }
+
+        static void AddAgeFilterFinalBids(IWebDriver driver)
+        {
+            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+
+            DateTimeOffset latestPublish = context.FinalBids.Select(finalBid => finalBid.SoldDate).Max();
+            int daysDiff = (int)Math.Ceiling(GetTotalDays(latestPublish, DateTimeOffset.Now));
+
+            string ageSearchFilter;
+
+            if (daysDiff <= 84)
+            {
+                ageSearchFilter = "search_sold_age_3m";
+            }
+            else if (daysDiff <= 168)
+            {
+                ageSearchFilter = "search_sold_age_6m";
+            }
+            else if (daysDiff <= 336)
+            {
+                ageSearchFilter = "search_sold_age_12m";
+            }
+            else
+            {
+                ageSearchFilter = "search_sold_age_all";
+            }
+
+            driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
+            Thread.Sleep(3000);
+
+            driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
+            Thread.Sleep(3000);
         }
 
         static void AddAgeFilter(IWebDriver driver)
