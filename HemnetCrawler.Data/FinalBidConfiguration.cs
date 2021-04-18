@@ -26,6 +26,7 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.LivingArea);
             builder.Property(e => e.Fee);
             builder.Property(e => e.SoldDate).IsRequired();
+            builder.Property(e => e.LastUpdated).IsRequired();
         }
     }
 }

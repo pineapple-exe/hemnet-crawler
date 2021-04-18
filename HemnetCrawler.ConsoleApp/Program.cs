@@ -113,7 +113,7 @@ namespace HemnetCrawler.ConsoleApp
                 Thread.Sleep(2000);
                 ReadOnlyCollection<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.hcl-card"));
                 List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
-                links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-")))));
+                links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
 
                 foreach (string link in links)
                 {
@@ -122,6 +122,8 @@ namespace HemnetCrawler.ConsoleApp
 
                     FinalBid finalBid = new FinalBid();
 
+                    finalBid.HemnetId = int.Parse(link.Substring(link.LastIndexOf("-") + 1));
+                    finalBid.LastUpdated = DateTimeOffset.Now;
                     finalBid.Street = driver.FindElement(By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
                     finalBid.Price = DigitPurist(driver.FindElement(By.CssSelector("span.sold-property__price-value")).Text);
                     finalBid.SoldDate = DateTimeOffset.Parse(driver.FindElement(By.CssSelector("time")).GetAttribute("datetime"));
@@ -243,33 +245,36 @@ namespace HemnetCrawler.ConsoleApp
         {
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            DateTimeOffset latestPublish = context.FinalBids.Select(finalBid => finalBid.SoldDate).Max();
-            int daysDiff = (int)Math.Ceiling(GetTotalDays(latestPublish, DateTimeOffset.Now));
-
-            string ageSearchFilter;
-
-            if (daysDiff <= 84)
+            if (context.FinalBids.Count() > 0)
             {
-                ageSearchFilter = "search_sold_age_3m";
-            }
-            else if (daysDiff <= 168)
-            {
-                ageSearchFilter = "search_sold_age_6m";
-            }
-            else if (daysDiff <= 336)
-            {
-                ageSearchFilter = "search_sold_age_12m";
-            }
-            else
-            {
-                ageSearchFilter = "search_sold_age_all";
-            }
+                DateTimeOffset latestPublish = context.FinalBids.Select(finalBid => finalBid.SoldDate).Max();
+                int daysDiff = (int)Math.Ceiling(GetTotalDays(latestPublish, DateTimeOffset.Now));
 
-            driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
-            Thread.Sleep(3000);
+                string ageSearchFilter;
 
-            driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
-            Thread.Sleep(3000);
+                if (daysDiff <= 84)
+                {
+                    ageSearchFilter = "search_sold_age_3m";
+                }
+                else if (daysDiff <= 168)
+                {
+                    ageSearchFilter = "search_sold_age_6m";
+                }
+                else if (daysDiff <= 336)
+                {
+                    ageSearchFilter = "search_sold_age_12m";
+                }
+                else
+                {
+                    ageSearchFilter = "search_sold_age_all";
+                }
+
+                driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
+                Thread.Sleep(3000);
+
+                driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
+                Thread.Sleep(3000);
+            }
         }
 
         static void AddAgeFilter(IWebDriver driver)
