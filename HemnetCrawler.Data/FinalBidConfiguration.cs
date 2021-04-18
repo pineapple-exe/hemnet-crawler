@@ -11,7 +11,7 @@ namespace HemnetCrawler.Data
     {
         public void Configure(EntityTypeBuilder<FinalBid> builder)
         {
-            //builder.Property(e => e.Id).IsRequired().UseIdentityColumn();
+            builder.Property(e => e.HemnetId).IsRequired();
             builder.Property(e => e.City).IsRequired();
             builder.Property(e => e.ConstructionYear);
             builder.Property(e => e.DemandedPrice);
@@ -26,6 +26,7 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.LivingArea);
             builder.Property(e => e.Fee);
             builder.Property(e => e.SoldDate).IsRequired();
+            builder.Property(e => e.LastUpdated).IsRequired();
         }
     }
 }
