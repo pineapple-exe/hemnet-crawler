@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
@@ -92,10 +93,6 @@ namespace HemnetCrawler.ConsoleApp
                     case "Antal besök":
                         listing.Visits = Utils.DigitPurist(pair.Value);
                         break;
-
-                    case "Dagar på Hemnet":
-                        listing.Published = DateTimeOffset.Now.AddDays(-Utils.DigitPurist(pair.Value)); //något fuffens här?
-                        break;
                 }
             }
         }
@@ -104,6 +101,10 @@ namespace HemnetCrawler.ConsoleApp
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
             listing.NewConstruction = listingLink.NewConstruction;
+
+            Regex publishedPattern = new Regex("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
+            string publishedDate = publishedPattern.Match(driver.PageSource).Value;
+            listing.Published = DateTimeOffset.Parse(publishedDate);
 
             listing.Street = driver.FindElement(By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
             Thread.Sleep(1000);
