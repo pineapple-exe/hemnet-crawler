@@ -30,5 +30,7 @@ namespace HemnetCrawler.Data.Entities
         public string EnergyClassification { get; set; }
         public int Visits { get; set; }
         public DateTimeOffset Published { get; set; }
+        public int? FinalBidID { get; set; }
+        public FinalBid FinalBid { get; set; }
     }
 }
