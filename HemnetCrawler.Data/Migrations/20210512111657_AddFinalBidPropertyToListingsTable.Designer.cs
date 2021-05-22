@@ -4,14 +4,16 @@ using HemnetCrawler.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HemnetCrawler.Data.Migrations
 {
     [DbContext(typeof(HemnetCrawlerDbContext))]
-    partial class HemnetCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210512111657_AddFinalBidPropertyToListingsTable")]
+    partial class AddFinalBidPropertyToListingsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,7 +145,10 @@ namespace HemnetCrawler.Data.Migrations
                     b.Property<int?>("Fee")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FinalBidID")
+                    b.Property<int?>("FinalBid")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FinalBidIDId")
                         .HasColumnType("int");
 
                     b.Property<string>("Floor")
@@ -202,7 +207,7 @@ namespace HemnetCrawler.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FinalBidID");
+                    b.HasIndex("FinalBidIDId");
 
                     b.ToTable("Listings");
                 });
@@ -220,11 +225,11 @@ namespace HemnetCrawler.Data.Migrations
 
             modelBuilder.Entity("HemnetCrawler.Data.Entities.Listing", b =>
                 {
-                    b.HasOne("HemnetCrawler.Data.Entities.FinalBid", "FinalBid")
+                    b.HasOne("HemnetCrawler.Data.Entities.FinalBid", "FinalBidID")
                         .WithMany()
-                        .HasForeignKey("FinalBidID");
+                        .HasForeignKey("FinalBidIDId");
 
-                    b.Navigation("FinalBid");
+                    b.Navigation("FinalBidID");
                 });
 #pragma warning restore 612, 618
         }
