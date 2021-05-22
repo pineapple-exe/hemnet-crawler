@@ -18,7 +18,7 @@ namespace HemnetCrawler.ConsoleApp
                 switch (pair.Key)
                 {
                     case "Begärt pris":
-                        finalBid.DemandedPrice = Utils.DigitPurist(pair.Value);
+                            finalBid.DemandedPrice = Utils.DigitPurist(pair.Value);
                         break;
 
                     case "Prisutveckling":
@@ -42,8 +42,11 @@ namespace HemnetCrawler.ConsoleApp
                         break;
 
                     case "Avgift/månad":
-                        if (pair.Value != "kr/månad")
+                        string trimmedValue = pair.Value.Trim();
+
+                        if (trimmedValue != "kr/mån" && trimmedValue != "kr/månad")
                             finalBid.Fee = Utils.DigitPurist(pair.Value);
+
                         break;
 
                     case "Driftskostnad":

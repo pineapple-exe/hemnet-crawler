@@ -12,10 +12,20 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     { 
         static void Main(string[] args)
         {
-            //SearchGatherListings();
-            //SearchGatherFinalBids();
+            SearchGatherListings();
+            SearchGatherFinalBids();
 
             AddFinalBidsToListings();
+
+
+            //ChromeDriver driverTest = new ChromeDriver
+            //{
+            //    Url = "https://www.hemnet.se/bostad/villa-5rum-kungsbacka-kolla-kungsbacka-kommun-kolla-bengtssons-vag-18-17452236"
+            //};
+
+            //if (!driverTest.PageSource.Contains("removed-listing"))
+            //    Console.WriteLine("Hurra!");
+
         }
 
         static void GeneralSearchAndGather(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver> leafThroughPagesAndCreateRecords)
@@ -42,15 +52,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            List<FinalBid> finalBids = context.FinalBids.ToList();
+            List<FinalBid> finalBids = context.FinalBids.OrderBy(fb => fb.SoldDate).ToList();
 
             foreach (Listing listing in context.Listings)
             {
                 FinalBid match = finalBids.FirstOrDefault(fb => IsFinalBidAMatch(listing, fb));
 
                 if (match != null)
+                {
                     listing.FinalBidID = match.Id;
+                    context.Update(listing);
+                }
             }
+            context.SaveChanges();
         }
 
         static bool IsFinalBidAMatch(Listing listing, FinalBid finalBid)

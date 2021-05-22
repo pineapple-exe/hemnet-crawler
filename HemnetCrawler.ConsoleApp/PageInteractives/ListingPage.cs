@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -98,6 +97,9 @@ namespace HemnetCrawler.ConsoleApp
         }
         public static void CreateListingEntity(IWebDriver driver, HemnetCrawlerDbContext context, ListingLink listingLink, Listing listing)
         {
+            if (driver.PageSource.Contains("removed-listing"))
+                return;
+
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
             listing.NewConstruction = listingLink.NewConstruction;
