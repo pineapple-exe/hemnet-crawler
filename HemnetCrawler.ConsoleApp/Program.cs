@@ -61,7 +61,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             return (listing.Published < finalBid.SoldDate &&
                     listing.HomeType == finalBid.HomeType &&
-                    listing.City == finalBid.City &&
+                    listing.PostalCode == finalBid.PostalCode &&
                     listing.Street == finalBid.Street);
         }
     }

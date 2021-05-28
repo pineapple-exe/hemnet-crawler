@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
@@ -67,7 +68,7 @@ namespace HemnetCrawler.ConsoleApp
 
         public static List<ListingLink> CollectListingLinks(IWebDriver driver)
         {
-            List<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.js-listing-card-link")).ToList();
+            List<IWebElement> searchResults = driver.FindElements(By.CssSelector("li.normal-results__hit")).ToList();
             Thread.Sleep(5000);
             searchResults.RemoveAll(l => Mixed.ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
 
@@ -75,7 +76,9 @@ namespace HemnetCrawler.ConsoleApp
 
             foreach (IWebElement searchResult in searchResults)
             {
-                int listingLinkId = int.Parse(searchResult.FindElement(By.CssSelector("button.listing-card__save-button")).GetAttribute("data-listing-id"));
+                Regex premiumIdPattern = new Regex("(?<={\"id\":\")\\d+");
+                string dataContainer = searchResult.GetAttribute("data-gtm-item-info");
+                int listingLinkId = int.Parse(premiumIdPattern.Match(dataContainer).Value);
 
                 HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
                 if (context.Listings.Any(l => l.HemnetId == listingLinkId))
@@ -84,8 +87,9 @@ namespace HemnetCrawler.ConsoleApp
                 }
 
                 bool newConstruction = Mixed.ElementContainsSpecificText(searchResult, ".listing-card__label--type", "Nyproduktion");
+                string href = searchResult.FindElement(By.CssSelector(".js-listing-card-link")).GetAttribute("href");
 
-                links.Add(new ListingLink(listingLinkId, searchResult.GetAttribute("href"), newConstruction));
+                links.Add(new ListingLink(listingLinkId, href, newConstruction));
             }
             return links;
         }

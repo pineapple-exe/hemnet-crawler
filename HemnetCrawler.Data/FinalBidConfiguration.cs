@@ -13,6 +13,7 @@ namespace HemnetCrawler.Data
         {
             builder.Property(e => e.HemnetId).IsRequired();
             builder.Property(e => e.City).IsRequired();
+            builder.Property(e => e.PostalCode);
             builder.Property(e => e.ConstructionYear);
             builder.Property(e => e.DemandedPrice);
             builder.Property(e => e.Price).IsRequired();
