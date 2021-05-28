@@ -29,7 +29,7 @@ namespace HemnetCrawler.ConsoleApp
             int daysDiff;
             string ageSearchFilter = "search_age_all";
 
-            if (context.Listings.FirstOrDefault() != null)
+            if (context.Listings.Any())
             {
                 DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
                 daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
