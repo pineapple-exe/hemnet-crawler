@@ -26,34 +26,34 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
-            int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
+            int daysDiff;
+            string ageSearchFilter = "search_age_all";
 
-            string ageSearchFilter;
+            if (context.Listings.FirstOrDefault() != null)
+            {
+                DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
+                daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
 
-            if (daysDiff <= 1)
-            {
-                ageSearchFilter = "search_age_1d";
-            }
-            else if (daysDiff <= 3)
-            {
-                ageSearchFilter = "search_age_3d";
-            }
-            else if (daysDiff <= 7)
-            {
-                ageSearchFilter = "search_age_1w";
-            }
-            else if (daysDiff <= 14)
-            {
-                ageSearchFilter = "search_age_2w";
-            }
-            else if (daysDiff <= 28)
-            {
-                ageSearchFilter = "search_age_1m";
-            }
-            else
-            {
-                ageSearchFilter = "search_age_all";
+                if (daysDiff <= 1)
+                {
+                    ageSearchFilter = "search_age_1d";
+                }
+                else if (daysDiff <= 3)
+                {
+                    ageSearchFilter = "search_age_3d";
+                }
+                else if (daysDiff <= 7)
+                {
+                    ageSearchFilter = "search_age_1w";
+                }
+                else if (daysDiff <= 14)
+                {
+                    ageSearchFilter = "search_age_2w";
+                }
+                else if (daysDiff <= 28)
+                {
+                    ageSearchFilter = "search_age_1m";
+                }
             }
 
             driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
