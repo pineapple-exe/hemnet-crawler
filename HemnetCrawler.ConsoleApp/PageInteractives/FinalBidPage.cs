@@ -64,11 +64,8 @@ namespace HemnetCrawler.ConsoleApp
             finalBid.Price = Utils.DigitPurist(driver.FindElement(By.CssSelector("span.sold-property__price-value")).Text);
             finalBid.SoldDate = DateTimeOffset.Parse(driver.FindElement(By.CssSelector("time")).GetAttribute("datetime"));
 
-            Regex postalCodePattern1 = new Regex("(?<=\"property_zipcode\",\\s\")\\d{5}");
-            Regex postalCodePattern2 = new Regex("(?<=\"property_zipcode\",\\s\")\\d{3}\\s\\d{2}");
-            string postalCode = postalCodePattern1.IsMatch(driver.PageSource) ?
-                                postalCodePattern1.Match(driver.PageSource).Value :
-                                postalCodePattern2.Match(driver.PageSource).Value;
+            Regex postalCodePattern = new Regex("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
+            string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             finalBid.PostalCode = int.Parse(postalCode);
 
             Regex redundantWhitespace = new Regex("\\s{2,}");
