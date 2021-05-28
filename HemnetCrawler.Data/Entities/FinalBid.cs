@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HemnetCrawler.Data.Entities
 {
@@ -11,6 +9,7 @@ namespace HemnetCrawler.Data.Entities
         public DateTimeOffset LastUpdated { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
+        public int? PostalCode { get; set; }
         public int Price { get; set; }
         public DateTimeOffset SoldDate { get; set; }
         public int DemandedPrice { get; set; }

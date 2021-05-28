@@ -12,6 +12,7 @@ namespace HemnetCrawler.Data.Entities
         public bool NewConstruction { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
+        public int? PostalCode { get; set; }
         public int? Price { get; set; }
         public int? PricePerSquareMeter { get; set; }
         public string Description { get; set; }

@@ -13,6 +13,7 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.NewConstruction).IsRequired();
             builder.Property(e => e.Street).IsRequired().HasMaxLength(96);
             builder.Property(e => e.City).IsRequired().HasMaxLength(96);
+            builder.Property(e => e.PostalCode);
             builder.Property(e => e.Price);
             builder.Property(e => e.PricePerSquareMeter);
             builder.Property(e => e.Description).IsRequired();

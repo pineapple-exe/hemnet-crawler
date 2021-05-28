@@ -1,7 +1,4 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
@@ -15,7 +12,7 @@ namespace HemnetCrawler.ConsoleApp
             driver.Manage().Window.Maximize();
             Thread.Sleep(1000);
 
-            IWebElement acceptCookiesButton = driver.FindElement(By.CssSelector("button.hcl-button--primary"));
+            IWebElement acceptCookiesButton = driver.FindElement(By.CssSelector(".consent__button-wrapper > button.hcl-button--primary"));
             acceptCookiesButton.Click();
             Thread.Sleep(1000);
         }

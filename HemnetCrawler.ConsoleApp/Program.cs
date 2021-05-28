@@ -12,20 +12,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     { 
         static void Main(string[] args)
         {
-            SearchGatherListings();
+            //SearchGatherListings();
             SearchGatherFinalBids();
 
             AddFinalBidsToListings();
-
-
-            //ChromeDriver driverTest = new ChromeDriver
-            //{
-            //    Url = "https://www.hemnet.se/bostad/villa-5rum-kungsbacka-kolla-kungsbacka-kommun-kolla-bengtssons-vag-18-17452236"
-            //};
-
-            //if (!driverTest.PageSource.Contains("removed-listing"))
-            //    Console.WriteLine("Hurra!");
-
         }
 
         static void GeneralSearchAndGather(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver> leafThroughPagesAndCreateRecords)
@@ -71,7 +61,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             return (listing.Published < finalBid.SoldDate &&
                     listing.HomeType == finalBid.HomeType &&
-                    listing.City == finalBid.City &&
+                    listing.PostalCode == finalBid.PostalCode &&
                     listing.Street == finalBid.Street);
         }
     }
