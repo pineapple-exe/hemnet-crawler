@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
@@ -26,13 +25,12 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            int daysDiff;
-            string ageSearchFilter = "search_age_all";
-
             if (context.Listings.Any())
             {
                 DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
-                daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
+                int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
+
+                string ageSearchFilter;
 
                 if (daysDiff <= 1)
                 {
@@ -54,13 +52,17 @@ namespace HemnetCrawler.ConsoleApp
                 {
                     ageSearchFilter = "search_age_1m";
                 }
+                else
+                {
+                    ageSearchFilter = "search_age_all";
+                }
+
+                driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
+                Thread.Sleep(3000);
+
+                driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
+                Thread.Sleep(3000);
             }
-
-            driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
-            Thread.Sleep(3000);
-
-            driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
-            Thread.Sleep(3000);
         }
 
         public static List<ListingLink> CollectListingLinks(IWebDriver driver)
