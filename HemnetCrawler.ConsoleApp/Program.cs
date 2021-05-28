@@ -12,7 +12,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     { 
         static void Main(string[] args)
         {
-            //SearchGatherListings();
+            SearchGatherListings();
             SearchGatherFinalBids();
 
             AddFinalBidsToListings();
