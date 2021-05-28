@@ -1,9 +1,7 @@
 ﻿using HemnetCrawler.Data;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
@@ -26,7 +24,7 @@ namespace HemnetCrawler.ConsoleApp
         {
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            if (context.FinalBids.Count() > 0)
+            if (context.FinalBids.Any())
             {
                 DateTimeOffset latestPublish = context.FinalBids.Select(finalBid => finalBid.SoldDate).Max();
                 int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));

@@ -26,41 +26,44 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
-            int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
+            if (context.Listings.Any())
+            {
+                DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
+                int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
 
-            string ageSearchFilter;
+                string ageSearchFilter;
 
-            if (daysDiff <= 1)
-            {
-                ageSearchFilter = "search_age_1d";
-            }
-            else if (daysDiff <= 3)
-            {
-                ageSearchFilter = "search_age_3d";
-            }
-            else if (daysDiff <= 7)
-            {
-                ageSearchFilter = "search_age_1w";
-            }
-            else if (daysDiff <= 14)
-            {
-                ageSearchFilter = "search_age_2w";
-            }
-            else if (daysDiff <= 28)
-            {
-                ageSearchFilter = "search_age_1m";
-            }
-            else
-            {
-                ageSearchFilter = "search_age_all";
-            }
+                if (daysDiff <= 1)
+                {
+                    ageSearchFilter = "search_age_1d";
+                }
+                else if (daysDiff <= 3)
+                {
+                    ageSearchFilter = "search_age_3d";
+                }
+                else if (daysDiff <= 7)
+                {
+                    ageSearchFilter = "search_age_1w";
+                }
+                else if (daysDiff <= 14)
+                {
+                    ageSearchFilter = "search_age_2w";
+                }
+                else if (daysDiff <= 28)
+                {
+                    ageSearchFilter = "search_age_1m";
+                }
+                else
+                {
+                    ageSearchFilter = "search_age_all";
+                }
 
-            driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
-            Thread.Sleep(3000);
+                driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
+                Thread.Sleep(3000);
 
-            driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
-            Thread.Sleep(3000);
+                driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
+                Thread.Sleep(3000);
+            }
         }
 
         public static List<ListingLink> CollectListingLinks(IWebDriver driver)
