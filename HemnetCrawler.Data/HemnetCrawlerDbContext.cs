@@ -13,7 +13,7 @@ namespace HemnetCrawler.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=UggeboiAndPinegal;Trusted_Connection=True;");
+                "Server=localhost;Database=TestUggeboiAndPinegal;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

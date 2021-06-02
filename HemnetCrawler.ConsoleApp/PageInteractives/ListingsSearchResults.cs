@@ -26,7 +26,7 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            if (context.Listings.Any()) //Smäller när Listings inte finns.
+            if (context.Listings.Any())
             {
                 DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
                 int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
