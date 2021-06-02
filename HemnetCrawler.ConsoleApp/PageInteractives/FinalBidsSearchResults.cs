@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class FinalBidsSearchResults
+    internal class FinalBidsSearchResults
     {
         public static void SpecifyAndSortResults(IWebDriver driver)
         {

@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HemnetCrawler.Data.Entities;
+using System;
 
 namespace HemnetCrawler.Data
 {
-    public class HemnetCrawlerDbContext : DbContext
+    public class HemnetCrawlerDbContext : DbContext, IDisposable
     {
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }

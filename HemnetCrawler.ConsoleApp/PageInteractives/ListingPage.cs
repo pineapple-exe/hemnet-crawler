@@ -11,9 +11,9 @@ using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class ListingPage
+    internal class ListingPage
     {
-        public static bool ContainsRepeatedValue(List<IWebElement> labels, out int index)
+        private static bool ContainsRepeatedValue(List<IWebElement> labels, out int index)
         {
             if (labels.Any(l => l.Text == "Förening"))
             {
@@ -27,7 +27,7 @@ namespace HemnetCrawler.ConsoleApp
             }
         }
 
-        public static void InterpretTable(Listing listing, Dictionary<string, string> labelsAndValues)
+        private static void InterpretTable(Listing listing, Dictionary<string, string> labelsAndValues)
         {
             foreach (KeyValuePair<string, string> pair in labelsAndValues)
             {
@@ -95,10 +95,13 @@ namespace HemnetCrawler.ConsoleApp
                 }
             }
         }
-        public static void CreateListingEntity(IWebDriver driver, HemnetCrawlerDbContext context, ListingLink listingLink, Listing listing)
+
+        private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
             if (driver.PageSource.Contains("removed-listing"))
-                return;
+                return default;
+
+            Listing listing = new Listing();
 
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
@@ -146,11 +149,10 @@ namespace HemnetCrawler.ConsoleApp
 
             InterpretTable(listing, labelsAndValues);
 
-            context.Add(listing);
-            context.SaveChanges();
+            return listing;
         }
 
-        public static void CreateImageEntities(IWebDriver driver, HemnetCrawlerDbContext context, Listing listing)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
@@ -162,8 +164,8 @@ namespace HemnetCrawler.ConsoleApp
                 };
                 image.Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src")));
                 image.ContentType = "Unknown";
-                context.Add(image);
-                context.SaveChanges();
+
+                yield return image;
             }
         }
 
@@ -176,10 +178,23 @@ namespace HemnetCrawler.ConsoleApp
                 Thread.Sleep(2000);
 
                 HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-                Listing listing = new Listing();
 
-                CreateListingEntity(driver, context, listingLink, listing);
-                CreateImageEntities(driver, context, listing);
+                Listing listing = CreateListingEntity(driver, listingLink);
+
+                if (listing != null)
+                {
+                    context.Add(listing);
+
+                    IEnumerable<Image> images = CreateImageEntities(driver, listing);
+                    foreach (Image img in images)
+                    {
+                        context.Add(img);
+                    }
+
+                    context.SaveChanges();
+                }
+
+                context.Dispose();
             }
         }
     }

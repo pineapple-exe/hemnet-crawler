@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public static class StartPage
+    internal static class StartPage
     {
         public static void EnterHemnet(IWebDriver driver)
         {

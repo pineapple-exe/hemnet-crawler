@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class ListingLink
+    internal class ListingLink
     {
         public int Id { get; }
         public string Href { get; }

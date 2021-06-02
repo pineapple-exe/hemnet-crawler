@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class ListingsSearchResults
+    internal class ListingsSearchResults
     {
         public static void SortSearchResults(IWebDriver driver)
         {
@@ -26,7 +26,7 @@ namespace HemnetCrawler.ConsoleApp
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            if (context.Listings.Any())
+            if (context.Listings.Any()) //Smäller när Listings inte finns.
             {
                 DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
                 int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));

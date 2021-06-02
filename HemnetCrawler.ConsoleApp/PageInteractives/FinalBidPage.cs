@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class FinalBidPage
+    internal class FinalBidPage
     {
-        public static void InterpretTable(FinalBid finalBid, Dictionary<string, string> labelsAndValues)
+        private static FinalBid InterpretTable(FinalBid finalBid, Dictionary<string, string> labelsAndValues)
         {
             foreach (KeyValuePair<string, string> pair in labelsAndValues)
             {
@@ -53,10 +53,13 @@ namespace HemnetCrawler.ConsoleApp
                         break;
                 }
             }
+            return finalBid;
         }
 
-        public static void CreateEntity(IWebDriver driver, int hemnetId, FinalBid finalBid)
+        private static FinalBid CreateEntity(IWebDriver driver, int hemnetId)
         {
+            FinalBid finalBid = new FinalBid();
+
             finalBid.HemnetId = hemnetId;
             finalBid.LastUpdated = DateTimeOffset.Now;
             finalBid.Street = driver.FindElement(By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
@@ -82,14 +85,12 @@ namespace HemnetCrawler.ConsoleApp
                     labelsAndValues.Add(labels[i], values[i]);
             }
 
-            FinalBidPage.InterpretTable(finalBid, labelsAndValues);
+            return FinalBidPage.InterpretTable(finalBid, labelsAndValues);
         }
 
         public static void CreateFinalBidRecords(IWebDriver driver, int hemnetId, HemnetCrawlerDbContext context)
         {
-            FinalBid finalBid = new FinalBid();
-            CreateEntity(driver, hemnetId, finalBid);
-            context.Add(finalBid);
+            context.Add(CreateEntity(driver, hemnetId));
             context.SaveChanges();
         }
     }
