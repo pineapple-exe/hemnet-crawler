@@ -114,7 +114,7 @@ namespace HemnetCrawler.ConsoleApp
             Regex postalCodePattern = new Regex("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
-               listing.PostalCode = int.Parse(postalCode);
+               listing.PostalCode = Utils.DigitPurist(postalCode);
 
             listing.Street = driver.FindElement(By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
             Thread.Sleep(1000);
