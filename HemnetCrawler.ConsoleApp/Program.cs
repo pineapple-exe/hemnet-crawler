@@ -20,16 +20,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         static void GeneralSearchAndGather(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver> leafThroughPagesAndCreateRecords)
         {
-            ChromeDriver driver = new ChromeDriver();
+            using ChromeDriver driver = new ChromeDriver();
             
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver);
             orderSearchResults(driver);
             addAgeFilter(driver);
             leafThroughPagesAndCreateRecords(driver);
-
-            driver.Quit();
-            driver.Dispose();
         }
 
         static void SearchGatherListings()
@@ -44,7 +41,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         static void AddFinalBidsToListings()
         {
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             List<FinalBid> finalBids = context.FinalBids.OrderBy(fb => fb.SoldDate).ToList();
 
@@ -59,7 +56,6 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 }
             }
             context.SaveChanges();
-            context.Dispose();
         }
 
         static bool IsFinalBidAMatch(Listing listing, FinalBid finalBid)

@@ -4,7 +4,7 @@ using System;
 
 namespace HemnetCrawler.Data
 {
-    public class HemnetCrawlerDbContext : DbContext, IDisposable
+    public class HemnetCrawlerDbContext : DbContext
     {
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }

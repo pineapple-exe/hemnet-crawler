@@ -9,7 +9,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal class ListingPage
     {
@@ -152,16 +152,12 @@ namespace HemnetCrawler.ConsoleApp
             return listing;
         }
 
-        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Image image)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
             foreach (IWebElement imageContainer in imageContainers)
             {
-                Image image = new Image
-                {
-                    Listing = listing
-                };
                 image.Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src")));
                 image.ContentType = "Unknown";
 
@@ -177,7 +173,7 @@ namespace HemnetCrawler.ConsoleApp
                 driver.Navigate();
                 Thread.Sleep(2000);
 
-                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+                using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
                 Listing listing = CreateListingEntity(driver, listingLink);
 
@@ -185,7 +181,12 @@ namespace HemnetCrawler.ConsoleApp
                 {
                     context.Add(listing);
 
-                    IEnumerable<Image> images = CreateImageEntities(driver, listing);
+                    Image image = new Image
+                    {
+                        Listing = listing
+                    };
+
+                    IEnumerable<Image> images = CreateImageEntities(driver, image);
                     foreach (Image img in images)
                     {
                         context.Add(img);
@@ -193,8 +194,6 @@ namespace HemnetCrawler.ConsoleApp
 
                     context.SaveChanges();
                 }
-
-                context.Dispose();
             }
         }
     }

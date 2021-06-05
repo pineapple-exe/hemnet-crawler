@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal static class Mixed
     {
@@ -43,13 +43,12 @@ namespace HemnetCrawler.ConsoleApp
                     break;
                 }
             }
-            driver.Dispose();
         }
 
         public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver)
         {
             string latestPage = driver.Url;
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             while (true)
             {
@@ -81,7 +80,6 @@ namespace HemnetCrawler.ConsoleApp
                     break;
                 }
             }
-            driver.Dispose();
         }
     }
 }

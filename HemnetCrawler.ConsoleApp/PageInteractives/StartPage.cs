@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal static class StartPage
     {
