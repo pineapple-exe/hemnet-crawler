@@ -4,9 +4,9 @@ using System;
 using System.Linq;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
-    public class FinalBidsSearchResults
+    internal class FinalBidsSearchResults
     {
         public static void SpecifyAndSortResults(IWebDriver driver)
         {

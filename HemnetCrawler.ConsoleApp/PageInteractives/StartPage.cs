@@ -1,9 +1,9 @@
 ﻿using OpenQA.Selenium;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
-    public static class StartPage
+    internal static class StartPage
     {
         public static void EnterHemnet(IWebDriver driver)
         {

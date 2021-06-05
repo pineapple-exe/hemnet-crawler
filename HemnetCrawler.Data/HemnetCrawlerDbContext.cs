@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HemnetCrawler.Data.Entities;
+using System;
 
 namespace HemnetCrawler.Data
 {
