@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HemnetCrawler.ConsoleApp
+﻿namespace HemnetCrawler.ConsoleApp
 {
-    public class ListingLink
+    internal class ListingLink
     {
         public int Id { get; }
         public string Href { get; }

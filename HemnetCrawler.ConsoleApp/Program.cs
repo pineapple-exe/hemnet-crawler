@@ -20,7 +20,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         static void GeneralSearchAndGather(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver> leafThroughPagesAndCreateRecords)
         {
-            ChromeDriver driver = new ChromeDriver();
+            using ChromeDriver driver = new ChromeDriver();
+            
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver);
             orderSearchResults(driver);
@@ -40,7 +41,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         static void AddFinalBidsToListings()
         {
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             List<FinalBid> finalBids = context.FinalBids.OrderBy(fb => fb.SoldDate).ToList();
 

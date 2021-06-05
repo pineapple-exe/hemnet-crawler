@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
-    public class ListingsSearchResults
+    internal class ListingsSearchResults
     {
         public static void SortSearchResults(IWebDriver driver)
         {

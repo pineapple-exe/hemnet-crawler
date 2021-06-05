@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HemnetCrawler.ConsoleApp
 {
-    public class Utils
+    internal class Utils
     {
         public static double GetTotalDays(DateTimeOffset from, DateTimeOffset to)
         {

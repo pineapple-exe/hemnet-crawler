@@ -9,11 +9,11 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
-    public class ListingPage
+    internal class ListingPage
     {
-        public static bool ContainsRepeatedValue(List<IWebElement> labels, out int index)
+        private static bool ContainsRepeatedValue(List<IWebElement> labels, out int index)
         {
             if (labels.Any(l => l.Text == "Förening"))
             {
@@ -27,7 +27,7 @@ namespace HemnetCrawler.ConsoleApp
             }
         }
 
-        public static void InterpretTable(Listing listing, Dictionary<string, string> labelsAndValues)
+        private static void InterpretTable(Listing listing, Dictionary<string, string> labelsAndValues)
         {
             foreach (KeyValuePair<string, string> pair in labelsAndValues)
             {
@@ -95,10 +95,13 @@ namespace HemnetCrawler.ConsoleApp
                 }
             }
         }
-        public static void CreateListingEntity(IWebDriver driver, HemnetCrawlerDbContext context, ListingLink listingLink, Listing listing)
+
+        private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
             if (driver.PageSource.Contains("removed-listing"))
-                return;
+                return null;
+
+            Listing listing = new Listing();
 
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
@@ -111,7 +114,7 @@ namespace HemnetCrawler.ConsoleApp
             Regex postalCodePattern = new Regex("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
-               listing.PostalCode = int.Parse(postalCode);
+               listing.PostalCode = Utils.DigitPurist(postalCode);
 
             listing.Street = driver.FindElement(By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
             Thread.Sleep(1000);
@@ -146,24 +149,23 @@ namespace HemnetCrawler.ConsoleApp
 
             InterpretTable(listing, labelsAndValues);
 
-            context.Add(listing);
-            context.SaveChanges();
+            return listing;
         }
 
-        public static void CreateImageEntities(IWebDriver driver, HemnetCrawlerDbContext context, Listing listing)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
+
             foreach (IWebElement imageContainer in imageContainers)
             {
                 Image image = new Image
                 {
-                    Listing = listing
+                    Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
+                    ContentType = "Unknown"
                 };
-                image.Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src")));
-                image.ContentType = "Unknown";
-                context.Add(image);
-                context.SaveChanges();
+
+                yield return image;
             }
         }
 
@@ -175,11 +177,23 @@ namespace HemnetCrawler.ConsoleApp
                 driver.Navigate();
                 Thread.Sleep(2000);
 
-                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-                Listing listing = new Listing();
+                using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-                CreateListingEntity(driver, context, listingLink, listing);
-                CreateImageEntities(driver, context, listing);
+                Listing listing = CreateListingEntity(driver, listingLink);
+
+                if (listing != null)
+                {
+                    context.Add(listing);
+
+                    IEnumerable<Image> images = CreateImageEntities(driver);
+                    foreach (Image img in images)
+                    {
+                        img.Listing = listing;
+                        context.Add(img);
+                    }
+
+                    context.SaveChanges();
+                }
             }
         }
     }

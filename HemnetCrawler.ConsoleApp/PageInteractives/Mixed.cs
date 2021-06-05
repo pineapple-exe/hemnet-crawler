@@ -1,18 +1,13 @@
 ﻿using HemnetCrawler.Data;
-using HemnetCrawler.Data.Entities;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
-    public static class Mixed
+    internal static class Mixed
     {
         public static bool ElementContainsSpecificText(IWebElement element, string selector, string content)
         {
@@ -48,13 +43,12 @@ namespace HemnetCrawler.ConsoleApp
                     break;
                 }
             }
-            driver.Dispose();
         }
 
         public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver)
         {
             string latestPage = driver.Url;
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             while (true)
             {
@@ -86,7 +80,6 @@ namespace HemnetCrawler.ConsoleApp
                     break;
                 }
             }
-            driver.Dispose();
         }
     }
 }
