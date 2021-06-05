@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using HemnetCrawler.Data.Entities;
+using HemnetCrawler.Domain.Entities;
 
 namespace HemnetCrawler.Data
 {

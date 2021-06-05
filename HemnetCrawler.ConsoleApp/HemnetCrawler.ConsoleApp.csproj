@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HemnetCrawler.Data\HemnetCrawler.Data.csproj" />
+    <ProjectReference Include="..\HemnetCrawler.Domain\HemnetCrawler.Domain.csproj" />
   </ItemGroup>
 
 </Project>
