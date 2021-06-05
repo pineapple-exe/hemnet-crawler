@@ -99,7 +99,7 @@ namespace HemnetCrawler.ConsoleApp
         private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
             if (driver.PageSource.Contains("removed-listing"))
-                return default;
+                return null;
 
             Listing listing = new Listing();
 
@@ -152,7 +152,7 @@ namespace HemnetCrawler.ConsoleApp
             return listing;
         }
 
-        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
