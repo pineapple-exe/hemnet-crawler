@@ -1,5 +1,7 @@
 ﻿using HemnetCrawler.Data;
-using HemnetCrawler.Data.Entities;
+using HemnetCrawler.Data.Repositories;
+using HemnetCrawler.Domain.Entities;
+using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -88,10 +90,10 @@ namespace HemnetCrawler.ConsoleApp
             return FinalBidPage.InterpretTable(finalBid, labelsAndValues);
         }
 
-        public static void CreateFinalBidRecords(IWebDriver driver, int hemnetId, HemnetCrawlerDbContext context)
+        public static void CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId)
         {
-            context.Add(CreateEntity(driver, hemnetId));
-            context.SaveChanges();
+            repository.AddFinalBid(CreateEntity(driver, hemnetId));
+            repository.DisposeContext();
         }
     }
 }

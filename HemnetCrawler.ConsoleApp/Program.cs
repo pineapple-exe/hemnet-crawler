@@ -5,20 +5,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HemnetCrawler.Domain.Entities;
+using HemnetCrawler.Domain.Repositories;
+using HemnetCrawler.Data.Repositories;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     class Program
-    { 
+    {
         static void Main(string[] args)
         {
-            SearchGatherListings();
-            SearchGatherFinalBids();
+            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
-            AddFinalBidsToListings();
+            IListingRepository listingRepository = new ListingRepository(context);
+            IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
+
+            SearchGatherListings(listingRepository);
+            SearchGatherFinalBids(finalBidRepository);
+
+            AddFinalBidsToListings(listingRepository);
         }
 
-        static void GeneralSearchAndGather(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver> leafThroughPagesAndCreateRecords)
+        static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver, T> leafThroughPagesAndCreateRecords, T repository)
         {
             ChromeDriver driver = new ChromeDriver();
             
@@ -26,48 +34,25 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             StartPage.AddSearchBase(driver);
             orderSearchResults(driver);
             addAgeFilter(driver);
-            leafThroughPagesAndCreateRecords(driver);
+            leafThroughPagesAndCreateRecords(driver, repository);
 
             driver.Quit();
             driver.Dispose();
         }
 
-        static void SearchGatherListings()
+        static void SearchGatherListings(IListingRepository repository)
         {
-            GeneralSearchAndGather(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords);
+            GeneralSearchAndGather(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords, repository);
         }
 
-        static void SearchGatherFinalBids()
+        static void SearchGatherFinalBids(IFinalBidRepository repository)
         {
-            GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords);
+            GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository);
         }
 
-        static void AddFinalBidsToListings()
+        static void AddFinalBidsToListings(IListingRepository repository)
         {
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-
-            List<FinalBid> finalBids = context.FinalBids.OrderBy(fb => fb.SoldDate).ToList();
-
-            foreach (Listing listing in context.Listings)
-            {
-                FinalBid match = finalBids.FirstOrDefault(fb => IsFinalBidAMatch(listing, fb));
-
-                if (match != null)
-                {
-                    listing.FinalBidID = match.Id;
-                    context.Update(listing);
-                }
-            }
-            context.SaveChanges();
-            context.Dispose();
-        }
-
-        static bool IsFinalBidAMatch(Listing listing, FinalBid finalBid)
-        {
-            return (listing.Published < finalBid.SoldDate &&
-                    listing.HomeType == finalBid.HomeType &&
-                    listing.PostalCode == finalBid.PostalCode &&
-                    listing.Street == finalBid.Street);
+            repository.AddFinalBidToListing();
         }
     }
 }

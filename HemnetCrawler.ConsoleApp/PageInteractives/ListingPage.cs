@@ -1,5 +1,7 @@
 ﻿using HemnetCrawler.Data;
-using HemnetCrawler.Data.Entities;
+using HemnetCrawler.Data.Repositories;
+using HemnetCrawler.Domain.Entities;
+using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -169,7 +171,7 @@ namespace HemnetCrawler.ConsoleApp
             }
         }
 
-        public static void CreateEntities(IWebDriver driver, List<ListingLink> listingLinks)
+        public static void CreateEntities(IWebDriver driver, IListingRepository repository, List<ListingLink> listingLinks)
         {
             foreach (ListingLink listingLink in listingLinks)
             {
@@ -177,24 +179,20 @@ namespace HemnetCrawler.ConsoleApp
                 driver.Navigate();
                 Thread.Sleep(2000);
 
-                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-
                 Listing listing = CreateListingEntity(driver, listingLink);
 
                 if (listing != null)
                 {
-                    context.Add(listing);
+                    repository.AddListing(listing);
 
                     IEnumerable<Image> images = CreateImageEntities(driver, listing);
                     foreach (Image img in images)
                     {
-                        context.Add(img);
+                        repository.AddImage(img);
                     }
-
-                    context.SaveChanges();
                 }
 
-                context.Dispose();
+                repository.DisposeContext();
             }
         }
     }
