@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HemnetCrawler.Data.Entities
+namespace HemnetCrawler.Domain.Entities
 {
     public class FinalBid
     {

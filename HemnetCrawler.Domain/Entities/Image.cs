@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HemnetCrawler.Data.Entities
+﻿namespace HemnetCrawler.Domain.Entities
 {
     public class Image
     {
