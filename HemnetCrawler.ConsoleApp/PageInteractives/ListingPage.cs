@@ -11,7 +11,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal class ListingPage
     {
@@ -101,7 +101,7 @@ namespace HemnetCrawler.ConsoleApp
         private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
             if (driver.PageSource.Contains("removed-listing"))
-                return default;
+                return null;
 
             Listing listing = new Listing();
 
@@ -154,18 +154,18 @@ namespace HemnetCrawler.ConsoleApp
             return listing;
         }
 
-        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
+
             foreach (IWebElement imageContainer in imageContainers)
             {
                 Image image = new Image
                 {
-                    Listing = listing
+                    Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
+                    ContentType = "Unknown"
                 };
-                image.Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src")));
-                image.ContentType = "Unknown";
 
                 yield return image;
             }
@@ -185,7 +185,7 @@ namespace HemnetCrawler.ConsoleApp
                 {
                     repository.AddListing(listing);
 
-                    IEnumerable<Image> images = CreateImageEntities(driver, listing);
+                    IEnumerable<Image> images = CreateImageEntities(driver);
                     foreach (Image img in images)
                     {
                         repository.AddImage(img);

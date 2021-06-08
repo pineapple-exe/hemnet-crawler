@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal class FinalBidPage
     {
@@ -70,7 +70,8 @@ namespace HemnetCrawler.ConsoleApp
 
             Regex postalCodePattern = new Regex("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
-            finalBid.PostalCode = int.Parse(postalCode);
+            if (postalCode != "")
+                finalBid.PostalCode = Utils.DigitPurist(postalCode);
 
             Regex redundantWhitespace = new Regex("\\s{2,}");
             string city = driver.FindElement(By.CssSelector("p.sold-property__metadata.qa-sold-property-metadata")).Text.Replace("\n", "");

@@ -32,7 +32,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver, T> leafThroughPagesAndCreateRecords, T repository)
         {
-            ChromeDriver driver = new ChromeDriver();
+            using ChromeDriver driver = new ChromeDriver();
             
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver);

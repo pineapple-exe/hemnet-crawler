@@ -4,7 +4,7 @@ using HemnetCrawler.Domain.Entities;
 
 namespace HemnetCrawler.Data
 {
-    public class HemnetCrawlerDbContext : DbContext, IDisposable
+    public class HemnetCrawlerDbContext : DbContext
     {
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }
@@ -13,7 +13,7 @@ namespace HemnetCrawler.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=TestUggeboiAndPinegal;Trusted_Connection=True;");
+                "Server=localhost;Database=UggeboiAndPinegal;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

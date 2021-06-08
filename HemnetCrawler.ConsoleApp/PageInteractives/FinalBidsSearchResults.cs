@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading;
 
-namespace HemnetCrawler.ConsoleApp
+namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal class FinalBidsSearchResults
     {
