@@ -20,10 +20,14 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
 
+            HemnetCrawlerDomain domain = new HemnetCrawlerDomain(listingRepository, finalBidRepository);
+
             SearchGatherListings(listingRepository);
             SearchGatherFinalBids(finalBidRepository);
 
-            AddFinalBidsToListings(listingRepository);
+            domain.AddFinalBidToListing();
+
+            context.Dispose();
         }
 
         static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver, T> leafThroughPagesAndCreateRecords, T repository)
@@ -48,11 +52,6 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         static void SearchGatherFinalBids(IFinalBidRepository repository)
         {
             GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository);
-        }
-
-        static void AddFinalBidsToListings(IListingRepository repository)
-        {
-            repository.AddFinalBidToListing();
         }
     }
 }

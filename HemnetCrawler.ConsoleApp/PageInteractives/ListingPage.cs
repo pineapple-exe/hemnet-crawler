@@ -191,8 +191,6 @@ namespace HemnetCrawler.ConsoleApp
                         repository.AddImage(img);
                     }
                 }
-
-                repository.DisposeContext();
             }
         }
     }

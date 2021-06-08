@@ -11,8 +11,8 @@ namespace HemnetCrawler.Domain.Repositories
     {
         void AddListing(Listing listing);
         void AddImage(Image image);
-        bool IsFinalBidAMatch(Listing listing, FinalBid finalBid);
-        void AddFinalBidToListing();
-        void DisposeContext();
+        IQueryable<Listing> GetAll();
+
+        void UpdateListing(Listing listing);
     }
 }

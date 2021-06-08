@@ -28,34 +28,15 @@ namespace HemnetCrawler.Data.Repositories
             _context.SaveChanges();
         }
 
-        public bool IsFinalBidAMatch(Listing listing, FinalBid finalBid)
+        public void UpdateListing(Listing listing)
         {
-            return (listing.Published < finalBid.SoldDate &&
-                    listing.HomeType == finalBid.HomeType &&
-                    listing.PostalCode == finalBid.PostalCode &&
-                    listing.Street == finalBid.Street);
-        }
-
-        public void AddFinalBidToListing()
-        {
-            List<FinalBid> finalBids = _context.FinalBids.OrderBy(fb => fb.SoldDate).ToList();
-
-            foreach (Listing listing in _context.Listings)
-            {
-                FinalBid match = finalBids.FirstOrDefault(fb => IsFinalBidAMatch(listing, fb));
-
-                if (match != null)
-                {
-                    listing.FinalBidID = match.Id;
-                    _context.Update(listing);
-                }
-            }
+            _context.Update(listing);
             _context.SaveChanges();
         }
 
-        public void DisposeContext()
+        public IQueryable<Listing> GetAll()
         {
-            _context.Dispose();
+            return _context.Listings;
         }
     }
 }

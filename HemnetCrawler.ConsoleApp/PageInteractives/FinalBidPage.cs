@@ -93,7 +93,6 @@ namespace HemnetCrawler.ConsoleApp
         public static void CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId)
         {
             repository.AddFinalBid(CreateEntity(driver, hemnetId));
-            repository.DisposeContext();
         }
     }
 }

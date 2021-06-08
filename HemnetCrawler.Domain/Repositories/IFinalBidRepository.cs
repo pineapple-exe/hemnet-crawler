@@ -10,6 +10,6 @@ namespace HemnetCrawler.Domain.Repositories
     public interface IFinalBidRepository
     {
         void AddFinalBid(FinalBid finalBid);
-        void DisposeContext();
+        IQueryable<FinalBid> GetAll();
     }
 }

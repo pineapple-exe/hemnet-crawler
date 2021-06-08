@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
@@ -21,9 +22,9 @@ namespace HemnetCrawler.Data.Repositories
             _context.SaveChanges();
         }
 
-        public void DisposeContext()
+        public IQueryable<FinalBid> GetAll()
         {
-            _context.Dispose();
+            return _context.FinalBids;
         }
     }
 }
