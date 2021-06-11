@@ -154,7 +154,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return listing;
         }
 
-        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver)
+        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
             ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
             WebClient webWizard = new WebClient();
@@ -163,6 +163,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             {
                 Image image = new Image
                 {
+                    Listing = listing,
                     Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
                     ContentType = "Unknown"
                 };
@@ -185,7 +186,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 {
                     repository.AddListing(listing);
 
-                    IEnumerable<Image> images = CreateImageEntities(driver);
+                    IEnumerable<Image> images = CreateImageEntities(driver, listing);
                     foreach (Image img in images)
                     {
                         repository.AddImage(img);

@@ -30,7 +30,7 @@ namespace HemnetCrawler.Domain
         {
             List<FinalBid> finalBids = _finalBidRepository.GetAll().OrderBy(fb => fb.SoldDate).ToList();
 
-            foreach (Listing listing in _listingRepository.GetAll())
+            foreach (Listing listing in _listingRepository.GetAll().ToList())
             {
                 FinalBid match = finalBids.FirstOrDefault(fb => IsFinalBidAMatch(listing, fb));
 
