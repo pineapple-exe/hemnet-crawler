@@ -57,7 +57,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 Thread.Sleep(2000);
                 ReadOnlyCollection<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.hcl-card"));
                 List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
-                links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
+                int linksRemoved = links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
+
+                if (linksRemoved > 0)
+                    logger.Log($"{linksRemoved} Final Bids were skipped because they already exist in the database.");
 
                 foreach (string link in links)
                 {
