@@ -1,5 +1,5 @@
 ﻿using HemnetCrawler.Data;
-using HemnetCrawler.Data.Repositories;
+using HemnetCrawler.Domain;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System.Collections.Generic;
@@ -24,13 +24,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return false;
         }
 
-        public static void LeafThroughListingPagesAndCreateRecords(IWebDriver driver, IListingRepository repository)
+        public static void LeafThroughListingPagesAndCreateRecords(IWebDriver driver, IListingRepository repository, ILogger logger)
         {
             string latestPage = driver.Url;
 
             while (true)
             {
-                ListingPage.CreateEntities(driver, repository, ListingsSearchResults.CollectListingLinks(driver));
+                ListingPage.CreateRecords(driver, repository, ListingsSearchResults.CollectListingLinks(driver, logger), logger);
                 driver.Url = latestPage;
                 Thread.Sleep(2000);
 
@@ -47,7 +47,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             }
         }
 
-        public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver, IFinalBidRepository repository)
+        public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
         {
             string latestPage = driver.Url;
             using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
@@ -65,7 +65,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     driver.Navigate();
                     Thread.Sleep(2000);
 
-                    FinalBidPage.CreateFinalBidRecord(driver, repository, int.Parse(link.Substring(link.LastIndexOf("-") + 1)));
+                    FinalBidPage.CreateFinalBidRecord(driver, repository, int.Parse(link.Substring(link.LastIndexOf("-") + 1)), logger);
                 }
 
                 driver.Url = latestPage;
