@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HemnetCrawler_WebApp
+namespace HemnetCrawler.WebPage
 {
     public class Program
     {
