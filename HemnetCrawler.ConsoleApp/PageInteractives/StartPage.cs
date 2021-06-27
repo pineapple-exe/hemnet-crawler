@@ -25,34 +25,23 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             string[] counties = { county1, county2 };
 
-            string countiesString = "";
-
             IWebElement searchBox = driver.FindElement(By.CssSelector("#area-search-input-box"));
             searchBox.Click();
             Thread.Sleep(1000);
 
-            searchBox.SendKeys(counties[0]);
-            Thread.Sleep(3000);
-            driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
-            searchBox.Click();
-            Thread.Sleep(1000);
-
-            searchBox.SendKeys(counties[1]);
-            Thread.Sleep(3000);
-            driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
-            Thread.Sleep(1000);
+            for (int i = 0; i < counties.Length; i++)
+            {
+                searchBox.SendKeys(counties[i]);
+                Thread.Sleep(3000);
+                driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
+                searchBox.Click();
+                Thread.Sleep(1000);
+            }
 
             driver.FindElement(By.CssSelector(".js-submit-button.js-show-on-forsale")).Click();
             Thread.Sleep(7000);
 
-            for (int i = 0; i < counties.Length; i++)
-            {
-                countiesString += i < counties.Length - 1 ? 
-                                       counties[i] + ", " : 
-                                       counties[i];
-            }
-
-            logger.Log($"Searching within counties: {countiesString}.");
+            logger.Log($"Searching within counties: {string.Join(", ", counties)}.");
         }
     }
 }

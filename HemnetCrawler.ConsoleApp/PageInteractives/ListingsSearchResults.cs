@@ -94,7 +94,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
                 if (context.Listings.Any(l => l.HemnetId == listingLinkId))
                 {
-                    logger.Log("A listing was skipped because it already existed in the database.");
+                    logger.Log($"Listing with HemnetId {listingLinkId} was skipped because it already existed in the database.");
                     continue;
                 }
 
