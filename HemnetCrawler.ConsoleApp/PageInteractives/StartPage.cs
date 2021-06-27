@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using System.Threading;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -17,25 +18,30 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             Thread.Sleep(1000);
         }
 
-        public static void AddSearchBase(IWebDriver driver)
+        public static void AddSearchBase(IWebDriver driver, ILogger logger)
         {
+            string county1 = "Västra Götalands län";
+            string county2 = "Hallands län";
+
+            string[] counties = { county1, county2 };
+
             IWebElement searchBox = driver.FindElement(By.CssSelector("#area-search-input-box"));
             searchBox.Click();
             Thread.Sleep(1000);
 
-            searchBox.SendKeys("Västra");
-            Thread.Sleep(3000);
-            driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
-            searchBox.Click();
-            Thread.Sleep(1000);
-
-            searchBox.SendKeys("Hallands");
-            Thread.Sleep(3000);
-            driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
-            Thread.Sleep(1000);
+            for (int i = 0; i < counties.Length; i++)
+            {
+                searchBox.SendKeys(counties[i]);
+                Thread.Sleep(3000);
+                driver.FindElement(By.CssSelector(".item-first.item.alt")).Click();
+                searchBox.Click();
+                Thread.Sleep(1000);
+            }
 
             driver.FindElement(By.CssSelector(".js-submit-button.js-show-on-forsale")).Click();
             Thread.Sleep(7000);
+
+            logger.Log($"Searching within counties: {string.Join(", ", counties)}.");
         }
     }
 }

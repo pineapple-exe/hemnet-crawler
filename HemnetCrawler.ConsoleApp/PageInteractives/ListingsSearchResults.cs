@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -19,10 +20,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             sortOptions.Where(o => o.Text == "Äldst först").First().Click();
         }
 
-        public static void AddAgeFilter(IWebDriver driver)
+        public static void AddAgeFilter(IWebDriver driver, ILogger logger)
         {
             driver.FindElement(By.CssSelector("button.js-search-form-expand-more-filters")).Click();
             Thread.Sleep(3000);
+
+            DateTimeOffset searchFrom = DateTimeOffset.Now;
 
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
@@ -36,26 +39,32 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 if (daysDiff <= 1)
                 {
                     ageSearchFilter = "search_age_1d";
+                    searchFrom = searchFrom.AddDays(-1);
                 }
                 else if (daysDiff <= 3)
                 {
                     ageSearchFilter = "search_age_3d";
+                    searchFrom = searchFrom.AddDays(-3);
                 }
                 else if (daysDiff <= 7)
                 {
                     ageSearchFilter = "search_age_1w";
+                    searchFrom = searchFrom.AddDays(-7);
                 }
                 else if (daysDiff <= 14)
                 {
                     ageSearchFilter = "search_age_2w";
+                    searchFrom = searchFrom.AddDays(-14);
                 }
                 else if (daysDiff <= 28)
                 {
                     ageSearchFilter = "search_age_1m";
+                    searchFrom = searchFrom.AddMonths(-1);
                 }
                 else
                 {
                     ageSearchFilter = "search_age_all";
+                    searchFrom = DateTimeOffset.MinValue;
                 }
 
                 driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
@@ -64,9 +73,11 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
                 Thread.Sleep(3000);
             }
+
+            logger.Log($"Listing search initiated, from {searchFrom} and onward.");
         }
 
-        public static List<ListingLink> CollectListingLinks(IWebDriver driver)
+        public static List<ListingLink> CollectListingLinks(IWebDriver driver, ILogger logger)
         {
             List<IWebElement> searchResults = driver.FindElements(By.CssSelector("li.normal-results__hit")).ToList();
             Thread.Sleep(5000);
@@ -83,6 +94,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
                 if (context.Listings.Any(l => l.HemnetId == listingLinkId))
                 {
+                    logger.Log($"Listing with HemnetId {listingLinkId} was skipped because it already existed in the database.");
                     continue;
                 }
 

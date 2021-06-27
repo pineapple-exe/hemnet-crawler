@@ -1,5 +1,6 @@
 ﻿using HemnetCrawler.Data;
 using HemnetCrawler.Data.Repositories;
+using HemnetCrawler.Domain;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
@@ -91,9 +92,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return FinalBidPage.InterpretTable(finalBid, labelsAndValues);
         }
 
-        public static void CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId)
+        public static void CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId, ILogger logger)
         {
-            repository.AddFinalBid(CreateEntity(driver, hemnetId));
+            FinalBid finalBid = CreateEntity(driver, hemnetId);
+
+            repository.AddFinalBid(finalBid);
+
+            logger.Log($"A new Final Bid with id {finalBid.Id} was created. Located on {finalBid.Street}, {finalBid.City}.");
         }
     }
 }

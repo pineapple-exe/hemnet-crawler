@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using System;
 using System.Linq;
 using System.Threading;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -20,8 +21,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             options.Where(e => e.Text == "Tidigast såld/överlåten först").First().Click();
         }
 
-        public static void AddAgeFilter(IWebDriver driver)
+        public static void AddAgeFilter(IWebDriver driver, ILogger logger)
         {
+            DateTimeOffset searchFrom = DateTimeOffset.Now;
+
             HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
 
             if (context.FinalBids.Any())
@@ -34,18 +37,22 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 if (daysDiff <= 84)
                 {
                     ageSearchFilter = "search_sold_age_3m";
+                    searchFrom = searchFrom.AddMonths(-3);
                 }
                 else if (daysDiff <= 168)
                 {
                     ageSearchFilter = "search_sold_age_6m";
+                    searchFrom = searchFrom.AddMonths(-6);
                 }
                 else if (daysDiff <= 336)
                 {
                     ageSearchFilter = "search_sold_age_12m";
+                    searchFrom = searchFrom.AddMonths(-12);
                 }
                 else
                 {
                     ageSearchFilter = "search_sold_age_all";
+                    searchFrom = DateTimeOffset.MinValue;
                 }
 
                 driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
@@ -54,6 +61,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
                 Thread.Sleep(3000);
             }
+
+            logger.Log($"Final bids search initiated, from {searchFrom} and onward.");
         }
     }
 }

@@ -2,9 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Data.Repositories;
 using HemnetCrawler.Domain;
@@ -22,36 +19,38 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             HemnetCrawlerDomain domain = new HemnetCrawlerDomain(listingRepository, finalBidRepository);
 
-            SearchGatherListings(listingRepository);
-            SearchGatherFinalBids(finalBidRepository);
+            ConsoleLogger logger = new ConsoleLogger();
 
-            domain.AddFinalBidToListing();
+            //SearchGatherListings(listingRepository, logger);
+            SearchGatherFinalBids(finalBidRepository, logger);
+
+            //domain.AddFinalBidToListing();
 
             context.Dispose();
         }
 
-        static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver> addAgeFilter, Action<IWebDriver, T> leafThroughPagesAndCreateRecords, T repository)
+        static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
         {
             using ChromeDriver driver = new ChromeDriver();
             
             StartPage.EnterHemnet(driver);
-            StartPage.AddSearchBase(driver);
+            StartPage.AddSearchBase(driver, logger);
             orderSearchResults(driver);
-            addAgeFilter(driver);
-            leafThroughPagesAndCreateRecords(driver, repository);
+            addAgeFilter(driver, logger);
+            leafThroughPagesAndCreateRecords(driver, repository, logger);
 
             driver.Quit();
             driver.Dispose();
         }
 
-        static void SearchGatherListings(IListingRepository repository)
+        static void SearchGatherListings(IListingRepository repository, ILogger logger)
         {
-            GeneralSearchAndGather(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords, repository);
+            GeneralSearchAndGather(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords, repository, logger);
         }
 
-        static void SearchGatherFinalBids(IFinalBidRepository repository)
+        static void SearchGatherFinalBids(IFinalBidRepository repository, ILogger logger)
         {
-            GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository);
+            GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository, logger);
         }
     }
 }

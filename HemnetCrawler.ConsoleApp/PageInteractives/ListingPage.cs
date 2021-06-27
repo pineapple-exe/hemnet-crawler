@@ -1,5 +1,4 @@
-﻿using HemnetCrawler.Data;
-using HemnetCrawler.Data.Repositories;
+﻿using HemnetCrawler.Domain;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
@@ -172,7 +171,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             }
         }
 
-        public static void CreateEntities(IWebDriver driver, IListingRepository repository, List<ListingLink> listingLinks)
+        public static void CreateRecords(IWebDriver driver, IListingRepository repository, List<ListingLink> listingLinks, ILogger logger)
         {
             foreach (ListingLink listingLink in listingLinks)
             {
@@ -185,6 +184,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 if (listing != null)
                 {
                     repository.AddListing(listing);
+                    logger.Log($"A new Listing with id {listing.Id} was created. Located on {listing.Street}, {listing.City}.");
 
                     IEnumerable<Image> images = CreateImageEntities(driver, listing);
                     foreach (Image img in images)
