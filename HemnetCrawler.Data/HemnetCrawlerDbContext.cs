@@ -10,6 +10,16 @@ namespace HemnetCrawler.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<FinalBid> FinalBids { get; set; }
 
+        public HemnetCrawlerDbContext()
+        {
+
+        }
+
+        public HemnetCrawlerDbContext(DbContextOptions<HemnetCrawlerDbContext> contextOptions) : base(contextOptions)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(

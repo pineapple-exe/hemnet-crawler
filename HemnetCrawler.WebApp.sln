@@ -9,7 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.ConsoleApp", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.Domain", "HemnetCrawler.Domain\HemnetCrawler.Domain.csproj", "{CD84FBAA-46C8-464E-90E1-9A1466497D0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HemnetCrawler.WebApp", "HemnetCrawler.WebApp\HemnetCrawler.WebApp.csproj", "{A0252221-9C7D-4273-8079-DF7EA526AD75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.WebApp", "HemnetCrawler.WebApp\HemnetCrawler.WebApp.csproj", "{A0252221-9C7D-4273-8079-DF7EA526AD75}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CD84FBAA-46C8-464E-90E1-9A1466497D0C} = {CD84FBAA-46C8-464E-90E1-9A1466497D0C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

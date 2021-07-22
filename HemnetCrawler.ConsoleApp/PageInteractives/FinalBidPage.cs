@@ -38,6 +38,18 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         finalBid.Rooms = pair.Value;
                         break;
 
+                    case "Boarea":
+                        finalBid.LivingArea = Utils.DigitPurist(pair.Value);
+                        break;
+
+                    case "Biarea":
+                        finalBid.BiArea = Utils.DigitPurist(pair.Value);
+                        break;
+
+                    case "Tomtarea":
+                        finalBid.PropertyArea = Utils.DigitPurist(pair.Value);
+                        break;
+
                     case "Byggår":
                         finalBid.ConstructionYear = pair.Value;
                         break;

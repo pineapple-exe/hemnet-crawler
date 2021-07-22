@@ -2,9 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Data.Repositories;
 using HemnetCrawler.Domain;
@@ -20,7 +17,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
 
-            HemnetCrawlerDomain domain = new HemnetCrawlerDomain(listingRepository, finalBidRepository);
+            HemnetCrawlerInteractor domain = new HemnetCrawlerInteractor(listingRepository, finalBidRepository);
 
             SearchGatherListings(listingRepository);
             SearchGatherFinalBids(finalBidRepository);
