@@ -7,6 +7,21 @@ tr:nth-of-type(odd) {
     background: #eee;
 }
 
+tr.listing:hover {
+    color: white;
+    background-color: palevioletred;
+}
+
+Link {
+    cursor: pointer;
+    text-decoration: none;
+    color:aqua;
+}
+
+Link:hover {
+    color:aliceblue;
+}
+
 th {
     background: #333;
     color: white;

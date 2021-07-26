@@ -11,8 +11,8 @@ namespace HemnetCrawler.Domain.Repositories
     {
         void AddListing(Listing listing);
         void AddImage(Image image);
-        IQueryable<Listing> GetAll();
-
+        IQueryable<Listing> GetAllListings();
+        IQueryable<Image> GetAllImages();
         void UpdateListing(Listing listing);
     }
 }

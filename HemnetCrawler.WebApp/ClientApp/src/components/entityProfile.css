@@ -1,0 +1,32 @@
+﻿li {
+    list-style: none;
+}
+
+.property-name {
+    font-weight: bold;
+    color: aquamarine;
+}
+
+.unknown-value {
+    font-style: italic;
+    color: #D5D5D5;
+}
+
+.estimation > button {
+    border: none;
+    outline: none;
+    background-color: hotpink;
+    color: white;
+    padding: 5px 10px 5px 10px;
+
+    margin: 6px;
+}
+
+.estimation > button:hover {
+    background-color: aquamarine;
+}
+
+.estimation-key {
+    font-weight: bold;
+    color: lightcoral;
+}
