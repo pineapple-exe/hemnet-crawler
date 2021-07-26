@@ -17,7 +17,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
 
-            HemnetCrawlerDomain domain = new HemnetCrawlerDomain(listingRepository, finalBidRepository);
+            HemnetCrawlerInteractor domain = new HemnetCrawlerInteractor(listingRepository, finalBidRepository);
 
             ConsoleLogger logger = new ConsoleLogger();
 

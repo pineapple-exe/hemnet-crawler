@@ -19,6 +19,8 @@ namespace HemnetCrawler.Domain.Entities
         public string OwnershipType { get; set; }
         public string Rooms { get; set; }
         public double? LivingArea { get; set; }
+        public double? BiArea { get; set; }
+        public int PropertyArea { get; set; }
         public int? Fee { get; set; }
         public string ConstructionYear { get; set; }
         public int? LandLeaseFee { get; set; }

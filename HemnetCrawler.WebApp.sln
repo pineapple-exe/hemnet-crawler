@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.WebApp", "HemnetCrawler.WebApp\HemnetCrawler.WebApp.csproj", "{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.Data", "HemnetCrawler.Data\HemnetCrawler.Data.csproj", "{6002E44F-E8B6-466A-9B87-63F61B374B80}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.ConsoleApp", "HemnetCrawler.ConsoleApp\HemnetCrawler.ConsoleApp.csproj", "{CF13F291-EC3F-4AAF-9983-BDF5F93EDC53}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD} = {AE1321F1-6150-42EB-9A67-E4BA456E5FFD}
-	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HemnetCrawler.Domain", "HemnetCrawler.Domain\HemnetCrawler.Domain.csproj", "{CD84FBAA-46C8-464E-90E1-9A1466497D0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.Domain", "HemnetCrawler.Domain\HemnetCrawler.Domain.csproj", "{CD84FBAA-46C8-464E-90E1-9A1466497D0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemnetCrawler.WebApp", "HemnetCrawler.WebApp\HemnetCrawler.WebApp.csproj", "{A0252221-9C7D-4273-8079-DF7EA526AD75}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CD84FBAA-46C8-464E-90E1-9A1466497D0C} = {CD84FBAA-46C8-464E-90E1-9A1466497D0C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE1321F1-6150-42EB-9A67-E4BA456E5FFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6002E44F-E8B6-466A-9B87-63F61B374B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,6 +32,10 @@ Global
 		{CD84FBAA-46C8-464E-90E1-9A1466497D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD84FBAA-46C8-464E-90E1-9A1466497D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD84FBAA-46C8-464E-90E1-9A1466497D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0252221-9C7D-4273-8079-DF7EA526AD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0252221-9C7D-4273-8079-DF7EA526AD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0252221-9C7D-4273-8079-DF7EA526AD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0252221-9C7D-4273-8079-DF7EA526AD75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
