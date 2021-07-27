@@ -26,7 +26,7 @@ namespace HemnetCrawler.Domain
 
         public void AddFinalBidToListing()
         {
-            var finalBids = _finalBidRepository.GetAll().OrderBy(fb => fb.SoldDate);
+            var finalBids = _finalBidRepository.GetAll().OrderBy(fb => fb.SoldDate).ToList();
 
             foreach (Listing listing in _listingRepository.GetAllListings())
             {
