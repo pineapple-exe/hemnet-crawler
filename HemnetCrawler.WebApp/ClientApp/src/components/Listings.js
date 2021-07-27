@@ -1,4 +1,5 @@
-﻿import React, { Component, useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './tables.css';
 
 export default function Listings() {
@@ -9,12 +10,13 @@ export default function Listings() {
             .then(resp => resp.json())
             .then(data => {
                 setListings(data)
-            });
-    });
+            })}, 
+        []
+    );
 
     const filledTableBody = listings.map(l =>
-        <tr key={l.id}>
-            <td>{l.id}</td>
+        <tr className="listing" key={l.id}>
+            <td><Link to={`/listing/${l.id}`}>{l.id}</Link></td>
             <td>{l.street}</td>
             <td>{l.city}</td>
             <td>{l.postalCode}</td>

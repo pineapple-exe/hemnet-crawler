@@ -21,10 +21,30 @@ namespace HemnetCrawler.WebPage.Controllers
             return _hemnetCrawlerInteractor.ListListings();
         }
 
+        [HttpGet("listing")]
+        public ListingOutputModel GetListing(int listingId)
+        {
+            return _hemnetCrawlerInteractor.ListListings().Find(l => l.Id == listingId);
+        }
+
+        [HttpGet("image")]
+        public IActionResult GetImage(int imageId)
+        {
+           byte[] imageData = _hemnetCrawlerInteractor.GetImageData(imageId);
+
+           return File(imageData, "image/jpeg");
+        }
+
         [HttpGet("finalBids")]
         public List<FinalBidOutputModel> GetFinalBids()
         {
             return _hemnetCrawlerInteractor.ListFinalBids();
+        }
+
+        [HttpGet("estimatedPrice")]
+        public IActionResult GetAveragePrice(int listingId)
+        {
+            return Ok(new { price = _hemnetCrawlerInteractor.GetAveragePrice(listingId) });
         }
     }
 }

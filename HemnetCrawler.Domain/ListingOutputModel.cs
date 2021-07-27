@@ -15,8 +15,9 @@ namespace HemnetCrawler.Domain
         public string HomeType { get; }
         public double? LivingArea { get; }
         public int? Fee { get; }
+        public int[] ImageIds { get; }
 
-        public ListingOutputModel(int id, string street, string city, int? postalCode, int? price, string rooms, string homeType, double? livingArea, int? fee)
+        public ListingOutputModel(int id, string street, string city, int? postalCode, int? price, string rooms, string homeType, double? livingArea, int? fee, int[] imageIds)
         {
             Id = id;
             Street = street;
@@ -27,6 +28,7 @@ namespace HemnetCrawler.Domain
             HomeType = homeType;
             LivingArea = livingArea;
             Fee = fee;
+            ImageIds = imageIds;
         }
     }
 }

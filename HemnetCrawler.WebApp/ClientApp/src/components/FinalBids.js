@@ -10,8 +10,9 @@ export default function FinalBids(props) {
             .then(resp => resp.json())
             .then(data => {
                 setFinalBids(data);
-            });
-    });
+            })
+        }, []
+    );
 
     const filledTableBody = finalBids.map(fb =>
         <tr key={fb.id}>

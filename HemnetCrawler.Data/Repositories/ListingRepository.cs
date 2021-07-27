@@ -34,9 +34,14 @@ namespace HemnetCrawler.Data.Repositories
             _context.SaveChanges();
         }
 
-        public IQueryable<Listing> GetAll()
+        public IQueryable<Listing> GetAllListings()
         {
             return _context.Listings;
+        }
+
+        public IQueryable<Image> GetAllImages()
+        {
+            return _context.Images;
         }
     }
 }

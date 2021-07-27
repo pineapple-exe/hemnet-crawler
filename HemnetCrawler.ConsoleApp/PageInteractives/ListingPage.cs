@@ -155,19 +155,30 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
-            ReadOnlyCollection<IWebElement> imageContainers = driver.FindElements(By.CssSelector(".gallery-carousel__image-touchable img"));
-            WebClient webWizard = new WebClient();
+            bool hasImages = driver.PageSource.Contains("property-gallery__fullscreen-button");
+            
+            if (hasImages)
+            { 
+                IWebElement expandImagesButton = driver.FindElement(By.CssSelector("button.property-gallery__fullscreen-button"));
+                expandImagesButton.Click();
 
-            foreach (IWebElement imageContainer in imageContainers)
-            {
-                Image image = new Image
+                ReadOnlyCollection<IWebElement> imgElements = driver.FindElements(By.CssSelector("img.all-images__image all-images__image--loaded"));
+                WebClient webWizard = new WebClient();
+
+                foreach (IWebElement imageContainer in imgElements)
                 {
-                    Listing = listing,
-                    Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
-                    ContentType = "Unknown"
-                };
+                    Image image = new Image
+                    {
+                        Listing = listing,
+                        Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
+                        ContentType = "Unknown"
+                    };
 
-                yield return image;
+                    yield return image;
+                }
+
+                IWebElement closeImages = driver.FindElement(By.CssSelector("button.fullscreen-action-bar__close-button"));
+                closeImages.Click();
             }
         }
 
