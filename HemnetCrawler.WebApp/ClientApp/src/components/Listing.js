@@ -49,7 +49,7 @@ export default function Listing(props) {
             );
         } else {
             return (
-                <button type="button" onClick={() => getEstimatedFinalPrice()}>
+                <button type="button" onClick={getEstimatedFinalPrice}>
                     Estimate Final Price
                 </button>
             );
