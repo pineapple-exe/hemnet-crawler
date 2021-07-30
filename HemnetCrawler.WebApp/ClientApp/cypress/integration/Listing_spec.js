@@ -1,9 +1,9 @@
-﻿const baseUrl = 'https://localhost:44394/';
+﻿import data from '../fixtures/data.json';
 let listingProperties = [];
 
 describe('Listings', () => {
     it('Checks if Listings show up', () => {
-        cy.visit(baseUrl);
+        cy.visit(data.baseUrl);
 
         cy.contains('Listings').click();
 
@@ -13,14 +13,14 @@ describe('Listings', () => {
 
 describe('Listing property values', () => {
     it('Checks property value-correspondence between Listing row and Listing page', () => {
-        cy.visit(`${baseUrl}listings`);
+        cy.visit(`${data.baseUrl}listings`);
 
         cy.get('tr.listing').first().children().then(tds => {
             tds.each((tdIndex, td) => {
                 listingProperties.push(td.textContent === '' ? 'unknown' : td.textContent)
             });
 
-            cy.visit(`${baseUrl}listing/${listingProperties[0]}`);
+            cy.visit(`${data.baseUrl}listing/${listingProperties[0]}`);
 
             cy.get('.listing-properties > li > .property-value').then(lis => {
                 lis.each((liIndex, li) => {
@@ -33,7 +33,7 @@ describe('Listing property values', () => {
 
 describe('Listing navigation', () => {
     it('Navigates to individual Listing page', () => {
-        cy.visit(`${baseUrl}listings`);
+        cy.visit(`${data.baseUrl}listings`);
 
         cy.get('td').first().click();
     })
@@ -41,7 +41,7 @@ describe('Listing navigation', () => {
 
 describe('Listing Estimation', () => {
     it('Checks Estimation functionality', () => {
-        cy.visit(`${baseUrl}listings`);
+        cy.visit(`${data.baseUrl}listings`);
 
         cy.get('td').first().click();
 

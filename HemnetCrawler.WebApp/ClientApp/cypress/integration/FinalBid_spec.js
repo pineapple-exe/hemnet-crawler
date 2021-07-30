@@ -1,8 +1,9 @@
-﻿const baseUrl = 'https://localhost:44394/';
+﻿/*const baseUrl = 'https://localhost:44394/';*/
+import data from '../fixtures/data.json';
 
 describe('Final bids', () => {
     it('Checks if FinalBids show up', () => {
-        cy.visit(baseUrl);
+        cy.visit(data.baseUrl);
 
         cy.contains('Final Bids').click();
 
