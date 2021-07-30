@@ -1,6 +1,7 @@
 ﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './tables.css';
+import { prettySEK } from './Utils.js';
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
@@ -20,11 +21,11 @@ export default function Listings() {
             <td>{l.street}</td>
             <td>{l.city}</td>
             <td>{l.postalCode}</td>
-            <td>{l.price}</td>
+            <td>{prettySEK(l.price)}</td>
             <td>{l.rooms}</td>
             <td>{l.homeType}</td>
             <td>{l.livingArea}</td>
-            <td>{l.fee}</td>
+            <td>{prettySEK(l.fee)}</td>
         </tr>
      );
 

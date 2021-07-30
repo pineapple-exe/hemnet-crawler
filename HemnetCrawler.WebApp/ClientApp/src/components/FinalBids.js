@@ -15,7 +15,7 @@ export default function FinalBids(props) {
     );
 
     const filledTableBody = finalBids.map(fb =>
-        <tr key={fb.id}>
+        <tr className="final-bid" key={fb.id}>
             <td>{fb.id}</td>
             <td>{fb.street}</td>
             <td>{fb.city}</td>

@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\cypress\integration\Sample_spec.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HemnetCrawler.Data\HemnetCrawler.Data.csproj" />
     <ProjectReference Include="..\HemnetCrawler.Domain\HemnetCrawler.Domain.csproj" />
   </ItemGroup>
