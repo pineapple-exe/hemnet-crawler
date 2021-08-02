@@ -1,13 +1,14 @@
 ﻿import React, { useEffect } from 'react';
 import './entityProfile.css';
 import { prettySEK } from './Utils.js';
+import { ListingRating } from './ListingRating.js';
 
 export default function Listing(props) {
     const [listing, setListing] = React.useState(null);
     const [estimatedFinalPrice, setEstimatedFinalPrice] = React.useState(null);
 
     useEffect(() => {
-        fetch('/hemnetData/listing?' + new URLSearchParams({
+        fetch('/HemnetData/listing?' + new URLSearchParams({
             listingId: props.match.params.id,
         }))
             .then(resp => resp.json())
@@ -26,7 +27,7 @@ export default function Listing(props) {
     }
 
     const getEstimatedFinalPrice = () => {
-        fetch('/hemnetData/estimatedPrice?' + new URLSearchParams({
+        fetch('/HemnetData/estimatedPrice?' + new URLSearchParams({
             listingId: listing.id,
             }))
                 .then(resp => resp.json())
@@ -58,7 +59,7 @@ export default function Listing(props) {
         const gallery = listing.imageIds.map(imageId => (
                 <img
                     key={imageId}
-                    src={`/hemnetData/image?imageId=${imageId}`}
+                    src={`/HemnetData/image?imageId=${imageId}`}
                     alt="listing"
                 />
             )
@@ -85,7 +86,10 @@ export default function Listing(props) {
                 <div className="gallery">
                     {gallery}
                 </div>
+
+                <ListingRating listingId={listing.id} />
             </div>
+            
         );
     }
 }

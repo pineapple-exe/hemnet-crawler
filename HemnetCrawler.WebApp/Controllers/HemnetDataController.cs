@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using HemnetCrawler.Domain;
+using HemnetCrawler.Domain.Models;
+using HemnetCrawler.WebApp.Models;
 
 namespace HemnetCrawler.WebPage.Controllers
 {
@@ -45,6 +47,20 @@ namespace HemnetCrawler.WebPage.Controllers
         public IActionResult GetAveragePrice(int listingId)
         {
             return Ok(new { price = _hemnetCrawlerInteractor.GetAveragePrice(listingId) });
+        }
+
+        [HttpGet("listingRating")]
+        public ListingRatingOutputModel GetListingRating(int listingId)
+        {
+            return _hemnetCrawlerInteractor.GetListingRating(listingId);
+        }
+
+        [HttpPost("rateListing")]
+        public IActionResult AddListingRating(ListingRatingInputModel ratingModel)
+        {
+            _hemnetCrawlerInteractor.AddListingRating(ratingModel.ListingId, ratingModel.KitchenRating, ratingModel.BathroomRating);
+
+            return Ok();
         }
     }
 }

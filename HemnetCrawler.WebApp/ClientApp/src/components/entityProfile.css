@@ -1,4 +1,8 @@
-﻿li {
+﻿* {
+    color: #8A8A8A;
+}
+
+li {
     list-style: none;
 }
 

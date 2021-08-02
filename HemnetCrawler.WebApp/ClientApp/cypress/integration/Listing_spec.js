@@ -51,4 +51,4 @@ describe('Listing Estimation', () => {
 
         cy.get('.estimation p').should('exist');
     })
-});
+}); 

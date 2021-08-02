@@ -1,0 +1,36 @@
+﻿button {
+    border: none;
+    padding: 2rem;
+}
+
+button.disabled {
+    background-color: aquamarine;
+}
+
+button:hover {
+    outline: none;
+}
+
+*:focus {
+    outline: 0 !important;
+}
+
+#rate {
+    padding: 1rem;
+    background-color: lightcoral;
+    color: white;
+}
+
+#rate:hover {
+    background-color: mediumaquamarine;
+    color: white;
+    cursor: pointer;
+}
+
+#rate:disabled {
+    background-color: #E3D7DC;
+}
+
+#rate:disabled:hover {
+    cursor: default;
+}

@@ -18,12 +18,8 @@ Link {
     color:aqua;
 }
 
-Link:hover {
-    color:aliceblue;
-}
-
 th {
-    background: #333;
+    background: #726268;
     color: white;
     font-weight: bold;
 }

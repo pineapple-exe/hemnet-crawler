@@ -28,6 +28,7 @@ namespace HemnetCrawler.WebPage
             services.AddTransient<HemnetCrawlerInteractor>();
             services.AddTransient<IListingRepository, ListingRepository>();
             services.AddTransient<IFinalBidRepository, FinalBidRepository>();
+            services.AddTransient<IListingRatingRepository, ListingRatingRepository>();
 
             services.AddControllersWithViews();
 

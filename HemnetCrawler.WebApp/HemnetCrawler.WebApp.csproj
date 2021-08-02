@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\cypress\fixtures\example.json" />
     <None Remove="ClientApp\cypress\integration\Sample_spec.js" />
   </ItemGroup>
 
