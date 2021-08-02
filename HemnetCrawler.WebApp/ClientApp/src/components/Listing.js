@@ -1,6 +1,6 @@
 ﻿import React, { useEffect } from 'react';
 import './entityProfile.css';
-import prettyMoney from "pretty-money";
+import { prettySEK } from './Utils.js';
 
 export default function Listing(props) {
     const [listing, setListing] = React.useState(null);
@@ -32,12 +32,6 @@ export default function Listing(props) {
                 .then(resp => resp.json())
                 .then(data => { setEstimatedFinalPrice(data.price) })
     }
-
-    const prettySEK = prettyMoney({
-        currency: "kr",
-        maxDecimal: 0,
-        thousandsDelimiter: " ",
-    });
 
     const estimationStatus = () => {
         if (estimatedFinalPrice) {
@@ -73,15 +67,15 @@ export default function Listing(props) {
         return (
             <div className="listing-container">
                 <ul className="listing-properties">
-                    <li><span className="property-name">Id:</span> {listing.id}</li>
-                    <li><span className="property-name">Street:</span> {listing.street}</li>
-                    <li><span className="property-name">City:</span> {listing.city}</li>
-                    <li><span className="property-name">Postal code:</span> {listingProperty(listing.postalCode)}</li>
-                    <li><span className="property-name">Price:</span> {listingProperty(prettySEK(listing.price))}</li>
-                    <li><span className="property-name">Rooms:</span> {listing.rooms === null ? '-' : listing.rooms}</li>
-                    <li><span className="property-name">Home type:</span> {listing.homeType}</li>
-                    <li><span className="property-name">Living area:</span> {listing.livingArea === null ? '-' : listing.livingArea}</li>
-                    <li><span className="property-name">Fee:</span> {listingProperty(prettySEK(listing.fee))}</li>
+                    <li><span className="property-name">Id:</span> <span className="property-value">{listing.id}</span></li>
+                    <li><span className="property-name">Street:</span> <span className="property-value">{listing.street}</span></li>
+                    <li><span className="property-name">City:</span> <span className="property-value">{listing.city}</span></li>
+                    <li><span className="property-name">Postal code:</span> <span className="property-value">{listingProperty(listing.postalCode)}</span></li>
+                    <li><span className="property-name">Price:</span> <span className="property-value">{listingProperty(prettySEK(listing.price))}</span></li>
+                    <li><span className="property-name">Rooms:</span> <span className="property-value">{listing.rooms === null ? '-' : listing.rooms}</span></li>
+                    <li><span className="property-name">Home type:</span> <span className="property-value">{listing.homeType}</span></li>
+                    <li><span className="property-name">Living area:</span> <span className="property-value">{listing.livingArea === null ? '-' : listing.livingArea}</span></li>
+                    <li><span className="property-name">Fee:</span> <span className="property-value">{listingProperty(prettySEK(listing.fee))}</span></li>
                 </ul>
 
                <div className="estimation">
