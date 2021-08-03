@@ -97,16 +97,16 @@ namespace HemnetCrawler.Domain
 
         public ListingRatingOutputModel GetListingRating(int listingId)
         {
-            ListingRatingOutputModel outputModel = new ListingRatingOutputModel();
-
             ListingRating relevantListingRating = _listingRatingRepository.GetAll().FirstOrDefault(lr => lr.ListingId == listingId);
 
             if (relevantListingRating != null)
             { 
-                outputModel = new ListingRatingOutputModel(relevantListingRating.KitchenRating, relevantListingRating.BathroomRating);
+                return new ListingRatingOutputModel(relevantListingRating.KitchenRating, relevantListingRating.BathroomRating);
             }
-
-            return outputModel;
+            else
+            {
+                return new ListingRatingOutputModel();
+            }
         }
 
         public void AddListingRating(int listingId, int kitchenRating, int bathroomRating)
