@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HemnetCrawler.Domain
+namespace HemnetCrawler.Domain.Models
 {
     public class ListingOutputModel
     {

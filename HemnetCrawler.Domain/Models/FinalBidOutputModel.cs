@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HemnetCrawler.Domain
+namespace HemnetCrawler.Domain.Models
 {
     public class FinalBidOutputModel
     {

@@ -7,7 +7,7 @@ export default function Listings() {
     const [listings, setListings] = React.useState([]);
 
     useEffect(() => {
-        fetch("/hemnetData/listings")
+        fetch("/HemnetData/listings")
             .then(resp => resp.json())
             .then(data => {
                 setListings(data)

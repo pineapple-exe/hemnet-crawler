@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 
@@ -9,7 +6,7 @@ namespace HemnetCrawler.Data.Repositories
 {
     public class ListingRepository : IListingRepository
     {
-        private HemnetCrawlerDbContext _context;
+        private readonly HemnetCrawlerDbContext _context;
 
         public ListingRepository(HemnetCrawlerDbContext context)
         {

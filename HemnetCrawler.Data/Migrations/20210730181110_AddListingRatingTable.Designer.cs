@@ -4,14 +4,16 @@ using HemnetCrawler.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HemnetCrawler.Data.Migrations
 {
     [DbContext(typeof(HemnetCrawlerDbContext))]
-    partial class HemnetCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730181110_AddListingRatingTable")]
+    partial class AddListingRatingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,12 +112,12 @@ namespace HemnetCrawler.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("ListingId")
+                    b.Property<int>("ListingID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ListingId");
+                    b.HasIndex("ListingID");
 
                     b.ToTable("Images");
                 });
@@ -219,34 +221,11 @@ namespace HemnetCrawler.Data.Migrations
                     b.ToTable("Listings");
                 });
 
-            modelBuilder.Entity("HemnetCrawler.Domain.Entities.ListingRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BathroomRating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("KitchenRating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ListingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ListingId");
-
-                    b.ToTable("ListingRatings");
-                });
-
             modelBuilder.Entity("HemnetCrawler.Domain.Entities.Image", b =>
                 {
                     b.HasOne("HemnetCrawler.Domain.Entities.Listing", "Listing")
                         .WithMany()
-                        .HasForeignKey("ListingId")
+                        .HasForeignKey("ListingID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -260,17 +239,6 @@ namespace HemnetCrawler.Data.Migrations
                         .HasForeignKey("FinalBidID");
 
                     b.Navigation("FinalBid");
-                });
-
-            modelBuilder.Entity("HemnetCrawler.Domain.Entities.ListingRating", b =>
-                {
-                    b.HasOne("HemnetCrawler.Domain.Entities.Listing", "Listing")
-                        .WithMany()
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Listing");
                 });
 #pragma warning restore 612, 618
         }
