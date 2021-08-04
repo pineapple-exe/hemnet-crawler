@@ -1,5 +1,13 @@
 ﻿import data from '../fixtures/data.json';
+
 let listingProperties = [];
+const ratingTypes = ['kitchen', 'bathroom'];
+
+const enterFirstListing = () => {
+    cy.visit(`${data.baseUrl}listings`);
+
+    cy.get('td').first().click();
+}
 
 describe('Listings', () => {
     it('Checks if Listings show up', () => {
@@ -33,17 +41,13 @@ describe('Listing property values', () => {
 
 describe('Listing navigation', () => {
     it('Navigates to individual Listing page', () => {
-        cy.visit(`${data.baseUrl}listings`);
-
-        cy.get('td').first().click();
+        enterFirstListing();
     })
 });
 
 describe('Listing Estimation', () => {
     it('Checks Estimation functionality', () => {
-        cy.visit(`${data.baseUrl}listings`);
-
-        cy.get('td').first().click();
+        enterFirstListing();
 
         cy.get('.estimation p').should('not.exist');
 
@@ -51,4 +55,46 @@ describe('Listing Estimation', () => {
 
         cy.get('.estimation p').should('exist');
     })
-}); 
+});
+
+describe('Rating options', () => {
+    it('Checks the existence of instructions', () => {
+        enterFirstListing();
+
+        for (let i = 0; i < ratingTypes.length; i++) {
+            cy.get(`div.${ratingTypes[i]}-rating>p`).should('not.be.empty');
+        }
+    });
+
+    it('Checks the existence of options', () => {
+        enterFirstListing();
+
+        for (let i = 0; i < ratingTypes.length; i++) {
+            cy.get(`div.${ratingTypes[i]}-rating>button`).should('have.length', 3);
+        }
+    });
+
+    it('Checks Option button pressed down functionality', () => {
+        enterFirstListing();
+
+        for (let i = 0; i < ratingTypes.length; i++) {
+            cy.get(`div.${ratingTypes[i]}-rating>button`).first().click();
+
+            cy.get(`div.${ratingTypes[i]}-rating>button`).first().should('have.class', 'already-chosen');
+
+            cy.get(`div.${ratingTypes[i]}-rating>button`).last().click();
+
+            cy.get(`div.${ratingTypes[i]}-rating>button`).first().should('not.have.class', 'already-chosen');
+        }
+    });
+
+    it('Checks Rate Listing button responsivity', () => {
+        enterFirstListing();
+
+        cy.get(`div.${ratingTypes[0]}-rating>button`).not('.already-chosen').first().click();
+
+        cy.get('#rate').click();
+
+        cy.get('div.freshly-rated>p').should('exist');
+    });
+});

@@ -3,7 +3,7 @@
     padding: 2rem;
 }
 
-button.disabled {
+button.already-chosen {
     background-color: aquamarine;
 }
 
