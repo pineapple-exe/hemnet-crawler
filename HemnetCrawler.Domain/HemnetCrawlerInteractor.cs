@@ -48,7 +48,19 @@ namespace HemnetCrawler.Domain
             var allListings = _listingRepository.GetAllListings().Take(100);
             IQueryable<Image> images = _listingRepository.GetAllImages();
 
-            List<ListingOutputModel> outputModels = allListings.Select(l => new ListingOutputModel(l.Id, l.Street, l.City, l.PostalCode, l.Price, l.Rooms, l.HomeType, l.LivingArea, l.Fee, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())).ToList();
+            List<ListingOutputModel> outputModels = allListings.Select(l => new ListingOutputModel
+            {
+                Id = l.Id, 
+                Street = l.Street, 
+                City = l.City, 
+                PostalCode = l.PostalCode, 
+                Price = l.Price, 
+                Rooms = l.Rooms, 
+                HomeType = l.HomeType, 
+                LivingArea = l.LivingArea, 
+                Fee = l.Fee, 
+                ImageIds = images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray()
+            }).ToList();
 
             return outputModels;
         }
@@ -64,7 +76,21 @@ namespace HemnetCrawler.Domain
         {
             var allFinalBids = _finalBidRepository.GetAll().Take(100);
 
-            List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb => new FinalBidOutputModel(fb.Id, fb.Street, fb.City, fb.PostalCode, fb.Price, fb.SoldDate, fb.DemandedPrice, fb.PriceDevelopment, fb.HomeType, fb.Rooms, fb.LivingArea, fb.Fee)).ToList();
+            List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb => new FinalBidOutputModel 
+            { 
+                Id = fb.Id, 
+                Street = fb.Street, 
+                City = fb.City, 
+                PostalCode = fb.PostalCode, 
+                Price = fb.Price, 
+                SoldDate = fb.SoldDate, 
+                DemandedPrice = fb.DemandedPrice, 
+                PriceDevelopment = fb.PriceDevelopment, 
+                HomeType = fb.HomeType, 
+                Rooms = fb.Rooms, 
+                LivingArea = fb.LivingArea, 
+                Fee = fb.Fee 
+            }).ToList();
 
             return outputModels;
         }
