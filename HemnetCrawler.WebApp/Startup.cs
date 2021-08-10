@@ -1,6 +1,6 @@
 using HemnetCrawler.Data;
 using HemnetCrawler.Data.Repositories;
-using HemnetCrawler.Domain;
+using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +25,9 @@ namespace HemnetCrawler.WebPage
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<HemnetCrawlerDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<HemnetCrawlerInteractor>();
+            services.AddTransient<FetchFinalBids>();
+            services.AddTransient<FetchListings>();
+            services.AddTransient<ListingQualities>();
             services.AddTransient<IListingRepository, ListingRepository>();
             services.AddTransient<IFinalBidRepository, FinalBidRepository>();
             services.AddTransient<IListingRatingRepository, ListingRatingRepository>();

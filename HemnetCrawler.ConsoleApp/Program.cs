@@ -5,6 +5,7 @@ using System;
 using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Data.Repositories;
 using HemnetCrawler.Domain;
+using HemnetCrawler.Domain.Interactors;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -16,23 +17,25 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
-            IListingRatingRepository listingRatingRepository = new ListingRatingRepository(context);
 
-            HemnetCrawlerInteractor domain = new HemnetCrawlerInteractor(listingRepository, finalBidRepository, listingRatingRepository);
+            //FetchFinalBids fetchFinalBids = new FetchFinalBids(finalBidRepository);
+            //FetchListings fetchListings = new FetchListings(listingRepository);
 
-            ConsoleLogger logger = new ConsoleLogger();
+            FinalBidListingAssociater finalBidListingAssociater = new(listingRepository, finalBidRepository);
 
-            //SearchGatherListings(listingRepository, logger);
+            ConsoleLogger logger = new();
+
+            SearchGatherListings(listingRepository, logger);
             SearchGatherFinalBids(finalBidRepository, logger);
 
-            //domain.AddFinalBidToListing();
+            finalBidListingAssociater.AddFinalBidToListing();
 
             context.Dispose();
         }
 
         static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
         {
-            using ChromeDriver driver = new ChromeDriver();
+            using ChromeDriver driver = new();
             
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver, logger);

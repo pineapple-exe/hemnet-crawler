@@ -1,11 +1,11 @@
 ﻿import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './entityProfile.css';
 import { prettySEK } from './Utils.js';
 import { ListingRating } from './ListingRating.js';
 
 export default function Listing(props) {
     const [listing, setListing] = React.useState(null);
-    const [estimatedFinalPrice, setEstimatedFinalPrice] = React.useState(null);
 
     useEffect(() => {
         fetch('/HemnetData/listing?' + new URLSearchParams({
@@ -23,31 +23,6 @@ export default function Listing(props) {
             );
         } else {
             return propertyValue;
-        }
-    }
-
-    const getEstimatedFinalPrice = () => {
-        fetch('/HemnetData/estimatedPrice?' + new URLSearchParams({
-            listingId: listing.id,
-            }))
-                .then(resp => resp.json())
-                .then(data => { setEstimatedFinalPrice(data.price) })
-    }
-
-    const estimationStatus = () => {
-        if (estimatedFinalPrice) {
-            return (
-                <p>
-                    <span className="estimation-key">Estimation: </span>
-                    {prettySEK(estimatedFinalPrice)}
-                </p>
-            );
-        } else {
-            return (
-                <button type="button" onClick={getEstimatedFinalPrice}>
-                    Estimate Final Price
-                </button>
-            );
         }
     }
 
@@ -79,9 +54,11 @@ export default function Listing(props) {
                     <li><span className="property-name">Fee:</span> <span className="property-value">{listingProperty(prettySEK(listing.fee))}</span></li>
                 </ul>
 
-               <div className="estimation">
-                    {estimationStatus()}
-               </div>
+                <div className="estimation">
+                    <Link to={`/finalBidEstimation/${listing.id}`}>
+                        Estimate Final Price
+                    </Link>
+                </div>
 
                 <div className="gallery">
                     {gallery}

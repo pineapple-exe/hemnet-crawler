@@ -83,7 +83,7 @@ export function ListingRating(props) {
 
     if (kitchen === null || bathroom === null) {
         return (
-            <h3>Please wait while loading Listing...</h3>
+            <h3>Please wait while loading Rating function...</h3>
         );
     }
     else {
