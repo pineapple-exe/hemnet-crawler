@@ -54,11 +54,9 @@ export default function Listing(props) {
                     <li><span className="property-name">Fee:</span> <span className="property-value">{listingProperty(prettySEK(listing.fee))}</span></li>
                 </ul>
 
-                <div className="estimation">
-                    <Link to={`/finalBidEstimation/${listing.id}`}>
-                        Estimate Final Price
-                    </Link>
-                </div>
+                <Link className="estimation-link" to={`/finalBidEstimation/${listing.id}`}>
+                    Estimation Page
+                </Link>
 
                 <div className="gallery">
                     {gallery}

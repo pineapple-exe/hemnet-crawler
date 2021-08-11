@@ -1,5 +1,4 @@
-﻿/*const baseUrl = 'https://localhost:44394/';*/
-import data from '../fixtures/data.json';
+﻿import data from '../fixtures/data.json';
 
 describe('Final bids', () => {
     it('Checks if FinalBids show up', () => {

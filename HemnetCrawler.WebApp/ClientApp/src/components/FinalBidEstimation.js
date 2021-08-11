@@ -75,8 +75,10 @@ export default function FinalBidEstimation(props) {
 
         return (
             <div>
-                {estimationStatus()}
-                <table>
+                <div className="estimation">
+                    {estimationStatus()}
+                </div>
+                <table className="relevant-finalbids">
                     <thead>
                         <tr>
                             <th>Listing</th>

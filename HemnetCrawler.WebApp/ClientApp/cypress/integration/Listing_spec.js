@@ -45,18 +45,6 @@ describe('Listing navigation', () => {
     })
 });
 
-describe('Listing Estimation', () => {
-    it('Checks Estimation functionality', () => {
-        enterFirstListing();
-
-        cy.get('.estimation p').should('not.exist');
-
-        cy.contains('Estimate Final Price').click();
-
-        cy.get('.estimation p').should('exist');
-    })
-});
-
 describe('Rating options', () => {
     it('Checks the existence of instructions', () => {
         enterFirstListing();
