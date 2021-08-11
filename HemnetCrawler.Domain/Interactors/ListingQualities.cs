@@ -4,13 +4,20 @@ using HemnetCrawler.Domain.Repositories;
 using System.Linq;
 
 
-namespace HemnetCrawler.Domain
+namespace HemnetCrawler.Domain.Interactors
 {
     public class ListingQualities
     {
         private readonly IListingRepository _listingRepository;
         private readonly IFinalBidRepository _finalBidRepository;
         private readonly IListingRatingRepository _listingRatingRepository;
+
+        public ListingQualities(IListingRepository listingRepository, IFinalBidRepository finalBidRepository, IListingRatingRepository listingRatingRepository)
+        {
+            _listingRepository = listingRepository;
+            _finalBidRepository = finalBidRepository;
+            _listingRatingRepository = listingRatingRepository;
+        }
 
         public byte[] GetImageData(int imageId)
         {
@@ -21,26 +28,7 @@ namespace HemnetCrawler.Domain
 
         public double GetAveragePrice(int listingId)
         {
-            Listing objectOfSpeculation = _listingRepository.GetAllListings().First(l => l.Id == listingId);
-
-            var relevantFinalBids = _finalBidRepository.GetAll().Where(fb => fb.HomeType == objectOfSpeculation.HomeType);
-
-            if (objectOfSpeculation.Rooms != null && relevantFinalBids.Where(fb => fb.Rooms == objectOfSpeculation.Rooms).Count() > 0)
-            {
-                relevantFinalBids = relevantFinalBids.Where(fb => fb.Rooms == objectOfSpeculation.Rooms);
-            }
-
-            if (relevantFinalBids.Where(fb => fb.City == objectOfSpeculation.City).Count() > 0)
-            {
-                relevantFinalBids = relevantFinalBids.Where(fb => fb.City == objectOfSpeculation.City);
-            }
-
-            if (objectOfSpeculation.PostalCode != null && relevantFinalBids.Where(fb => fb.PostalCode == objectOfSpeculation.PostalCode).Count() > 0)
-            {
-                relevantFinalBids = relevantFinalBids.Where(fb => fb.PostalCode == objectOfSpeculation.PostalCode);
-            }
-
-            double averagePrice = relevantFinalBids.Select(fb => fb.Price).Average();
+            double averagePrice = FetchFinalBids.FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository).Select(fb => fb.Price).Average();
 
             return averagePrice;
         }

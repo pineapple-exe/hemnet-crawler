@@ -4,4 +4,4 @@ export const prettySEK = prettyMoney({
         currency: "kr",
         maxDecimal: 0,
         thousandsDelimiter: " "
-    });
+});

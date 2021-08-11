@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using HemnetCrawler.Domain;
+using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 using HemnetCrawler.WebApp.Models;
 
@@ -10,29 +10,33 @@ namespace HemnetCrawler.WebPage.Controllers
     [Route("[controller]")]
     public class HemnetDataController : ControllerBase
     {
-        private readonly HemnetCrawlerInteractor _hemnetCrawlerInteractor;
+        private readonly FetchFinalBids _fetchFinalBids;
+        private readonly FetchListings _fetchListings;
+        private readonly ListingQualities _listingQualities;
 
-        public HemnetDataController(HemnetCrawlerInteractor hemnetCrawlerInteractor)
+        public HemnetDataController(FetchFinalBids fetchFinalBids, FetchListings fetchListings, ListingQualities listingQualities)
         {
-            _hemnetCrawlerInteractor = hemnetCrawlerInteractor;
+            _fetchFinalBids = fetchFinalBids;
+            _fetchListings = fetchListings;
+            _listingQualities = listingQualities;
         }
 
         [HttpGet("listings")]
         public List<ListingOutputModel> GetListings()
         {
-            return _hemnetCrawlerInteractor.ListListings();
+            return _fetchListings.ListListings();
         }
 
         [HttpGet("listing")]
         public ListingOutputModel GetListing(int listingId)
         {
-            return _hemnetCrawlerInteractor.ListListings().Find(l => l.Id == listingId);
+            return _fetchListings.ListListings().Find(l => l.Id == listingId);
         }
 
         [HttpGet("image")]
         public IActionResult GetImage(int imageId)
         {
-           byte[] imageData = _hemnetCrawlerInteractor.GetImageData(imageId);
+           byte[] imageData = _listingQualities.GetImageData(imageId);
 
            return File(imageData, "image/jpeg");
         }
@@ -40,25 +44,31 @@ namespace HemnetCrawler.WebPage.Controllers
         [HttpGet("finalBids")]
         public List<FinalBidOutputModel> GetFinalBids()
         {
-            return _hemnetCrawlerInteractor.ListFinalBids();
+            return _fetchFinalBids.ListFinalBids();
+        }
+
+        [HttpGet("relevantFinalBids")]
+        public IActionResult GetRelevantFinalBids(int listingId)
+        {
+            return Ok(new { finalBids = _fetchFinalBids.ListRelevantFinalBids(listingId) });
         }
 
         [HttpGet("estimatedPrice")]
         public IActionResult GetAveragePrice(int listingId)
         {
-            return Ok(new { price = _hemnetCrawlerInteractor.GetAveragePrice(listingId) });
+            return Ok(new { price = _listingQualities.GetAveragePrice(listingId) });
         }
 
         [HttpGet("listingRating")]
         public ListingRatingOutputModel GetListingRating(int listingId)
         {
-            return _hemnetCrawlerInteractor.GetListingRating(listingId);
+            return _listingQualities.GetListingRating(listingId);
         }
 
         [HttpPost("rateListing")]
         public IActionResult AddListingRating(ListingRatingInputModel ratingModel)
         {
-            _hemnetCrawlerInteractor.AddListingRating(ratingModel.ListingId, ratingModel.KitchenRating, ratingModel.BathroomRating);
+            _listingQualities.AddListingRating(ratingModel.ListingId, ratingModel.KitchenRating, ratingModel.BathroomRating);
 
             return Ok();
         }

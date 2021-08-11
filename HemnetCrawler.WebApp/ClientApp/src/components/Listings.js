@@ -29,7 +29,7 @@ export default function Listings() {
         </tr>
      );
 
-            return (
+     return (
         <table>
             <thead>
                 <tr>
