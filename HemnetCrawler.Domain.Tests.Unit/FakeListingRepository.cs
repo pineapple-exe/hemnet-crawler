@@ -8,23 +8,8 @@ namespace HemnetCrawler.Domain.Tests.Unit
 {
     class FakeListingRepository : IListingRepository
     {
-        readonly List<Listing> listings = new()
-        {
-            new Listing()
-            {
-                Id = 729,
-                PostalCode = 41760,
-                FinalBidID = 4487,
-                HomeType = "Lägenhet"
-            },
-            new Listing()
-            {
-                Id = 2649,
-                PostalCode = 41760,
-                HomeType = "Lägenhet"
-            }
+        public List<Listing> Listings = new();
 
-        };
         public void AddImage(Image image)
         {
             throw new NotImplementedException();
@@ -32,7 +17,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public void AddListing(Listing listing)
         {
-            listings.Add(listing);
+            Listings.Add(listing);
         }
 
         public IQueryable<Image> GetAllImages()
@@ -42,7 +27,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public IQueryable<Listing> GetAllListings()
         {
-            return listings.AsQueryable();
+            return Listings.AsQueryable();
         }
 
         public void UpdateListing(Listing listing)

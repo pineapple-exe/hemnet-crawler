@@ -2,7 +2,7 @@
 
 namespace HemnetCrawler.Domain.Models
 {
-    public class FinalBidOutputModel
+    public class FinalBidEstimationOutputModel
     {
         public int Id { get; init; }
         public string Street { get; init; }
@@ -16,5 +16,7 @@ namespace HemnetCrawler.Domain.Models
         public string Rooms { get; init; }
         public double? LivingArea { get; init; }
         public int? Fee { get; init; }
+        public int? ListingId { get; init; }
+        public bool HasRating { get; init; }
     }
 }

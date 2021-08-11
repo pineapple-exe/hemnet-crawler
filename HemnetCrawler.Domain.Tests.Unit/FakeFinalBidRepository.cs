@@ -7,25 +7,16 @@ namespace HemnetCrawler.Domain.Tests.Unit
 {
     internal class FakeFinalBidRepository : IFinalBidRepository
     {
-        private readonly List<FinalBid> finalBids = new()
-        {
-            new FinalBid()
-            {
-                Id = 4487,
-                City = "Sannegårdshamnen, Göteborgs kommun",
-                PostalCode = 41760,
-                HomeType = "Lägenhet",
-            }
-        };
+        public List<FinalBid> FinalBids = new();
 
         public void AddFinalBid(FinalBid finalBid)
         {
-            finalBids.Add(finalBid);
+            FinalBids.Add(finalBid);
         }
 
         public IQueryable<FinalBid> GetAll()
         {
-            return finalBids.AsQueryable();
+            return FinalBids.AsQueryable();
         }
     }
 }

@@ -71,15 +71,17 @@ namespace HemnetCrawler.Domain.Interactors
             return zeroOrNot == 0 ? null : zeroOrNot;
         }
 
-        public List<FinalBidOutputModel> ListRelevantFinalBids(int listingId)
+        public List<FinalBidEstimationOutputModel> ListRelevantFinalBids(int listingId)
         {
             var relevantFinalBids = FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository).Take(100).ToList();
+            IEnumerable<int> relevantFinalBidIds = relevantFinalBids.Select(fb => fb.Id);
 
-            var relevantOldListings = _listingRepository.GetAllListings().ToList().Where(l => relevantFinalBids.Any(fb => fb.Id == l.FinalBidID)).ToList();
+            var relevantOldListings = _listingRepository.GetAllListings().Where(l => relevantFinalBidIds.Contains(l.Id)).ToList();
+            IEnumerable<int> relevantOldListingsIds = relevantOldListings.Select(l => l.Id);
 
-            var relevantRatings = _listingRatingRepository.GetAll().ToList().Where(r => relevantOldListings.Any(l => l.Id == r.ListingId)).ToList();
+            var relevantRatings = _listingRatingRepository.GetAll().Where(r => relevantOldListingsIds.Contains(r.ListingId)).ToList();
 
-            List<FinalBidOutputModel> output = relevantFinalBids.Select(fb => new FinalBidOutputModel
+            List<FinalBidEstimationOutputModel> output = relevantFinalBids.Select(fb => new FinalBidEstimationOutputModel
             {
                 Id = fb.Id,
                 Street = fb.Street,
