@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
-    public class Tests
+    public class ListRelevantFinalBidsTest
     {
         [Fact]
         public void TestListRelevantFinalBids()

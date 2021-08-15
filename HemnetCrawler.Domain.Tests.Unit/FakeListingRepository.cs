@@ -32,7 +32,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public void UpdateListing(Listing listing)
         {
-            throw new NotImplementedException();
+            Listings.Add(listing);
         }
     }
 }
