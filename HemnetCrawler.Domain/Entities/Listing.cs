@@ -2,7 +2,7 @@
 
 namespace HemnetCrawler.Domain.Entities
 {
-    public class Listing
+    public class Listing : ICloneable
     {
         public int Id { get; set; }
         public int HemnetId { get; set; }
@@ -31,5 +31,10 @@ namespace HemnetCrawler.Domain.Entities
         public DateTimeOffset Published { get; set; }
         public int? FinalBidId { get; set; }
         public FinalBid FinalBid { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

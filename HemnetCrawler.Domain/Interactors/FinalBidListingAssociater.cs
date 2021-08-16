@@ -22,9 +22,9 @@ namespace HemnetCrawler.Domain.Interactors
             static string makeRoomsComparable(string rooms) => rooms != null ? rooms.Replace(" rum", "") : rooms;
             static int binaryPrecisionValue(bool condition) => condition ? 1 : 0;
 
-            double precisionRate = Fuzz.Ratio(listing.Street, finalBid.Street) / 100 +
+            double precisionRate = Fuzz.Ratio(listing.Street, finalBid.Street) / 100.0 +
                 binaryPrecisionValue(listing.HomeType == finalBid.HomeType) +
-                binaryPrecisionValue(listing.PostalCode == finalBid.PostalCode && listing.PostalCode != null && finalBid != null) +
+                binaryPrecisionValue(listing.PostalCode == finalBid.PostalCode && listing.PostalCode != null && finalBid.PostalCode != null) +
                 binaryPrecisionValue(listing.Price == finalBid.DemandedPrice) +
                 binaryPrecisionValue(listing.OwnershipType == finalBid.OwnershipType) +
                 binaryPrecisionValue(listing.Fee == finalBid.Fee) +
@@ -35,7 +35,7 @@ namespace HemnetCrawler.Domain.Interactors
 
         public void AddFinalBidsToListings()
         {
-            var finalBids = _finalBidRepository.GetAll().OrderBy(fb => fb.SoldDate).ToList();
+            var finalBids = _finalBidRepository.GetAll().ToList();
 
             foreach (Listing listing in _listingRepository.GetAllListings().ToList())
             {
@@ -46,6 +46,7 @@ namespace HemnetCrawler.Domain.Interactors
                     if (listing.Published < finalBid.SoldDate)
                     { 
                         EvaluatedFinalBidMatch match = GenerateEvaluatedMatch(listing, finalBid);
+                        evaluatedFinalBidMatches.Add(match);
                     }
                 }
 

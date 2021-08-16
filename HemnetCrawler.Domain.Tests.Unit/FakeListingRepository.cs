@@ -17,7 +17,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public void AddListing(Listing listing)
         {
-            Listings.Add(listing);
+            Listings.Add((Listing)listing.Clone());
         }
 
         public IQueryable<Image> GetAllImages()
@@ -27,12 +27,13 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public IQueryable<Listing> GetAllListings()
         {
-            return Listings.AsQueryable();
+            return Listings.Select(l => (Listing)l.Clone()).AsQueryable();
         }
 
         public void UpdateListing(Listing listing)
         {
-            Listings.Add(listing);
+            Listings.RemoveAll(l => l.Id == listing.Id);
+            Listings.Add((Listing)listing.Clone());
         }
     }
 }
