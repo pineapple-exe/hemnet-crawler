@@ -1,6 +1,8 @@
 ﻿using OpenQA.Selenium;
 using System.Threading;
 using HemnetCrawler.Domain;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -11,7 +13,9 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             driver.Url = "https://www.hemnet.se/";
             driver.Navigate();
             driver.Manage().Window.Maximize();
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
+
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
             IWebElement acceptCookiesButton = driver.FindElement(By.CssSelector(".consent__button-wrapper > button.hcl-button--primary"));
             acceptCookiesButton.Click();

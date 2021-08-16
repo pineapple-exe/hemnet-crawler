@@ -26,8 +26,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             ConsoleLogger logger = new();
 
-            //SearchGatherListings(listingRepository, logger);
-            //SearchGatherFinalBids(finalBidRepository, logger);
+            SearchGatherListings(listingRepository, logger);
+            SearchGatherFinalBids(finalBidRepository, logger);
 
             finalBidListingAssociater.AddFinalBidsToListings();
 

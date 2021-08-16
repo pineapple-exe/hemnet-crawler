@@ -51,7 +51,7 @@ namespace HemnetCrawler.Domain.Interactors
 
                 if (evaluatedFinalBidMatches.Count != 0)
                 {
-                    evaluatedFinalBidMatches.OrderBy(efb => efb.PrecisionRate);
+                    evaluatedFinalBidMatches = evaluatedFinalBidMatches.OrderBy(efb => efb.PrecisionRate).ToList();
 
                     int bestMatchId = evaluatedFinalBidMatches.Last().FinalBidId;
 
