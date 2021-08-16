@@ -20,12 +20,11 @@ namespace HemnetCrawler.Domain.Interactors
         private static EvaluatedFinalBidMatch GenerateEvaluatedMatch(Listing listing, FinalBid finalBid)
         {
             static string makeRoomsComparable(string rooms) => rooms != null ? rooms.Replace(" rum", "") : rooms;
-            static int binaryPrecisionValue(bool comparison) => comparison ? 1 : 0;
+            static int binaryPrecisionValue(bool condition) => condition ? 1 : 0;
 
-            double precisionRate = binaryPrecisionValue(listing.Published < finalBid.SoldDate) +
-                Fuzz.Ratio(listing.Street, finalBid.Street) / 100 +
+            double precisionRate = Fuzz.Ratio(listing.Street, finalBid.Street) / 100 +
                 binaryPrecisionValue(listing.HomeType == finalBid.HomeType) +
-                binaryPrecisionValue(listing.PostalCode == finalBid.PostalCode) +
+                binaryPrecisionValue(listing.PostalCode == finalBid.PostalCode && listing.PostalCode != null && finalBid != null) +
                 binaryPrecisionValue(listing.Price == finalBid.DemandedPrice) +
                 binaryPrecisionValue(listing.OwnershipType == finalBid.OwnershipType) +
                 binaryPrecisionValue(listing.Fee == finalBid.Fee) +
@@ -44,25 +43,23 @@ namespace HemnetCrawler.Domain.Interactors
 
                 foreach (FinalBid finalBid in finalBids)
                 {
-                    EvaluatedFinalBidMatch match = GenerateEvaluatedMatch(listing, finalBid);
-
-                    if (!evaluatedFinalBidMatches.Any(efb => efb.PrecisionRate > match.PrecisionRate))
+                    if (listing.Published < finalBid.SoldDate)
                     { 
-                        evaluatedFinalBidMatches.Add(match);
+                        EvaluatedFinalBidMatch match = GenerateEvaluatedMatch(listing, finalBid);
                     }
                 }
 
                 if (evaluatedFinalBidMatches.Count != 0)
-                { 
-                    EvaluatedFinalBidMatch bestMatch = evaluatedFinalBidMatches
-                        .Where(efb => efb.PrecisionRate == evaluatedFinalBidMatches
-                        .Select(efb => efb.PrecisionRate).Max()).First();
+                {
+                    evaluatedFinalBidMatches.OrderBy(efb => efb.PrecisionRate);
 
-                    listing.FinalBidId = bestMatch.FinalBidId;
+                    int bestMatchId = evaluatedFinalBidMatches.Last().FinalBidId;
+
+                    listing.FinalBidId = bestMatchId;
 
                     _listingRepository.UpdateListing(listing);
 
-                    finalBids.RemoveAll(fb => fb.Id == bestMatch.FinalBidId);
+                    finalBids.RemoveAll(fb => fb.Id == bestMatchId);
                 }
             }
         }
