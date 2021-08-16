@@ -9,7 +9,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
     public class ListRelevantFinalBidsTest
     {
         [Fact]
-        public void TestListRelevantFinalBids()
+        public void ListRelevantFinalBids_AddedListingsAndFinalBid_OneRelevance()
         {
             // Arrange
             FakeFinalBidRepository finalBidRepository = new();
@@ -28,7 +28,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             {
                 Id = 729,
                 PostalCode = 41760,
-                FinalBidID = 4487,
+                FinalBidId = 4487,
                 HomeType = "Lägenhet"
             });
 

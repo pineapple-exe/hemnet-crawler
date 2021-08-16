@@ -58,7 +58,7 @@ namespace HemnetCrawler.Domain.Interactors
                         .Where(efb => efb.PrecisionRate == evaluatedFinalBidMatches
                         .Select(efb => efb.PrecisionRate).Max()).First();
 
-                    listing.FinalBidID = bestMatch.FinalBidId;
+                    listing.FinalBidId = bestMatch.FinalBidId;
 
                     _listingRepository.UpdateListing(listing);
 

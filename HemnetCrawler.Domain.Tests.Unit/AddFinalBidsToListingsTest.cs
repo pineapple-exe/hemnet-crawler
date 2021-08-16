@@ -8,7 +8,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
     public class AddFinalBidsToListingsTest
     {
         [Fact]
-        public void TestAddFinalBidsToListings()
+        public void AddFinalBidsToListings_MatchAlternatives_BestMatch()
         {
             // Vill: Bekräfta att Listings får FinalBidId tillhörande det FinalBid med flest likheter.
 
@@ -71,11 +71,13 @@ namespace HemnetCrawler.Domain.Tests.Unit
             associater.AddFinalBidsToListings();
 
             // Assert
-            Assert.Equal(1, listingRepository.GetAllListings().First().FinalBidID);
+            IQueryable<Listing> allListings = listingRepository.GetAllListings();
+            Assert.Single(allListings);
+            Assert.Equal(1, allListings.Single().FinalBidId);
         }
 
         [Fact]
-        public void TestZeroMatches()
+        public void AddFinalBidsToListings_NoFinalBids_FinalBidIdNull()
         {
             // Arrange
             FakeFinalBidRepository finalBidRepository = new();
@@ -98,7 +100,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             associater.AddFinalBidsToListings();
 
             // Assert
-            Assert.Null(listingRepository.GetAllListings().First().FinalBidID);
+            Assert.Null(listingRepository.GetAllListings().First().FinalBidId);
         }
     }
 }
