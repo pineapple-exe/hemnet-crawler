@@ -14,16 +14,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     {
         public static void SortSearchResults(IWebDriver driver)
         {
-            IWebElement sortBy = driver.FindElement(By.CssSelector("select.form-control__select"));
+            IWebElement sortBy = DriverBehavior.TryFindElement(driver, By.CssSelector("select.form-control__select"));
             sortBy.Click();
-            ReadOnlyCollection<IWebElement> sortOptions = sortBy.FindElements(By.CssSelector("option"));
+            IReadOnlyCollection<IWebElement> sortOptions = DriverBehavior.TryFindElementsInsideElement(sortBy, By.CssSelector("option"));
             sortOptions.Where(o => o.Text == "Äldst först").First().Click();
         }
 
         public static void AddAgeFilter(IWebDriver driver, ILogger logger)
         {
-            driver.FindElement(By.CssSelector("button.js-search-form-expand-more-filters")).Click();
-            Thread.Sleep(3000);
+            DriverBehavior.TryFindElement(driver, By.CssSelector("button.js-search-form-expand-more-filters")).Click();
 
             DateTimeOffset searchFrom = DateTimeOffset.Now;
 
@@ -67,11 +66,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     searchFrom = DateTimeOffset.MinValue;
                 }
 
-                driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
-                Thread.Sleep(3000);
+                DriverBehavior.TryFindElements(driver, By.CssSelector("label.radio-token-list__label"))
+                    .Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
 
-                driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
-                Thread.Sleep(3000);
+                DriverBehavior.TryFindElement(driver, By.CssSelector("button.search-form__submit-button")).Click();
             }
 
             logger.Log($"Listing search initiated, from {searchFrom} and onward.");
@@ -79,8 +77,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         public static List<ListingLink> CollectListingLinks(IWebDriver driver, ILogger logger)
         {
-            List<IWebElement> searchResults = driver.FindElements(By.CssSelector("li.normal-results__hit")).ToList();
-            Thread.Sleep(5000);
+            List<IWebElement> searchResults = DriverBehavior.TryFindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
             searchResults.RemoveAll(l => Mixed.ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
 
             List<ListingLink> links = new List<ListingLink>();
@@ -99,7 +96,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 }
 
                 bool newConstruction = Mixed.ElementContainsSpecificText(searchResult, ".listing-card__label--type", "Nyproduktion");
-                string href = searchResult.FindElement(By.CssSelector(".js-listing-card-link")).GetAttribute("href");
+                string href = DriverBehavior.TryFindElementInsideElement(searchResult, By.CssSelector(".js-listing-card-link")).GetAttribute("href");
 
                 links.Add(new ListingLink(listingLinkId, href, newConstruction));
             }
