@@ -12,8 +12,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     {
         public static bool ElementContainsSpecificText(IWebElement element, string selector, string content)
         {
-            List<IWebElement> matches = new List<IWebElement>();
-            matches.AddRange(DriverBehavior.TryFindElementsInsideElement(element, By.CssSelector(selector)));
+            List<IWebElement> matches = new();
+            matches.AddRange(element.FindElements(By.CssSelector(selector)));
 
             foreach (IWebElement match in matches)
             {
@@ -34,10 +34,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                 try
                 {
-                    latestPage = DriverBehavior.TryFindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
+                    latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
                 }
-                catch (NoSuchElementException)
+                catch (System.NullReferenceException)
                 {
                     break;
                 }
@@ -52,7 +52,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             while (true)
             {
                 Thread.Sleep(2000);
-                IReadOnlyCollection<IWebElement> searchResults = DriverBehavior.TryFindElements(driver, By.CssSelector("a.hcl-card"));
+                IReadOnlyCollection<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("a.hcl-card"));
                 List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
                 int linksRemoved = links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
 
@@ -71,10 +71,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                 try
                 {
-                    latestPage = DriverBehavior.TryFindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
+                    latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
                 }
-                catch (NoSuchElementException)
+                catch (System.NullReferenceException)
                 {
                     break;
                 }

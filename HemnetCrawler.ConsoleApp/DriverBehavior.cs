@@ -7,9 +7,40 @@ namespace HemnetCrawler.ConsoleApp
 {
     internal class DriverBehavior
     {
-        public static IWebElement TryFindElement(IWebDriver driver, By findBy)
+
+        public static void Scroll(IWebDriver driver, string onElementSelector, int xPosition, int yPosition)
+        {
+            string script = $"document.querySelector('{onElementSelector}').scroll({xPosition}, {yPosition})";
+            IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
+
+            jsExecutor.ExecuteScript(script);
+            Thread.Sleep(500);
+        }
+
+        public static IWebElement FindElement(IWebElement container, By findBy)
+        {
+            return TryFindElement(container.FindElement, findBy);
+        }
+
+        public static IWebElement FindElement(IWebDriver driver, By findBy)
+        {
+            return TryFindElement(driver.FindElement, findBy);
+        }
+
+        public static IReadOnlyCollection<IWebElement> FindElements(IWebElement container, By findBy)
+        {
+            return TryFindElements(container.FindElements, findBy);
+        }
+
+        public static IReadOnlyCollection<IWebElement> FindElements(IWebDriver driver, By findBy)
+        {
+            return TryFindElements(driver.FindElements, findBy);
+        }
+
+        private static IWebElement TryFindElement(Func<By, IWebElement> findElement, By findBy)
         {
             DateTime nextTryStart = DateTime.Now;
+            bool firstTry = true;
 
             while (true)
             {
@@ -17,105 +48,63 @@ namespace HemnetCrawler.ConsoleApp
 
                 try
                 {
-                    IWebElement element = driver.FindElement(findBy);
+                    IWebElement element = findElement(findBy);
+                    Thread.Sleep(1000);
+
                     return element;
                 }
                 catch (NoSuchElementException)
                 {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds < 15)
+                    if (nextTryProgressed.Subtract(nextTryStart).Seconds > 15)
                     {
-                        throw;
+                        return null;
                     }
                     else
                     {
                         Thread.Sleep(1000);
-                        nextTryStart = DateTime.Now;
+
+                        if (firstTry)
+                        {
+                            nextTryStart = DateTime.Now;
+                            firstTry = false;
+                        }
                     }
                 }
             }
         }
 
-        public static IReadOnlyCollection<IWebElement> TryFindElements(IWebDriver driver, By findBy)
+        public static IReadOnlyCollection<IWebElement> TryFindElements(Func<By, IReadOnlyCollection<IWebElement>> findElements, By findBy)
         {
+            IReadOnlyCollection<IWebElement> elements;
             DateTime nextTryStart = DateTime.Now;
+            bool firstTry = true;
 
             while (true)
             {
                 DateTime nextTryProgressed = DateTime.Now;
 
-                try
-                {
-                    driver.FindElement(findBy);
+                elements = findElements(findBy);
 
-                    return driver.FindElements(findBy);
-                }
-                catch (NoSuchElementException)
+                if (elements.Count == 0)
                 {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds < 15)
+                    if (nextTryProgressed.Subtract(nextTryStart).Seconds > 15)
                     {
-                        throw;
+                        throw new Exception("No such elements found.");
                     }
                     else
                     {
                         Thread.Sleep(1000);
-                        nextTryStart = DateTime.Now;
+
+                        if (firstTry)
+                        {
+                            nextTryStart = DateTime.Now;
+                            firstTry = false;
+                        }
                     }
                 }
-            }
-        }
-
-        public static IWebElement TryFindElementInsideElement(IWebElement container, By findBy)
-        {
-            DateTime nextTryStart = DateTime.Now;
-
-            while (true)
-            {
-                DateTime nextTryProgressed = DateTime.Now;
-
-                try
+                else
                 {
-                    IWebElement element = container.FindElement(findBy);
-                    return element;
-                }
-                catch (NoSuchElementException)
-                {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds < 15)
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        Thread.Sleep(1000);
-                        nextTryStart = DateTime.Now;
-                    }
-                }
-            }
-        }
-
-        public static IReadOnlyCollection<IWebElement> TryFindElementsInsideElement(IWebElement container, By findBy)
-        {
-            DateTime nextTryStart = DateTime.Now;
-
-            while (true)
-            {
-                DateTime nextTryProgressed = DateTime.Now;
-
-                try
-                {
-                    container.FindElement(findBy);
-                    return container.FindElements(findBy);
-                }
-                catch (NoSuchElementException)
-                {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds < 15)
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        Thread.Sleep(1000);
-                        nextTryStart = DateTime.Now;
-                    }
+                    return elements;
                 }
             }
         }

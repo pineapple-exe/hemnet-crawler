@@ -75,9 +75,9 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             finalBid.HemnetId = hemnetId;
             finalBid.LastUpdated = DateTimeOffset.Now;
-            finalBid.Street = DriverBehavior.TryFindElement(driver, By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
-            finalBid.Price = Utils.DigitPurist(DriverBehavior.TryFindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
-            finalBid.SoldDate = DateTimeOffset.Parse(DriverBehavior.TryFindElement(driver, By.CssSelector("time")).GetAttribute("datetime"));
+            finalBid.Street = DriverBehavior.FindElement(driver, By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
+            finalBid.Price = Utils.DigitPurist(DriverBehavior.FindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
+            finalBid.SoldDate = DateTimeOffset.Parse(DriverBehavior.FindElement(driver, By.CssSelector("time")).GetAttribute("datetime"));
 
             Regex postalCodePattern = new Regex("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
@@ -85,12 +85,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 finalBid.PostalCode = Utils.DigitPurist(postalCode);
 
             Regex redundantWhitespace = new Regex("\\s{2,}");
-            string city = DriverBehavior.TryFindElement(driver, By.CssSelector("p.sold-property__metadata.qa-sold-property-metadata")).Text.Replace("\n", "");
+            string city = DriverBehavior.FindElement(driver, By.CssSelector("p.sold-property__metadata.qa-sold-property-metadata")).Text.Replace("\n", "");
             city = redundantWhitespace.Replace(city, " ");
             finalBid.City = city.Split("-")[1].Trim();
 
-            var labels = DriverBehavior.TryFindElements(driver, By.CssSelector("dt.sold-property__attribute")).Select(e => e.Text).ToList();
-            var values = DriverBehavior.TryFindElements(driver, By.CssSelector("dd.sold-property__attribute-value")).Select(e => e.Text).ToList();
+            var labels = DriverBehavior.FindElements(driver, By.CssSelector("dt.sold-property__attribute")).Select(e => e.Text).ToList();
+            var values = DriverBehavior.FindElements(driver, By.CssSelector("dd.sold-property__attribute-value")).Select(e => e.Text).ToList();
 
             var labelsAndValues = new Dictionary<string, string>();
             for (int i = 0; i < labels.Count; i++)

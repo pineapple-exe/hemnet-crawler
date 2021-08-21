@@ -12,7 +12,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             driver.Manage().Window.Maximize();
 
             By acceptCookiesButtonSelector = By.CssSelector(".consent__button-wrapper > button.hcl-button--primary");
-            DriverBehavior.TryFindElement(driver, acceptCookiesButtonSelector).Click();
+            DriverBehavior.FindElement(driver, acceptCookiesButtonSelector).Click();
         }
 
         public static void AddSearchBase(IWebDriver driver, ILogger logger)
@@ -23,7 +23,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             string[] counties = { county1, county2 };
 
             By searchBoxSelector = By.CssSelector("#area-search-input-box");
-            IWebElement searchBox = DriverBehavior.TryFindElement(driver, searchBoxSelector);
+            IWebElement searchBox = DriverBehavior.FindElement(driver, searchBoxSelector);
             searchBox.Click();
 
             for (int i = 0; i < counties.Length; i++)
@@ -31,13 +31,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 searchBox.SendKeys(counties[i]);
 
                 By countySearchFilterKeywordSelector = By.CssSelector(".item-first.item.alt");
-                DriverBehavior.TryFindElement(driver, countySearchFilterKeywordSelector).Click();
+                DriverBehavior.FindElement(driver, countySearchFilterKeywordSelector).Click();
 
                 searchBox.Click();
             }
 
             By submitButtonSelector = By.CssSelector(".js-submit-button.js-show-on-forsale");
-            DriverBehavior.TryFindElement(driver, submitButtonSelector).Click();
+            DriverBehavior.FindElement(driver, submitButtonSelector).Click();
 
             logger.Log($"Searching within counties: {string.Join(", ", counties)}.");
         }

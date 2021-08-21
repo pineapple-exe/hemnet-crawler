@@ -12,10 +12,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     {
         public static void SpecifyAndSortResults(IWebDriver driver)
         {
-            DriverBehavior.TryFindElements(driver, By.CssSelector("div.result-type-toggle__label")).Where(e => e.Text == "Slutpriser").First().Click();
+            DriverBehavior.FindElements(driver, By.CssSelector("div.result-type-toggle__label")).Where(e => e.Text == "Slutpriser").First().Click();
 
-            IWebElement sortBy = DriverBehavior.TryFindElement(driver, By.CssSelector("#search-results-sort-by"));
-            IReadOnlyCollection<IWebElement> options = DriverBehavior.TryFindElementsInsideElement(sortBy, By.CssSelector("option"));
+            IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("#search-results-sort-by"));
+            IReadOnlyCollection<IWebElement> options = DriverBehavior.FindElements(sortBy, By.CssSelector("option"));
 
             sortBy.Click();
             options.Where(e => e.Text == "Tidigast såld/överlåten först").First().Click();
@@ -55,10 +55,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     searchFrom = DateTimeOffset.MinValue;
                 }
 
-                DriverBehavior.TryFindElements(driver, By.CssSelector("label.radio-token-list__label"))
+                DriverBehavior.FindElements(driver, By.CssSelector("label.radio-token-list__label"))
                     .Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
 
-                DriverBehavior.TryFindElement(driver, By.CssSelector("button.search-form__submit-button")).Click();
+                DriverBehavior.FindElement(driver, By.CssSelector("button.search-form__submit-button")).Click();
             }
 
             logger.Log($"Final bids search initiated, from {searchFrom} and onward.");
