@@ -168,8 +168,23 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     yPosition += container.Size.Height;
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
-                    IWebElement imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
-                    var test = new Uri(imgElement.GetAttribute("src"));
+                    IWebElement imgElement;
+
+                    while (true)
+                    {
+                        imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
+
+                        try
+                        {
+                            Convert.ChangeType(imgElement, typeof(Uri));
+                        }
+                        catch (InvalidCastException)
+                        {
+                            continue;
+                        }
+
+                        break;
+                    }
 
                     Image image = new()
                     {

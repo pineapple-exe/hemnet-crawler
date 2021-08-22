@@ -14,7 +14,7 @@ namespace HemnetCrawler.ConsoleApp
             IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
 
             jsExecutor.ExecuteScript(script);
-            Thread.Sleep(500);
+            Thread.Sleep(100);
         }
 
         public static IWebElement FindElement(IWebElement container, By findBy)
