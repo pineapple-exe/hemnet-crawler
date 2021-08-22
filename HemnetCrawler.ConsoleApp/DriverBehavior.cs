@@ -39,12 +39,11 @@ namespace HemnetCrawler.ConsoleApp
 
         private static IWebElement TryFindElement(Func<By, IWebElement> findElement, By findBy)
         {
-            DateTime nextTryStart = DateTime.Now;
-            bool firstTry = true;
+            DateTime start = DateTime.Now;
 
             while (true)
             {
-                DateTime nextTryProgressed = DateTime.Now;
+                DateTime progressed = DateTime.Now;
 
                 try
                 {
@@ -55,19 +54,13 @@ namespace HemnetCrawler.ConsoleApp
                 }
                 catch (NoSuchElementException)
                 {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds > 15)
+                    if (progressed.Subtract(start).TotalSeconds > 15)
                     {
                         return null;
                     }
                     else
                     {
-                        Thread.Sleep(1000);
-
-                        if (firstTry)
-                        {
-                            nextTryStart = DateTime.Now;
-                            firstTry = false;
-                        }
+                        Thread.Sleep(250);
                     }
                 }
             }
@@ -76,30 +69,23 @@ namespace HemnetCrawler.ConsoleApp
         public static IReadOnlyCollection<IWebElement> TryFindElements(Func<By, IReadOnlyCollection<IWebElement>> findElements, By findBy)
         {
             IReadOnlyCollection<IWebElement> elements;
-            DateTime nextTryStart = DateTime.Now;
-            bool firstTry = true;
+            DateTime start = DateTime.Now;
 
             while (true)
             {
-                DateTime nextTryProgressed = DateTime.Now;
+                DateTime progressed = DateTime.Now;
 
                 elements = findElements(findBy);
 
                 if (elements.Count == 0)
                 {
-                    if (nextTryProgressed.Subtract(nextTryStart).Seconds > 15)
+                    if (progressed.Subtract(start).TotalSeconds > 15)
                     {
                         throw new Exception("No such elements found.");
                     }
                     else
                     {
-                        Thread.Sleep(1000);
-
-                        if (firstTry)
-                        {
-                            nextTryStart = DateTime.Now;
-                            firstTry = false;
-                        }
+                        Thread.Sleep(250);
                     }
                 }
                 else

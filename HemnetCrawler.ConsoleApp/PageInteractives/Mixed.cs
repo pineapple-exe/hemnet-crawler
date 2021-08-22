@@ -3,6 +3,7 @@ using HemnetCrawler.Domain;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading;
 
@@ -31,16 +32,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             {
                 ListingPage.CreateRecords(driver, repository, ListingsSearchResults.CollectListingLinks(driver, logger), logger);
                 driver.Url = latestPage;
+                latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
 
-                try
+                if (latestPage != null)
                 {
-                    latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
                 }
-                catch (System.NullReferenceException)
-                {
-                    break;
-                }
+                else return;
             }
         }
 
@@ -68,16 +66,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 }
 
                 driver.Url = latestPage;
+                latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
 
-                try
+                if (latestPage != null)
                 {
-                    latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
                 }
-                catch (System.NullReferenceException)
-                {
-                    break;
-                }
+                else return;
             }
         }
     }
