@@ -17,10 +17,6 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
-            IListingRatingRepository listingRatingRepository = new ListingRatingRepository(context);
-
-            FetchFinalBids fetchFinalBids = new FetchFinalBids(finalBidRepository, listingRepository, listingRatingRepository);
-            FetchListings fetchListings = new FetchListings(listingRepository);
 
             FinalBidListingAssociater finalBidListingAssociater = new(listingRepository, finalBidRepository);
 

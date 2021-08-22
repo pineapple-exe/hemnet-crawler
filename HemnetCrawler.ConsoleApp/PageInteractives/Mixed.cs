@@ -3,7 +3,7 @@ using HemnetCrawler.Domain;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System;
 using System.Linq;
 using System.Threading;
 
@@ -13,7 +13,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     {
         public static bool ElementContainsSpecificText(IWebElement element, string selector, string content)
         {
-            List<IWebElement> matches = new List<IWebElement>();
+            List<IWebElement> matches = new();
             matches.AddRange(element.FindElements(By.CssSelector(selector)));
 
             foreach (IWebElement match in matches)
@@ -32,18 +32,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             {
                 ListingPage.CreateRecords(driver, repository, ListingsSearchResults.CollectListingLinks(driver, logger), logger);
                 driver.Url = latestPage;
-                Thread.Sleep(2000);
+                latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
 
-                try
+                if (latestPage != null)
                 {
-                    latestPage = driver.FindElement(By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
-                    Thread.Sleep(2000);
                 }
-                catch (NoSuchElementException)
-                {
-                    break;
-                }
+                else return;
             }
         }
 
@@ -55,7 +50,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             while (true)
             {
                 Thread.Sleep(2000);
-                ReadOnlyCollection<IWebElement> searchResults = driver.FindElements(By.CssSelector("a.hcl-card"));
+                IReadOnlyCollection<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("a.hcl-card"));
                 List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
                 int linksRemoved = links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
 
@@ -66,24 +61,18 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 {
                     driver.Url = link;
                     driver.Navigate();
-                    Thread.Sleep(2000);
 
                     FinalBidPage.CreateFinalBidRecord(driver, repository, int.Parse(link.Substring(link.LastIndexOf("-") + 1)), logger);
                 }
 
                 driver.Url = latestPage;
-                Thread.Sleep(2000);
+                latestPage = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page")).GetAttribute("href");
 
-                try
+                if (latestPage != null)
                 {
-                    latestPage = driver.FindElement(By.CssSelector("a.next_page")).GetAttribute("href");
                     driver.Url = latestPage;
-                    Thread.Sleep(2000);
                 }
-                catch (NoSuchElementException)
-                {
-                    break;
-                }
+                else return;
             }
         }
     }

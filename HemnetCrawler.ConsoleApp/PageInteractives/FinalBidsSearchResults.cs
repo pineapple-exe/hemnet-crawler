@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using HemnetCrawler.Domain;
+using System.Collections.Generic;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -11,11 +12,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
     {
         public static void SpecifyAndSortResults(IWebDriver driver)
         {
-            driver.FindElements(By.CssSelector("div.result-type-toggle__label")).Where(e => e.Text == "Slutpriser").First().Click();
-            Thread.Sleep(2000);
+            DriverBehavior.FindElements(driver, By.CssSelector("div.result-type-toggle__label")).Where(e => e.Text == "Slutpriser").First().Click();
 
-            var sortBy = driver.FindElement(By.CssSelector("#search-results-sort-by"));
-            var options = sortBy.FindElements(By.CssSelector("option"));
+            IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("#search-results-sort-by"));
+            IReadOnlyCollection<IWebElement> options = DriverBehavior.FindElements(sortBy, By.CssSelector("option"));
 
             sortBy.Click();
             options.Where(e => e.Text == "Tidigast såld/överlåten först").First().Click();
@@ -55,11 +55,10 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     searchFrom = DateTimeOffset.MinValue;
                 }
 
-                driver.FindElements(By.CssSelector("label.radio-token-list__label")).Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
-                Thread.Sleep(3000);
+                DriverBehavior.FindElements(driver, By.CssSelector("label.radio-token-list__label"))
+                    .Where(e => e.GetAttribute("for") == $"{ageSearchFilter}").First().Click();
 
-                driver.FindElement(By.CssSelector("button.search-form__submit-button")).Click();
-                Thread.Sleep(3000);
+                DriverBehavior.FindElement(driver, By.CssSelector("button.search-form__submit-button")).Click();
             }
 
             logger.Log($"Final bids search initiated, from {searchFrom} and onward.");

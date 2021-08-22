@@ -4,11 +4,9 @@ using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -117,27 +115,26 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             if (postalCode != "")
                listing.PostalCode = Utils.DigitPurist(postalCode);
 
-            listing.Street = driver.FindElement(By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
-            Thread.Sleep(1000);
+            listing.Street = DriverBehavior.FindElement(driver, By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
 
-            listing.City = driver.FindElement(By.CssSelector("span.property-address__area")).Text;
-            Thread.Sleep(1000);
+            listing.City = DriverBehavior.FindElement(driver, By.CssSelector("span.property-address__area")).Text;
 
-            string price = driver.FindElement(By.CssSelector(".property-info__price.qa-property-price")).Text;
-            listing.Price = int.TryParse(price[0..^3].Replace(" ", ""), out int integerPrice) ? integerPrice : (int?)null;
-            Thread.Sleep(1000);
+            string price = DriverBehavior.FindElement(driver, By.CssSelector(".property-info__price.qa-property-price")).Text;
+            listing.Price = int.TryParse(price[0..^3].Replace(" ", ""), out int integerPrice) ? integerPrice : null;
 
-            listing.Description = driver.FindElement(By.CssSelector(".property-description")).Text;
-            Thread.Sleep(1000);
+            listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
 
             var attributeLabels = new List<IWebElement>();
             var attributeValues = new List<IWebElement>();
 
-            attributeLabels.AddRange(driver.FindElements(By.CssSelector(".property-attributes-table__label")));
-            attributeLabels.AddRange(driver.FindElements(By.CssSelector(".property-visits-counter__row-label")));
+            attributeLabels.AddRange(DriverBehavior.FindElements(driver, By.CssSelector(".property-attributes-table__label")));
+            attributeLabels.Add(DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-label")));
 
-            attributeValues.AddRange(driver.FindElements(By.CssSelector(".property-attributes-table__value")));
-            attributeValues.AddRange(driver.FindElements(By.CssSelector(".property-visits-counter__row-value")));
+            attributeValues.AddRange(DriverBehavior.FindElements(driver, By.CssSelector(".property-attributes-table__value")));
+            attributeValues.Add(DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-value")));
+
+            attributeLabels.RemoveAll(l => l == null);
+
             if (ContainsRepeatedValue(attributeLabels, out int index))
                 attributeValues.Remove(attributeValues[index]);
 
@@ -159,25 +156,32 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             
             if (hasImages)
             { 
-                IWebElement expandImagesButton = driver.FindElement(By.CssSelector("button.property-gallery__fullscreen-button"));
+                IWebElement expandImagesButton = DriverBehavior.FindElement(driver, By.CssSelector("button.property-gallery__fullscreen-button"));
                 expandImagesButton.Click();
 
-                ReadOnlyCollection<IWebElement> imgElements = driver.FindElements(By.CssSelector("img.all-images__image all-images__image--loaded"));
-                WebClient webWizard = new WebClient();
+                var imgElementContainers = DriverBehavior.FindElements(driver, By.CssSelector("div.all-images__image-container"));
+                WebClient webWizard = new();
+                int yPosition = 0;
 
-                foreach (IWebElement imageContainer in imgElements)
+                foreach (IWebElement container in imgElementContainers)
                 {
-                    Image image = new Image
+                    yPosition += container.Size.Height;
+                    DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
+
+                    IWebElement imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
+                    var test = new Uri(imgElement.GetAttribute("src"));
+
+                    Image image = new()
                     {
                         Listing = listing,
-                        Data = webWizard.DownloadData(new Uri(imageContainer.GetAttribute("src"))),
+                        Data = webWizard.DownloadData(new Uri(imgElement.GetAttribute("src"))),
                         ContentType = "Unknown"
                     };
 
                     yield return image;
                 }
 
-                IWebElement closeImages = driver.FindElement(By.CssSelector("button.fullscreen-action-bar__close-button"));
+                IWebElement closeImages = DriverBehavior.FindElement(driver, By.CssSelector("button.fullscreen-action-bar__close-button"));
                 closeImages.Click();
             }
         }
@@ -188,7 +192,6 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             {
                 driver.Url = listingLink.Href;
                 driver.Navigate();
-                Thread.Sleep(2000);
 
                 Listing listing = CreateListingEntity(driver, listingLink);
 
