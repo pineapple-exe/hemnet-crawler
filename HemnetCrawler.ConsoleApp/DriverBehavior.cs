@@ -17,14 +17,14 @@ namespace HemnetCrawler.ConsoleApp
             Thread.Sleep(100);
         }
 
-        public static IWebElement FindElement(IWebElement container, By findBy)
+        public static IWebElement FindElement(IWebElement container, By findBy, bool nullAllowed = false)
         {
-            return TryFindElement(container.FindElement, findBy);
+            return TryFindElement(container.FindElement, findBy, nullAllowed);
         }
 
-        public static IWebElement FindElement(IWebDriver driver, By findBy)
+        public static IWebElement FindElement(IWebDriver driver, By findBy, bool nullAllowed = false)
         {
-            return TryFindElement(driver.FindElement, findBy);
+            return TryFindElement(driver.FindElement, findBy, nullAllowed);
         }
 
         public static IReadOnlyCollection<IWebElement> FindElements(IWebElement container, By findBy)
@@ -37,7 +37,12 @@ namespace HemnetCrawler.ConsoleApp
             return TryFindElements(driver.FindElements, findBy);
         }
 
-        private static IWebElement TryFindElement(Func<By, IWebElement> findElement, By findBy)
+        // A. Vid null ska det smälla.
+        // B. Kan returnera null.
+
+        // C. Om föregående element var null så ska detta inte eftersökas alls.
+
+        private static IWebElement TryFindElement(Func<By, IWebElement> findElement, By findBy, bool nullAllowed)
         {
             DateTime start = DateTime.Now;
 
@@ -56,11 +61,12 @@ namespace HemnetCrawler.ConsoleApp
                 {
                     if (progressed.Subtract(start).TotalSeconds > 15)
                     {
-                        return null;
+                        if (nullAllowed) return null;
+                        else throw new Exception("No such elements found.");
                     }
                     else
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(250);
                     }
                 }
             }
@@ -86,7 +92,7 @@ namespace HemnetCrawler.ConsoleApp
                     }
                     else
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(250);
                     }
                 }
                 else

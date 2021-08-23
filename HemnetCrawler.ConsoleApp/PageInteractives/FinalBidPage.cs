@@ -71,7 +71,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         private static FinalBid CreateEntity(IWebDriver driver, int hemnetId)
         {
-            FinalBid finalBid = new FinalBid();
+            FinalBid finalBid = new();
 
             finalBid.HemnetId = hemnetId;
             finalBid.LastUpdated = DateTimeOffset.Now;
@@ -79,12 +79,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             finalBid.Price = Utils.DigitPurist(DriverBehavior.FindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
             finalBid.SoldDate = DateTimeOffset.Parse(DriverBehavior.FindElement(driver, By.CssSelector("time")).GetAttribute("datetime"));
 
-            Regex postalCodePattern = new Regex("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
+            Regex postalCodePattern = new("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
                 finalBid.PostalCode = Utils.DigitPurist(postalCode);
 
-            Regex redundantWhitespace = new Regex("\\s{2,}");
+            Regex redundantWhitespace = new("\\s{2,}");
             string city = DriverBehavior.FindElement(driver, By.CssSelector("p.sold-property__metadata.qa-sold-property-metadata")).Text.Replace("\n", "");
             city = redundantWhitespace.Replace(city, " ");
             finalBid.City = city.Split("-")[1].Trim();

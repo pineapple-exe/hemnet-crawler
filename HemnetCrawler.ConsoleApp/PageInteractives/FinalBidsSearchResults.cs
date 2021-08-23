@@ -2,7 +2,6 @@
 using OpenQA.Selenium;
 using System;
 using System.Linq;
-using System.Threading;
 using HemnetCrawler.Domain;
 using System.Collections.Generic;
 

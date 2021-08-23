@@ -31,6 +31,7 @@ namespace HemnetCrawler.Domain.Entities
         public DateTimeOffset Published { get; set; }
         public int? FinalBidId { get; set; }
         public FinalBid FinalBid { get; set; }
+        public string FinalBidHref { get; set; }
 
         public object Clone()
         {

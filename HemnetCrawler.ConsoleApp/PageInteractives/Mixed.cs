@@ -45,7 +45,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
         {
             string latestPage = driver.Url;
-            using HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new();
 
             while (true)
             {

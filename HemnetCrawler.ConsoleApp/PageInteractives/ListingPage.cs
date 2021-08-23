@@ -97,20 +97,27 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
-            if (driver.PageSource.Contains("removed-listing"))
-                return null;
+            Listing listing = new();
 
-            Listing listing = new Listing();
+            IWebElement removedListingButton = DriverBehavior.FindElement(driver, By.CssSelector("a.qa-removed-listing-button"), true);
+
+            if (removedListingButton != null)
+            {
+                if (removedListingButton.Text == "Visa slutpriset för bostaden")
+                    listing.FinalBidHref = removedListingButton.GetAttribute("href");
+                else
+                    return null;
+            }
 
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
             listing.NewConstruction = listingLink.NewConstruction;
 
-            Regex publishedPattern = new Regex("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
+            Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
             string publishedDate = publishedPattern.Match(driver.PageSource).Value;
             listing.Published = DateTimeOffset.Parse(publishedDate);
 
-            Regex postalCodePattern = new Regex("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
+            Regex postalCodePattern = new("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
                listing.PostalCode = Utils.DigitPurist(postalCode);
@@ -124,16 +131,18 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
 
-            var attributeLabels = new List<IWebElement>();
-            var attributeValues = new List<IWebElement>();
+            List<IWebElement> attributeLabels = new();
+            List<IWebElement> attributeValues = new();
 
             attributeLabels.AddRange(DriverBehavior.FindElements(driver, By.CssSelector(".property-attributes-table__label")));
-            attributeLabels.Add(DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-label")));
-
             attributeValues.AddRange(DriverBehavior.FindElements(driver, By.CssSelector(".property-attributes-table__value")));
-            attributeValues.Add(DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-value")));
 
-            attributeLabels.RemoveAll(l => l == null);
+            IWebElement visitsCounterLabel = DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-label"), true);
+            if (visitsCounterLabel != null)
+            {
+                attributeLabels.Add(visitsCounterLabel);
+                attributeValues.Add(DriverBehavior.FindElement(driver, By.CssSelector(".property-visits-counter__row-value")));
+            }
 
             if (ContainsRepeatedValue(attributeLabels, out int index))
                 attributeValues.Remove(attributeValues[index]);
@@ -171,15 +180,11 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
+                    imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
+
                     while (true)
                     {
-                        imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
-
-                        if (imgElement == null)
-                        {
-                            continue;
-                        }
-                        else if (!Uri.TryCreate(null, imgElement.GetAttribute("src"), out imgSrc))
+                        if (!Uri.TryCreate(null, imgElement.GetAttribute("src"), out imgSrc)) // denna kod saknar effekt?
                         {
                             continue;
                         }
