@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HemnetCrawler.Domain;
+using OpenQA.Selenium.Support.UI;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {

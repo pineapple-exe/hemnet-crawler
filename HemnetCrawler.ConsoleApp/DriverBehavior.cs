@@ -60,7 +60,7 @@ namespace HemnetCrawler.ConsoleApp
                     }
                     else
                     {
-                        Thread.Sleep(250);
+                        Thread.Sleep(500);
                     }
                 }
             }
@@ -76,6 +76,7 @@ namespace HemnetCrawler.ConsoleApp
                 DateTime progressed = DateTime.Now;
 
                 elements = findElements(findBy);
+                Thread.Sleep(1000);
 
                 if (elements.Count == 0)
                 {
@@ -85,7 +86,7 @@ namespace HemnetCrawler.ConsoleApp
                     }
                     else
                     {
-                        Thread.Sleep(250);
+                        Thread.Sleep(500);
                     }
                 }
                 else

@@ -166,19 +166,20 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 foreach (IWebElement container in imgElementContainers)
                 {
                     yPosition += container.Size.Height;
-                    DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
-
                     IWebElement imgElement;
+                    Uri imgSrc;
+
+                    DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
                     while (true)
                     {
                         imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
 
-                        try
+                        if (imgElement == null)
                         {
-                            Convert.ChangeType(imgElement, typeof(Uri));
+                            continue;
                         }
-                        catch (InvalidCastException)
+                        else if (!Uri.TryCreate(null, imgElement.GetAttribute("src"), out imgSrc))
                         {
                             continue;
                         }
@@ -189,7 +190,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                     Image image = new()
                     {
                         Listing = listing,
-                        Data = webWizard.DownloadData(new Uri(imgElement.GetAttribute("src"))),
+                        Data = webWizard.DownloadData(imgSrc),
                         ContentType = "Unknown"
                     };
 
