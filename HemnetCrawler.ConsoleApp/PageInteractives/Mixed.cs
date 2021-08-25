@@ -1,78 +1,133 @@
-﻿using HemnetCrawler.Data;
-using HemnetCrawler.Domain;
+﻿using HemnetCrawler.Domain;
+using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal static class Mixed
     {
-        public static bool ElementContainsSpecificText(IWebElement element, string selector, string content)
+        private static void DoThisThenNextPageLoop<T>(IWebDriver driver, T repository, ILogger logger, Action<IWebDriver, T, ILogger> doThis, bool condition = true)
         {
-            List<IWebElement> matches = new();
-            matches.AddRange(element.FindElements(By.CssSelector(selector)));
+            string latestPage = driver.Url;
 
-            foreach (IWebElement match in matches)
+            while (condition)
             {
-                if (match.Text == content)
-                    return true;
+                doThis(driver, repository, logger);
+
+                driver.Url = latestPage;
+                IWebElement nextPageElement = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page"));
+
+                if (nextPageElement != null)
+                {
+                    driver.Url = nextPageElement.GetAttribute("href");
+                    latestPage = driver.Url;
+                }
+                else return;
             }
-            return false;
+        }
+
+        public static void AllPagesCollectHrefsForPreExistingListings(IWebDriver driver, IListingRepository repository, ILogger logger)
+        {
+            bool hrefMissing = repository.GetAllListings().Any(l => l.Href == null);
+            DoThisThenNextPageLoop(driver, repository, logger, ListingsSearchResults.CollectHrefsForPreExistingListings, hrefMissing);
+        }
+
+        public static void AllPagesCollectHrefsForPreExistingFinalBids(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
+        {
+            bool hrefMissing = repository.GetAll().Any(fb => fb.Href == null);
+            DoThisThenNextPageLoop(driver, repository, logger, FinalBidsSearchResults.CollectHrefsForPreExistingFinalBids, hrefMissing);
         }
 
         public static void LeafThroughListingPagesAndCreateRecords(IWebDriver driver, IListingRepository repository, ILogger logger)
         {
-            string latestPage = driver.Url;
-
-            while (true)
-            {
-                ListingPage.CreateRecords(driver, repository, ListingsSearchResults.CollectListingLinks(driver, logger), logger);
-
-                driver.Url = latestPage;
-                IWebElement nextPageElement = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page"));
-
-                if (latestPage != null)
-                {
-                    driver.Url = nextPageElement.GetAttribute("href");
-                }
-                else return;
-            }
+            DoThisThenNextPageLoop(driver, repository, logger, CollectListingLinksAndCreateRecords);
         }
 
         public static void LeafThroughFinalBidPagesAndCreateRecords(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
         {
-            string latestPage = driver.Url;
-            using HemnetCrawlerDbContext context = new();
+            DoThisThenNextPageLoop(driver, repository, logger, CollectFinalBidLinksAndCreateRecords);
+        }
 
-            while (true)
+        private static void CollectListingLinksAndCreateRecords(IWebDriver driver, IListingRepository repository, ILogger logger)
+        {
+            List<ListingLink> listingLinks = ListingsSearchResults.CollectListingLinks(driver, repository, logger);
+
+            foreach (ListingLink listingLink in listingLinks)
             {
-                Thread.Sleep(2000);
-                IReadOnlyCollection<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("a.hcl-card"));
-                List<string> links = searchResults.Select(e => e.GetAttribute("href")).ToList();
-                int linksRemoved = links.RemoveAll(link => context.FinalBids.Any(f => f.HemnetId == int.Parse(link.Substring(link.LastIndexOf("-") + 1))));
+                driver.Url = listingLink.Href;
+                driver.Navigate();
 
-                if (linksRemoved > 0)
-                    logger.Log($"{linksRemoved} Final Bids were skipped because they already exist in the database.");
+                Listing listing = ListingPage.CreateListingEntity(driver, listingLink);
 
-                foreach (string link in links)
+                if (listing != null)
                 {
-                    driver.Url = link;
-                    driver.Navigate();
+                    repository.AddListing(listing);
+                    logger.Log($"A new Listing with Id {listing.Id} was created. Located on {listing.Street}, {listing.City}.");
 
-                    FinalBidPage.CreateFinalBidRecord(driver, repository, int.Parse(link.Substring(link.LastIndexOf("-") + 1)), logger);
+                    IEnumerable<Image> images = ListingPage.CreateImageEntities(driver, listing);
+                    foreach (Image img in images)
+                    {
+                        repository.AddImage(img);
+                    }
                 }
+            }
+        }
 
-                driver.Url = latestPage;
-                IWebElement nextPageElement = DriverBehavior.FindElement(driver, By.CssSelector("a.next_page"));
+        private static void CollectFinalBidLinksAndCreateRecords(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
+        {
+            IReadOnlyCollection<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("a.hcl-card"));
+            List<string> links = searchResults.Select(sr => sr.GetAttribute("href")).ToList();
+            int linksRemoved = links.RemoveAll(l => repository.GetAll().Any(f => f.HemnetId == int.Parse(l.Substring(l.LastIndexOf("-") + 1))));
 
-                if (latestPage != null)
+            if (linksRemoved > 0)
+                logger.Log($"{linksRemoved} Final Bids were skipped because they already exist in database.");
+
+            foreach (string link in links)
+            {
+                driver.Url = link;
+                driver.Navigate();
+
+                FinalBidPage.CreateFinalBidRecord(driver, repository, int.Parse(link.Substring(link.LastIndexOf("-") + 1)), logger);
+            }
+        }
+
+        public static void CheckIfOldListingsAreSoldIfSoAddLinkedFinalBid(IWebDriver driver, IFinalBidRepository finalBidRepository, IListingRepository listingRepository, ILogger logger)
+        {
+            List<Listing> listings = listingRepository.GetAllListings().Where(l => l.FinalBidId == null && !string.IsNullOrEmpty(l.Href)).ToList();
+
+            foreach (Listing listing in listings)
+            {
+                int correspondingFinalBidHemnetId;
+
+                StartPage.EnterHemnet(driver, listing.Href);
+
+                IWebElement removedListingButton = DriverBehavior.FindElement(driver, By.CssSelector("a.hcl-button.hcl-button--primary.hcl-button--full-width.qa-removed-listing-button"), true);
+                
+                if (removedListingButton == null) return;
+                else if (removedListingButton.Text == "Visa slutpriset för bostaden")
                 {
-                    driver.Url = nextPageElement.GetAttribute("href");
+                    string finalBidHref = removedListingButton.GetAttribute("href");
+                    correspondingFinalBidHemnetId = int.Parse(finalBidHref.Substring(finalBidHref.LastIndexOf("-") + 1));
+
+                    if (finalBidRepository.GetAll().Any(fb => fb.HemnetId == correspondingFinalBidHemnetId))
+                    {
+                        listing.FinalBid = finalBidRepository.GetAll().Where(fb => fb.HemnetId == correspondingFinalBidHemnetId).First();
+                        listingRepository.UpdateListing(listing);
+                    }
+                    else
+                    {
+                        driver.Url = finalBidHref;
+                        driver.Navigate();
+
+                        listing.FinalBid = FinalBidPage.CreateFinalBidRecord(driver, finalBidRepository, correspondingFinalBidHemnetId, logger);
+                        listingRepository.UpdateListing(listing);
+                    }
+                    logger.Log($"FinalBid with Id {listing.FinalBidId} was perfectly matched with Listing {listing.Id}.");
                 }
-                else return;
             }
         }
     }

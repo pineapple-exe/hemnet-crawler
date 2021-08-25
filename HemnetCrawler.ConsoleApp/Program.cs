@@ -11,9 +11,9 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
+            using HemnetCrawlerDbContext context = new();
 
             IListingRepository listingRepository = new ListingRepository(context);
             IFinalBidRepository finalBidRepository = new FinalBidRepository(context);
@@ -22,36 +22,71 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             ConsoleLogger logger = new();
 
-            SearchGatherListings(listingRepository, logger);
-            SearchGatherFinalBids(finalBidRepository, logger);
+            SearchAndCollectListings(listingRepository, logger);
+            SearchAndCollectFinalBids(finalBidRepository, logger);
 
-            finalBidListingAssociater.AddFinalBidsToListings();
+            CollectHrefsForOldListings(listingRepository, logger);
+            CollectHrefsForOldFinalBids(finalBidRepository, logger);
 
-            context.Dispose();
+            CrawlerAddFinalBidsToListings(listingRepository, finalBidRepository, logger);
+            finalBidListingAssociater.AlgorithmAddFinalBidsToListings(); //Dessa matchningar loggas inte, vilket skapar asymmetri.
         }
 
-        static void GeneralSearchAndGather<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
+        private static void GeneralSearchAndCollect<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, T, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
         {
             using ChromeDriver driver = new();
             
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver, logger);
+
             orderSearchResults(driver);
-            addAgeFilter(driver, logger);
+
+            addAgeFilter(driver, repository, logger);
             leafThroughPagesAndCreateRecords(driver, repository, logger);
 
             driver.Quit();
-            driver.Dispose();
         }
 
-        static void SearchGatherListings(IListingRepository repository, ILogger logger)
+        private static void SearchAndCollectListings(IListingRepository repository, ILogger logger)
         {
-            GeneralSearchAndGather(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords, repository, logger);
+            GeneralSearchAndCollect(ListingsSearchResults.SortSearchResults, ListingsSearchResults.AddAgeFilter, Mixed.LeafThroughListingPagesAndCreateRecords, repository, logger);
         }
 
-        static void SearchGatherFinalBids(IFinalBidRepository repository, ILogger logger)
+        private static void SearchAndCollectFinalBids(IFinalBidRepository repository, ILogger logger)
         {
-            GeneralSearchAndGather(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository, logger);
+            GeneralSearchAndCollect(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository, logger);
+        }
+
+        private static void GeneralComplementOldRecordsWithHrefs<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, T, ILogger> collectHrefs, T repository, ILogger logger)
+        {
+            using ChromeDriver driver = new();
+
+            StartPage.EnterHemnet(driver);
+            StartPage.AddSearchBase(driver, logger);
+
+            orderSearchResults(driver);
+            collectHrefs(driver, repository, logger);
+
+            driver.Quit();
+        }
+
+        private static void CollectHrefsForOldListings(IListingRepository repository, ILogger logger)
+        {
+            GeneralComplementOldRecordsWithHrefs(ListingsSearchResults.SortSearchResults, Mixed.AllPagesCollectHrefsForPreExistingListings, repository, logger);
+        }
+
+        private static void CollectHrefsForOldFinalBids(IFinalBidRepository repository, ILogger logger)
+        {
+            GeneralComplementOldRecordsWithHrefs(FinalBidsSearchResults.SpecifyAndSortResults, Mixed.AllPagesCollectHrefsForPreExistingFinalBids, repository, logger);
+        }
+
+        private static void CrawlerAddFinalBidsToListings(IListingRepository listingRepository, IFinalBidRepository finalBidRepository, ILogger logger)
+        {
+            using ChromeDriver driver = new();
+
+            Mixed.CheckIfOldListingsAreSoldIfSoAddLinkedFinalBid(driver, finalBidRepository, listingRepository, logger);
+
+            driver.Quit();
         }
     }
 }

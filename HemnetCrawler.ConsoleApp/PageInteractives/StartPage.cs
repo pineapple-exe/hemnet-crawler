@@ -5,9 +5,9 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal static class StartPage
     {
-        public static void EnterHemnet(IWebDriver driver)
+        public static void EnterHemnet(IWebDriver driver, string href = "https://www.hemnet.se/")
         {
-            driver.Url = "https://www.hemnet.se/";
+            driver.Url = href;
             driver.Navigate();
             driver.Manage().Window.Maximize();
 

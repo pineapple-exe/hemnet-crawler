@@ -18,5 +18,11 @@ namespace HemnetCrawler.Domain.Tests.Unit
         {
             return FinalBids.AsQueryable();
         }
+
+        public void UpdateFinalBid(FinalBid finalBid)
+        {
+            FinalBids.RemoveAll(fb => fb.Id == finalBid.Id);
+            FinalBids.Add((FinalBid)finalBid.Clone());
+        }
     }
 }

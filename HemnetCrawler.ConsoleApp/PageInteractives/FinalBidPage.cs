@@ -74,6 +74,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             FinalBid finalBid = new();
 
             finalBid.HemnetId = hemnetId;
+            finalBid.Href = driver.Url;
             finalBid.LastUpdated = DateTimeOffset.Now;
             finalBid.Street = DriverBehavior.FindElement(driver, By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
             finalBid.Price = Utils.DigitPurist(DriverBehavior.FindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
@@ -102,13 +103,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return FinalBidPage.InterpretTable(finalBid, labelsAndValues);
         }
 
-        public static void CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId, ILogger logger)
+        public static FinalBid CreateFinalBidRecord(IWebDriver driver, IFinalBidRepository repository, int hemnetId, ILogger logger)
         {
             FinalBid finalBid = CreateEntity(driver, hemnetId);
 
             repository.AddFinalBid(finalBid);
 
-            logger.Log($"A new Final Bid with id {finalBid.Id} was created. Located on {finalBid.Street}, {finalBid.City}.");
+            logger.Log($"A new Final Bid with Id {finalBid.Id} was created. Located on {finalBid.Street}, {finalBid.City}.");
+
+            return finalBid;
         }
     }
 }

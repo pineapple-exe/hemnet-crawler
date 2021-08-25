@@ -9,6 +9,7 @@ namespace HemnetCrawler.Data
         public void Configure(EntityTypeBuilder<Listing> builder)
         {
             builder.Property(e => e.HemnetId);
+            builder.Property(e => e.Href).IsRequired();
             builder.Property(e => e.LastUpdated);
             builder.Property(e => e.NewConstruction).IsRequired();
             builder.Property(e => e.Street).IsRequired().HasMaxLength(96);
@@ -32,7 +33,6 @@ namespace HemnetCrawler.Data
             builder.Property(e => e.EnergyClassification).HasMaxLength(16);
             builder.Property(e => e.Visits).IsRequired();
             builder.Property(e => e.Published).IsRequired();
-            builder.Property(e => e.FinalBidHref);
         }
     }
 }

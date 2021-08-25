@@ -74,7 +74,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);
 
             // Act
-            associater.AddFinalBidsToListings();
+            associater.AlgorithmAddFinalBidsToListings();
 
             // Assert
             IQueryable<Listing> allListings = listingRepository.GetAllListings();
@@ -103,7 +103,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);
 
             // Act
-            associater.AddFinalBidsToListings();
+            associater.AlgorithmAddFinalBidsToListings();
 
             // Assert
             Assert.Null(listingRepository.GetAllListings().First().FinalBidId);

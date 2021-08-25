@@ -14,7 +14,7 @@ namespace HemnetCrawler.ConsoleApp
 
         public static int DigitPurist(string impure)
         {
-            Regex nonDigitPattern = new Regex("\\D+");
+            Regex nonDigitPattern = new("\\D+");
             return int.Parse(nonDigitPattern.Replace(impure, ""));
         }
     }

@@ -9,6 +9,7 @@ namespace HemnetCrawler.Data
         public void Configure(EntityTypeBuilder<FinalBid> builder)
         {
             builder.Property(e => e.HemnetId).IsRequired();
+            builder.Property(e => e.Href).IsRequired();
             builder.Property(e => e.City).IsRequired();
             builder.Property(e => e.PostalCode);
             builder.Property(e => e.ConstructionYear);

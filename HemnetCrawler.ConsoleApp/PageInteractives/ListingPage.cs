@@ -1,6 +1,4 @@
-﻿using HemnetCrawler.Domain;
-using HemnetCrawler.Domain.Entities;
-using HemnetCrawler.Domain.Repositories;
+﻿using HemnetCrawler.Domain.Entities;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -95,41 +93,34 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             }
         }
 
-        private static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
+        public static Listing CreateListingEntity(IWebDriver driver, ListingLink listingLink)
         {
+            if (driver.PageSource.Contains("removed-listing")) return null;
+
             Listing listing = new();
-
-            IWebElement removedListingButton = DriverBehavior.FindElement(driver, By.CssSelector("a.qa-removed-listing-button"), true);
-
-            if (removedListingButton != null)
-            {
-                if (removedListingButton.Text == "Visa slutpriset för bostaden")
-                    listing.FinalBidHref = removedListingButton.GetAttribute("href");
-                else
-                    return null;
-            }
 
             listing.LastUpdated = DateTimeOffset.Now;
             listing.HemnetId = listingLink.Id;
+            listing.Href = listingLink.Href;
             listing.NewConstruction = listingLink.NewConstruction;
-
-            Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
-            string publishedDate = publishedPattern.Match(driver.PageSource).Value;
-            listing.Published = DateTimeOffset.Parse(publishedDate);
 
             Regex postalCodePattern = new("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
                listing.PostalCode = Utils.DigitPurist(postalCode);
 
+            Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
+            string publishedDate = publishedPattern.Match(driver.PageSource).Value;
+            listing.Published = DateTimeOffset.Parse(publishedDate);
+
+            listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
+
             listing.Street = DriverBehavior.FindElement(driver, By.CssSelector("h1.qa-property-heading.hcl-heading.hcl-heading--size2")).Text;
 
             listing.City = DriverBehavior.FindElement(driver, By.CssSelector("span.property-address__area")).Text;
 
-            string price = DriverBehavior.FindElement(driver, By.CssSelector(".property-info__price.qa-property-price")).Text;
+            string price = DriverBehavior.FindElement(driver, By.CssSelector(".qa-property-price")).Text;
             listing.Price = int.TryParse(price[0..^3].Replace(" ", ""), out int integerPrice) ? integerPrice : null;
-
-            listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
 
             List<IWebElement> attributeLabels = new();
             List<IWebElement> attributeValues = new();
@@ -159,7 +150,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return listing;
         }
 
-        private static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
+        public static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
             bool hasImages = driver.PageSource.Contains("property-gallery__fullscreen-button");
             
@@ -204,29 +195,6 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                 IWebElement closeImages = DriverBehavior.FindElement(driver, By.CssSelector("button.fullscreen-action-bar__close-button"));
                 closeImages.Click();
-            }
-        }
-
-        public static void CreateRecords(IWebDriver driver, IListingRepository repository, List<ListingLink> listingLinks, ILogger logger)
-        {
-            foreach (ListingLink listingLink in listingLinks)
-            {
-                driver.Url = listingLink.Href;
-                driver.Navigate();
-
-                Listing listing = CreateListingEntity(driver, listingLink);
-
-                if (listing != null)
-                {
-                    repository.AddListing(listing);
-                    logger.Log($"A new Listing with id {listing.Id} was created. Located on {listing.Street}, {listing.City}.");
-
-                    IEnumerable<Image> images = CreateImageEntities(driver, listing);
-                    foreach (Image img in images)
-                    {
-                        repository.AddImage(img);
-                    }
-                }
             }
         }
     }

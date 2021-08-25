@@ -7,7 +7,6 @@ namespace HemnetCrawler.ConsoleApp
 {
     internal class DriverBehavior
     {
-
         public static void Scroll(IWebDriver driver, string onElementSelector, int xPosition, int yPosition)
         {
             string script = $"document.querySelector('{onElementSelector}').scroll({xPosition}, {yPosition})";
@@ -36,11 +35,6 @@ namespace HemnetCrawler.ConsoleApp
         {
             return TryFindElements(driver.FindElements, findBy);
         }
-
-        // A. Vid null ska det smälla.
-        // B. Kan returnera null.
-
-        // C. Om föregående element var null så ska detta inte eftersökas alls.
 
         private static IWebElement TryFindElement(Func<By, IWebElement> findElement, By findBy, bool nullAllowed)
         {
@@ -72,7 +66,7 @@ namespace HemnetCrawler.ConsoleApp
             }
         }
 
-        public static IReadOnlyCollection<IWebElement> TryFindElements(Func<By, IReadOnlyCollection<IWebElement>> findElements, By findBy)
+        private static IReadOnlyCollection<IWebElement> TryFindElements(Func<By, IReadOnlyCollection<IWebElement>> findElements, By findBy)
         {
             IReadOnlyCollection<IWebElement> elements;
             DateTime start = DateTime.Now;
