@@ -26,11 +26,14 @@ namespace HemnetCrawler.Domain.Interactors
             return imageData;
         }
 
-        public double GetAveragePrice(int listingId)
+        public double? GetAveragePrice(int listingId)
         {
-            double averagePrice = FetchFinalBids.FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository).Select(fb => fb.Price).Average();
+            IQueryable<FinalBid> relevantFinalBids = FetchFinalBids.FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository);
 
-            return averagePrice;
+            if (relevantFinalBids.Any())
+                return relevantFinalBids.Select(fb => fb.Price).Average();
+            else
+                return null;
         }
 
         public ListingRatingOutputModel GetListingRating(int listingId)

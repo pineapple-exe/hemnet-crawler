@@ -65,6 +65,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             StartPage.AddSearchBase(driver, logger);
 
             orderSearchResults(driver);
+
             collectHrefs(driver, repository, logger);
 
             driver.Quit();

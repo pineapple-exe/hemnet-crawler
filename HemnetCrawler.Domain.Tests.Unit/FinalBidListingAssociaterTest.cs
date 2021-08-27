@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
-    public class AddFinalBidsToListingsTest
+    public class FinalBidListingAssociaterTest
     {
         [Fact]
         public void AddFinalBidsToListings_MatchAlternatives_BestMatch()

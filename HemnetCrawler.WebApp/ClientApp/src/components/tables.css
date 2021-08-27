@@ -9,7 +9,7 @@ tr:nth-of-type(odd) {
 
 tr.listing:hover {
     color: white;
-    background-color: palevioletred;
+    background-color: #FF963A;
 }
 
 Link {
@@ -19,7 +19,7 @@ Link {
 }
 
 th {
-    background: #726268;
+    background: #980A57;
     color: white;
     font-weight: bold;
 }
