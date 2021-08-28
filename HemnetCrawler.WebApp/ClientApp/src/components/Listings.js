@@ -7,7 +7,12 @@ import { prettySEK } from './Utils.js';
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
 
-    const [usersFilter, setFilter] = React.useState({ homeType: "All", roomsMinimum: null, roomsMaximum: null });
+    const [usersFilter, setFilter] = React.useState({
+        homeType: "All",
+        roomsMinimum: null,
+        roomsMaximum: null,
+        street: null,
+    });
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
@@ -25,7 +30,8 @@ export default function Listings() {
             .filter(l =>
                 (usersFilter.homeType !== "All" ? l.homeType === usersFilter.homeType : true) &&
                 (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
-                (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true)
+                (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
+                (usersFilter.street ? l.street.includes(usersFilter.street) : true)
             );
     }
 
@@ -64,10 +70,18 @@ export default function Listings() {
         });
     }
 
+    const handleStreetFilter = (event) => {
+        setFilter({
+            ...usersFilter,
+            street: event.target.value
+        });
+        console.log(event.target.value);
+    }
+
     const alternativeRoomsFilter = () => {
         if (hasRooms) {
             return (
-                <div className="rooms-filters">
+                <form className="rooms-filters">
                     <label>Minimum rooms:</label>
                     <input
                         type="number"
@@ -83,7 +97,7 @@ export default function Listings() {
                         min="1" max="50"
                         placeholder={usersFilter.roomsMaximum}
                     />
-                </div>
+                </form>
             );
         }
     }
@@ -98,9 +112,15 @@ export default function Listings() {
                     <option value="Villa">Villa</option>
                     <option value="Lägenhet">Lägenhet</option>
                 </select>
-                <br></br>
-                {alternativeRoomsFilter()}
             </form>
+
+            {alternativeRoomsFilter()}
+
+            <form>
+                <label>Street:</label>
+                <input type="text" value={usersFilter.street} onChange={handleStreetFilter}/>
+            </form>
+
             <table>
                 <thead>
                     <tr>
