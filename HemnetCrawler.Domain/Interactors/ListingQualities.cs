@@ -50,7 +50,7 @@ namespace HemnetCrawler.Domain.Interactors
             }
         }
 
-        public void AddListingRating(int listingId, int kitchenRating, int bathroomRating)
+        public void AddListingRating(int listingId, int? kitchenRating, int? bathroomRating)
         {
             ListingRating listingRating = new()
             {

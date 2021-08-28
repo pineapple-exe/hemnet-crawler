@@ -42,7 +42,7 @@ export function ListingRating(props) {
                 key={ratingValue}
                 className={latestClick(ratingValue, type)}
                 onClick={() => {
-                    setter(ratingValue)
+                    setter(latestClick(ratingValue, type) === 'already-chosen' ? null : ratingValue)
                     setFreshlyRated(setFreshlyRated(false))
                 }}>
                 {ratingValues.find(rv => rv.value === ratingValue).expression}
@@ -81,33 +81,26 @@ export function ListingRating(props) {
         }
     }
 
-    if (kitchen === null || bathroom === null) {
-        return (
-            <h3>Please wait while loading Rating function...</h3>
-        );
-    }
-    else {
-        return (
-            <div className="rating">
-                <div className="kitchen-rating">
-                    <p>Your impression of the kitchen:</p>
-                    {renderRatingButtons(kitchenLocal, setKitchenLocal)}
-                </div>
-                <div className="bathroom-rating">
-                    <p>Your impression of the bathroom:</p>
-                    {renderRatingButtons(bathroomLocal, setBathroomLocal)}
-                </div>
-                <button
-                    id="rate"
-                    disabled={kitchen === kitchenLocal && bathroom === bathroomLocal}
-                    onClick={rateListing}
-                >
-                    Rate Listing
-                </button>
-                <div className="freshly-rated">
-                    {ratedResponse()}
-                </div>
+    return (
+        <div className="rating">
+            <div className="kitchen-rating">
+                <p>Your impression of the kitchen:</p>
+                {renderRatingButtons(kitchenLocal, setKitchenLocal)}
             </div>
-        );
-    }
+            <div className="bathroom-rating">
+                <p>Your impression of the bathroom:</p>
+                {renderRatingButtons(bathroomLocal, setBathroomLocal)}
+            </div>
+            <button
+                id="rate"
+                disabled={kitchen === kitchenLocal && bathroom === bathroomLocal}
+                onClick={rateListing}
+            >
+                Rate Listing
+            </button>
+            <div className="freshly-rated">
+                {ratedResponse()}
+            </div>
+        </div>
+    );
 }
