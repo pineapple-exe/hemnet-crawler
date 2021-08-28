@@ -4,14 +4,16 @@ using HemnetCrawler.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HemnetCrawler.Data.Migrations
 {
     [DbContext(typeof(HemnetCrawlerDbContext))]
-    partial class HemnetCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210824082706_ChangeFinalBidHrefToSimplyHref")]
+    partial class ChangeFinalBidHrefToSimplyHref
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,10 +48,6 @@ namespace HemnetCrawler.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("HomeType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Href")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LandLeaseFee")

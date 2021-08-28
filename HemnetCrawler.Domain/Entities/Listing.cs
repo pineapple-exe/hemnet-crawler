@@ -6,6 +6,7 @@ namespace HemnetCrawler.Domain.Entities
     {
         public int Id { get; set; }
         public int HemnetId { get; set; }
+        public string Href { get; set; }
         public DateTimeOffset LastUpdated { get; set; }
         public bool NewConstruction { get; set; }
         public string Street { get; set; }
@@ -31,7 +32,6 @@ namespace HemnetCrawler.Domain.Entities
         public DateTimeOffset Published { get; set; }
         public int? FinalBidId { get; set; }
         public FinalBid FinalBid { get; set; }
-        public string FinalBidHref { get; set; }
 
         public object Clone()
         {

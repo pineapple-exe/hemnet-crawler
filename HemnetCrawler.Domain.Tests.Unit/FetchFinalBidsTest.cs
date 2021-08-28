@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
-    public class ListRelevantFinalBidsTest
+    public class FetchFinalBidsTest
     {
         [Fact]
         public void ListRelevantFinalBids_AddedListingsAndFinalBid_OneRelevance()

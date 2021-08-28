@@ -8,7 +8,7 @@ li {
 
 .property-name {
     font-weight: bold;
-    color: aquamarine;
+    color: #980A57;
 }
 
 .unknown-value {
@@ -19,15 +19,14 @@ li {
 .estimation > button {
     border: none;
     outline: none;
-    background-color: hotpink;
+    background-color: #980A57;
     color: white;
     padding: 5px 10px 5px 10px;
-
     margin: 6px;
 }
 
 .estimation > button:hover {
-    background-color: aquamarine;
+    background-color: #FF963A;
 }
 
 .estimation-key {

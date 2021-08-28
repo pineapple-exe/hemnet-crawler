@@ -1,11 +1,11 @@
-﻿using HemnetCrawler.Data;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HemnetCrawler.Domain;
-using OpenQA.Selenium.Support.UI;
+using HemnetCrawler.Domain.Repositories;
+using HemnetCrawler.Domain.Entities;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -19,17 +19,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             sortOptions.Where(o => o.Text == "Äldst först").First().Click();
         }
 
-        public static void AddAgeFilter(IWebDriver driver, ILogger logger)
+        public static void AddAgeFilter(IWebDriver driver, IListingRepository repository, ILogger logger)
         {
             DriverBehavior.FindElement(driver, By.CssSelector("button.js-search-form-expand-more-filters")).Click();
 
             DateTimeOffset searchFrom = DateTimeOffset.Now;
 
-            HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-
-            if (context.Listings.Any())
+            if (repository.GetAllListings().Any())
             {
-                DateTimeOffset latestPublish = context.Listings.Select(listing => listing.Published).Max();
+                DateTimeOffset latestPublish = repository.GetAllListings().Select(listing => listing.Published).Max();
                 int daysDiff = (int)Math.Ceiling(Utils.GetTotalDays(latestPublish, DateTimeOffset.Now));
 
                 string ageSearchFilter;
@@ -74,32 +72,74 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             logger.Log($"Listing search initiated, from {searchFrom} and onward.");
         }
 
-        public static List<ListingLink> CollectListingLinks(IWebDriver driver, ILogger logger)
+        private static bool ElementContainsSpecificText(IWebElement element, string selector, string content)
+        {
+            List<IWebElement> matches = new();
+            matches.AddRange(element.FindElements(By.CssSelector(selector)));
+
+            foreach (IWebElement match in matches)
+            {
+                if (match.Text == content)
+                    return true;
+            }
+            return false;
+        }
+
+        public static List<ListingLink> CollectListingLinks(IWebDriver driver, IListingRepository repository, ILogger logger)
         {
             List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
-            searchResults.RemoveAll(l => Mixed.ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+            searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
 
-            List<ListingLink> links = new List<ListingLink>();
+            List<ListingLink> links = new();
 
             foreach (IWebElement searchResult in searchResults)
             {
-                Regex premiumIdPattern = new Regex("(?<={\"id\":\")\\d+");
+                Regex premiumIdPattern = new("(?<={\"id\":\")\\d+");
                 string dataContainer = searchResult.GetAttribute("data-gtm-item-info");
                 int listingLinkId = int.Parse(premiumIdPattern.Match(dataContainer).Value);
 
-                HemnetCrawlerDbContext context = new HemnetCrawlerDbContext();
-                if (context.Listings.Any(l => l.HemnetId == listingLinkId))
+                if (repository.GetAllListings().Any(l => l.HemnetId == listingLinkId))
                 {
                     logger.Log($"Listing with HemnetId {listingLinkId} was skipped because it already existed in the database.");
                     continue;
                 }
 
-                bool newConstruction = Mixed.ElementContainsSpecificText(searchResult, ".listing-card__label--type", "Nyproduktion");
+                bool newConstruction = ElementContainsSpecificText(searchResult, ".listing-card__label--type", "Nyproduktion");
                 string href = DriverBehavior.FindElement(searchResult, By.CssSelector(".js-listing-card-link")).GetAttribute("href");
 
                 links.Add(new ListingLink(listingLinkId, href, newConstruction));
             }
             return links;
+        }
+
+        public static void CollectHrefsForPreExistingListings(IWebDriver driver, IListingRepository repository, ILogger logger)
+        {
+            List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
+            searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+
+            foreach (IWebElement searchResult in searchResults)
+            {
+                Regex premiumIdPattern = new("(?<={\"id\":\")\\d+");
+                string dataContainer = searchResult.GetAttribute("data-gtm-item-info");
+                int hemnetId = int.Parse(premiumIdPattern.Match(dataContainer).Value);
+
+                Listing listing = repository.GetAllListings().FirstOrDefault(l => l.HemnetId == hemnetId && string.IsNullOrEmpty(l.Href));
+
+                if (listing != null)
+                {
+                    listing.Href = DriverBehavior.FindElement(searchResult, By.CssSelector(".js-listing-card-link")).GetAttribute("href");
+                    repository.UpdateListing(listing);
+
+                    logger.Log($"Pre-existing Listing with Id {listing.Id} was complemented with href.");
+                }
+                else
+                {
+                    if (!repository.GetAllListings().Any(l => l.HemnetId == hemnetId))
+                        logger.Log($"Listing with HemnetId {hemnetId} does not exist in database.");
+                    else if (!(repository.GetAllListings().First(l => l.HemnetId == hemnetId).Href != null))
+                        logger.Log($"Listing with Id {repository.GetAllListings().First(l => l.HemnetId == hemnetId).Id} already has href.");
+                }
+            }
         }
     }
 }

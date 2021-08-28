@@ -2,10 +2,11 @@
 
 namespace HemnetCrawler.Domain.Entities
 {
-    public class FinalBid
+    public class FinalBid : ICloneable
     {
         public int Id { get; set; }
         public int HemnetId { get; set; }
+        public string Href { get; set; }
         public DateTimeOffset LastUpdated { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
@@ -25,5 +26,10 @@ namespace HemnetCrawler.Domain.Entities
         public string ConstructionYear { get; set; }
         public int? LandLeaseFee { get; set; }
         public int? Utilities { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

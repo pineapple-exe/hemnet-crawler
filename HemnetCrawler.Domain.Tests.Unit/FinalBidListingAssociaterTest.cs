@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
-    public class AddFinalBidsToListingsTest
+    public class FinalBidListingAssociaterTest
     {
         [Fact]
         public void AddFinalBidsToListings_MatchAlternatives_BestMatch()
@@ -74,7 +74,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);
 
             // Act
-            associater.AddFinalBidsToListings();
+            associater.AlgorithmAddFinalBidsToListings();
 
             // Assert
             IQueryable<Listing> allListings = listingRepository.GetAllListings();
@@ -103,7 +103,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);
 
             // Act
-            associater.AddFinalBidsToListings();
+            associater.AlgorithmAddFinalBidsToListings();
 
             // Assert
             Assert.Null(listingRepository.GetAllListings().First().FinalBidId);

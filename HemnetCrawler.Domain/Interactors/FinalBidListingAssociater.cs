@@ -33,11 +33,11 @@ namespace HemnetCrawler.Domain.Interactors
             return new EvaluatedFinalBidMatch(finalBid.Id, precisionRate);
         }
 
-        public void AddFinalBidsToListings()
+        public void AlgorithmAddFinalBidsToListings()
         {
             var finalBids = _finalBidRepository.GetAll().ToList();
 
-            foreach (Listing listing in _listingRepository.GetAllListings().ToList())
+            foreach (Listing listing in _listingRepository.GetAllListings().Where(l => string.IsNullOrEmpty(l.Href)).ToList())
             {
                 List<EvaluatedFinalBidMatch> evaluatedFinalBidMatches = new();
 
