@@ -21,8 +21,6 @@ export default function Listings() {
     );
 
     const filterListings = (listings) => {
-/*        const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);*/
-
         return listings
             .filter(l =>
                 (usersFilter.homeType !== "All" ? l.homeType === usersFilter.homeType : true) &&
@@ -49,8 +47,6 @@ export default function Listings() {
         setFilter({
             ...usersFilter,
             homeType: e.target.value,
-            //roomsMinimum: homeTypeValuesWithRooms.includes(event.target.value) ? usersFilter.roomsMinimum : null,
-            //roomsMaximum: homeTypeValuesWithRooms.includes(event.target.value) ? usersFilter.roomsMaximum : null
         });
     }
 
