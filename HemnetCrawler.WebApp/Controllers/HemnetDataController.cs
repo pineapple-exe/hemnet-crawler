@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
-using HemnetCrawler.WebApp.Models;
 
 namespace HemnetCrawler.WebPage.Controllers
 {
