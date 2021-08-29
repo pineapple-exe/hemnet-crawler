@@ -41,6 +41,12 @@ namespace HemnetCrawler.WebPage.Controllers
            return File(imageData, "image/jpeg");
         }
 
+        [HttpGet("finalBid")]
+        public FinalBidOutputModel GetFinalBid(int finalBidId)
+        {
+            return _fetchFinalBids.ListFinalBids().Find(fb => fb.Id == finalBidId);
+        }
+
         [HttpGet("finalBids")]
         public List<FinalBidOutputModel> GetFinalBids()
         {

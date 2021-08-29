@@ -8,7 +8,7 @@ export default function Listings() {
     const [listings, setListings] = React.useState([]);
 
     const [usersFilter, setFilter] = React.useState({
-        homeType: "All",
+        homeType: 'All',
         roomsMinimum: null,
         roomsMaximum: null,
         street: null,
@@ -17,7 +17,7 @@ export default function Listings() {
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
     useEffect(() => {
-        fetch("/HemnetData/listings")
+        fetch('/HemnetData/listings')
             .then(resp => resp.json())
             .then(data => {
                 setListings(data)
@@ -28,7 +28,7 @@ export default function Listings() {
     const filterListings = (listings) => {
         return listings
             .filter(l =>
-                (usersFilter.homeType !== "All" ? l.homeType === usersFilter.homeType : true) &&
+                (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
                 (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
                 (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
                 (usersFilter.street ? l.street.includes(usersFilter.street) : true)
