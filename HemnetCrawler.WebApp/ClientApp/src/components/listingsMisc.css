@@ -1,0 +1,8 @@
+﻿form>label {
+    padding-right: 5px;
+}
+
+.rooms-filters>input {
+    width: 45px;
+    margin-right: 10px;
+}

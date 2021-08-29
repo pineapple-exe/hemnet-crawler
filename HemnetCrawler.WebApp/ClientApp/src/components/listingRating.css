@@ -4,7 +4,7 @@
 }
 
 button.already-chosen {
-    background-color: aquamarine;
+    background-color: #93C6FD;
 }
 
 button:hover {
@@ -17,12 +17,12 @@ button:hover {
 
 #rate {
     padding: 1rem;
-    background-color: lightcoral;
+    background-color: #980A57;
     color: white;
 }
 
 #rate:hover {
-    background-color: mediumaquamarine;
+    background-color: #FF963A;
     color: white;
     cursor: pointer;
 }
