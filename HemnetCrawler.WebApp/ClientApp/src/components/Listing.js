@@ -8,7 +8,7 @@ export default function Listing(props) {
     const [listing, setListing] = React.useState(null);
 
     useEffect(() => {
-        fetch('/HemnetData/listing?' + new URLSearchParams({
+        fetch('/ListingsData/listing?' + new URLSearchParams({
             listingId: props.match.params.id,
         }))
             .then(resp => resp.json())
@@ -34,7 +34,7 @@ export default function Listing(props) {
         const gallery = listing.imageIds.map(imageId => (
                 <img
                     key={imageId}
-                    src={`/HemnetData/image?imageId=${imageId}`}
+                    src={`/ListingsData/image?imageId=${imageId}`}
                     alt="listing"
                 />
             )

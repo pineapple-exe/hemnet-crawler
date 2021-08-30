@@ -7,7 +7,7 @@ export default function FinalBidEstimation(props) {
     const [estimatedFinalPrice, setEstimatedFinalPrice] = React.useState(null);
 
     useEffect(() => {
-        fetch('/HemnetData/relevantFinalBids?' + new URLSearchParams({
+        fetch('/FinalBidsData/relevantFinalBids?' + new URLSearchParams({
             listingId: props.match.params.id,
         }))
             .then(resp => resp.json())
@@ -15,7 +15,7 @@ export default function FinalBidEstimation(props) {
     }, [props.match.params.id]);
 
     const getEstimatedFinalPrice = () => {
-        fetch('/HemnetData/estimatedPrice?' + new URLSearchParams({
+        fetch('/ListingsData/estimatedPrice?' + new URLSearchParams({
             listingId: props.match.params.id,
         }))
             .then(resp => resp.json())

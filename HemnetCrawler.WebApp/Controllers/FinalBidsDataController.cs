@@ -7,11 +7,11 @@ namespace HemnetCrawler.WebApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class FinalBidsController : ControllerBase
+    public class FinalBidsDataController : ControllerBase
     {
         private readonly FetchFinalBids _fetchFinalBids;
 
-        public FinalBidsController(FetchFinalBids fetchFinalBids)
+        public FinalBidsDataController(FetchFinalBids fetchFinalBids)
         {
             _fetchFinalBids = fetchFinalBids;
         }
