@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace HemnetCrawler.Domain.Models
 {
@@ -16,5 +14,6 @@ namespace HemnetCrawler.Domain.Models
         public double? LivingArea { get; init; }
         public int? Fee { get; init; }
         public int[] ImageIds { get; init; }
+        public int? FinalBidId { get; init; }
     }
 }
