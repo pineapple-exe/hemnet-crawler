@@ -7,12 +7,12 @@ namespace HemnetCrawler.WebPage.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HemnetDataController : ControllerBase
+    public class ListingsController : ControllerBase
     {
         private readonly FetchListings _fetchListings;
         private readonly ListingQualities _listingQualities;
 
-        public HemnetDataController(FetchListings fetchListings, ListingQualities listingQualities)
+        public ListingsController(FetchListings fetchListings, ListingQualities listingQualities)
         {
             _fetchListings = fetchListings;
             _listingQualities = listingQualities;
