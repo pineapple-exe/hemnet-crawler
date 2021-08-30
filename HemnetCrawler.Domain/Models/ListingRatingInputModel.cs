@@ -1,4 +1,4 @@
-﻿namespace HemnetCrawler.WebApp.Models
+﻿namespace HemnetCrawler.Domain.Models
 {
     public class ListingRatingInputModel
     {
