@@ -9,13 +9,11 @@ namespace HemnetCrawler.WebPage.Controllers
     [Route("[controller]")]
     public class HemnetDataController : ControllerBase
     {
-        private readonly FetchFinalBids _fetchFinalBids;
         private readonly FetchListings _fetchListings;
         private readonly ListingQualities _listingQualities;
 
-        public HemnetDataController(FetchFinalBids fetchFinalBids, FetchListings fetchListings, ListingQualities listingQualities)
+        public HemnetDataController(FetchListings fetchListings, ListingQualities listingQualities)
         {
-            _fetchFinalBids = fetchFinalBids;
             _fetchListings = fetchListings;
             _listingQualities = listingQualities;
         }
@@ -38,18 +36,6 @@ namespace HemnetCrawler.WebPage.Controllers
            byte[] imageData = _listingQualities.GetImageData(imageId);
 
            return File(imageData, "image/jpeg");
-        }
-
-        [HttpGet("finalBids")]
-        public List<FinalBidOutputModel> GetFinalBids()
-        {
-            return _fetchFinalBids.ListFinalBids();
-        }
-
-        [HttpGet("relevantFinalBids")]
-        public IActionResult GetRelevantFinalBids(int listingId)
-        {
-            return Ok(new { finalBids = _fetchFinalBids.ListRelevantFinalBids(listingId) });
         }
 
         [HttpGet("estimatedPrice")]
