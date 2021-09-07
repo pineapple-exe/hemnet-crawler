@@ -8,7 +8,7 @@ export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
 
     useEffect(() => {
-        fetch("/hemnetData/finalBids")
+        fetch("/FinalBidsData/finalBids")
             .then(resp => resp.json())
             .then(data => {
                 setFinalBids(data);

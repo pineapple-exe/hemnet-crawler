@@ -17,7 +17,7 @@ export default function Listings() {
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
     useEffect(() => {
-        fetch('/HemnetData/listings')
+        fetch('/ListingsData/listings')
             .then(resp => resp.json())
             .then(data => {
                 setListings(data)

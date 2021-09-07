@@ -11,7 +11,7 @@ export function ListingRating(props) {
     const [freshlyRated, setFreshlyRated] = React.useState(false);
 
     useEffect(() => {
-        fetch('/HemnetData/listingRating?' + new URLSearchParams({
+        fetch('/ListingsData/listingRating?' + new URLSearchParams({
             listingId: props.listingId
         }))
             .then(resp => resp.json())
@@ -62,7 +62,7 @@ export function ListingRating(props) {
     }
 
     const rateListing = () => {
-        fetch('/HemnetData/rateListing', {
+        fetch('/ListingsData/rateListing', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ listingId: props.listingId, kitchenRating: kitchenLocal, bathroomRating: bathroomLocal })
