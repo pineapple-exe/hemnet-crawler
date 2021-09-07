@@ -21,11 +21,12 @@ namespace HemnetCrawler.Domain.Interactors
 
         public List<FinalBidOutputModel> ListFinalBids()
         {
-            var allFinalBids = _finalBidRepository.GetAll();
+            IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll();
 
             List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb => new FinalBidOutputModel
             {
                 Id = fb.Id,
+                ListingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ? _listingRepository.GetAllListings().Select(l => l.FinalBidId).Single(i => i == fb.Id) : null,
                 Street = fb.Street,
                 City = fb.City,
                 PostalCode = fb.PostalCode,

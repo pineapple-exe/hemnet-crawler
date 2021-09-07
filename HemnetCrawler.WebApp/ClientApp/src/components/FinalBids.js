@@ -1,8 +1,10 @@
 ﻿import React from 'react';
+import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
+import { prettySEK } from './Utils.js';
 
-export default function FinalBids(props) {
+export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
 
     useEffect(() => {
@@ -16,17 +18,17 @@ export default function FinalBids(props) {
 
     const filledTableBody = finalBids.map(fb =>
         <tr className="final-bid" key={fb.id}>
-            <td>{fb.id}</td>
+            <td><Link to={`/finalBid/${fb.id}`}>{fb.id}</Link></td>
             <td>{fb.street}</td>
             <td>{fb.city}</td>
             <td>{fb.postalCode}</td>
-            <td>{fb.price}</td>
+            <td>{prettySEK(fb.price)}</td>
             <td>{fb.rooms}</td>
             <td>{fb.homeType}</td>
             <td>{fb.livingArea}</td>
-            <td>{fb.fee}</td>
+            <td>{prettySEK(fb.fee)}</td>
             <td>{fb.soldDate}</td>
-            <td>{fb.demandedPrice}</td>
+            <td>{prettySEK(fb.demandedPrice)}</td>
         </tr>
     );
 

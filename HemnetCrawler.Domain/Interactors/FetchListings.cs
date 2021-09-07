@@ -31,7 +31,8 @@ namespace HemnetCrawler.Domain.Interactors
                 HomeType = l.HomeType,
                 LivingArea = l.LivingArea,
                 Fee = l.Fee,
-                ImageIds = images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray()
+                ImageIds = images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray(),
+                FinalBidId = l.FinalBidId
             }).ToList();
 
             return outputModels;

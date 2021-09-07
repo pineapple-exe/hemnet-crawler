@@ -1,7 +1,7 @@
 ﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './entityProfile.css';
-import { prettySEK } from './Utils.js';
+import { prettySEK, entityProperty } from './Utils.js';
 import { ListingRating } from './ListingRating.js';
 
 export default function Listing(props) {
@@ -12,21 +12,11 @@ export default function Listing(props) {
             listingId: props.match.params.id,
         }))
             .then(resp => resp.json())
-            .then(data => { setListing(data) })},
-        [props.match.params.id]
+            .then(data => setListing(data))
+        }, [props.match.params.id]
     );
 
-    const listingProperty = (propertyValue) => {
-        if (propertyValue === null) {
-            return (
-                <span className="unknown-value">unknown</span>
-            );
-        } else {
-            return propertyValue;
-        }
-    }
-
-    if (listing === null) {
+    if (!listing) {
         return (
             <h3>Please wait while loading Listing...</h3>
         );
@@ -40,18 +30,34 @@ export default function Listing(props) {
             )
         );
 
+        const finalBidLinkProperty = (finalBidId) => {
+            if (finalBidId) {
+                return (
+                    <li>
+                        <span className="property-name">Final bid:</span>
+                        <span className="property-value">
+                            <Link to={`/finalBid/${finalBidId}`}>
+                                {finalBidId}
+                            </Link>
+                        </span>
+                    </li>
+                );
+            }
+        }
+
         return (
             <div className="listing-container">
                 <ul className="listing-properties">
                     <li><span className="property-name">Id:</span> <span className="property-value">{listing.id}</span></li>
+                    {finalBidLinkProperty(listing.finalBidId)}
                     <li><span className="property-name">Street:</span> <span className="property-value">{listing.street}</span></li>
                     <li><span className="property-name">City:</span> <span className="property-value">{listing.city}</span></li>
-                    <li><span className="property-name">Postal code:</span> <span className="property-value">{listingProperty(listing.postalCode)}</span></li>
-                    <li><span className="property-name">Price:</span> <span className="property-value">{listingProperty(prettySEK(listing.price))}</span></li>
+                    <li><span className="property-name">Postal code:</span> <span className="property-value">{entityProperty(listing.postalCode)}</span></li>
+                    <li><span className="property-name">Price:</span> <span className="property-value">{entityProperty(prettySEK(listing.price))}</span></li>
                     <li><span className="property-name">Rooms:</span> <span className="property-value">{listing.rooms === null ? '-' : listing.rooms}</span></li>
                     <li><span className="property-name">Home type:</span> <span className="property-value">{listing.homeType}</span></li>
                     <li><span className="property-name">Living area:</span> <span className="property-value">{listing.livingArea === null ? '-' : listing.livingArea}</span></li>
-                    <li><span className="property-name">Fee:</span> <span className="property-value">{listingProperty(prettySEK(listing.fee))}</span></li>
+                    <li><span className="property-name">Fee:</span> <span className="property-value">{entityProperty(prettySEK(listing.fee))}</span></li>
                 </ul>
 
                 <Link className="estimation-link" to={`/finalBidEstimation/${listing.id}`}>
@@ -64,7 +70,6 @@ export default function Listing(props) {
 
                 <ListingRating listingId={listing.id} />
             </div>
-            
         );
     }
 }

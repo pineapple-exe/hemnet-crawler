@@ -5,6 +5,7 @@ namespace HemnetCrawler.Domain.Models
     public class FinalBidOutputModel
     {
         public int Id { get; init; }
+        public int? ListingId { get; init; }
         public string Street { get; init; }
         public string City { get; init; }
         public int? PostalCode { get; init; }
