@@ -19,13 +19,13 @@ namespace HemnetCrawler.WebApp.Controllers
         [HttpGet("finalBid")]
         public FinalBidOutputModel GetFinalBid(int finalBidId)
         {
-            return _fetchFinalBids.ListFinalBids().Find(fb => fb.Id == finalBidId);
+            return _fetchFinalBids.GetFinalBid(finalBidId);
         }
 
         [HttpGet("finalBids")]
-        public List<FinalBidOutputModel> GetFinalBids()
+        public FinalBidsOutputModel GetFinalBids(int page, int size)
         {
-            return _fetchFinalBids.ListFinalBids();
+            return _fetchFinalBids.ListFinalBids(page, size);
         }
 
         [HttpGet("relevantFinalBids")]

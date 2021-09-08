@@ -3,7 +3,6 @@ using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 
 namespace HemnetCrawler.Domain.Tests.Unit
@@ -72,7 +71,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            FinalBidOutputModel output = fetchFinalBids.ListFinalBids().First();
+            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20).FinalBidsSubset.First();
 
             //Assert
             Assert.Null(output.ListingId);

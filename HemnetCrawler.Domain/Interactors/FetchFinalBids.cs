@@ -19,14 +19,37 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRatingRepository = listingRatingRepository;
         }
 
-        public List<FinalBidOutputModel> ListFinalBids()
+        public FinalBidOutputModel GetFinalBid(int finalBidId)
         {
-            IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll();
+            FinalBid finalBid = _finalBidRepository.GetAll().ToList().Find(fb => fb.Id == finalBidId);
+            int? listingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == finalBidId) ? _listingRepository.GetAllListings().Single(l => l.FinalBidId == finalBidId).Id : null;
+
+            return new FinalBidOutputModel {
+                Id = finalBid.Id,
+                ListingId = listingId,
+                Street = finalBid.Street,
+                City = finalBid.City,
+                PostalCode = finalBid.PostalCode,
+                Price = finalBid.Price,
+                SoldDate = finalBid.SoldDate,
+                DemandedPrice = finalBid.DemandedPrice,
+                PriceDevelopment = finalBid.PriceDevelopment,
+                HomeType = finalBid.HomeType,
+                Rooms = finalBid.Rooms,
+                LivingArea = finalBid.LivingArea,
+                Fee = finalBid.Fee
+            };
+        }
+
+        public FinalBidsOutputModel ListFinalBids(int page, int size)
+        {
+            IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll().Skip(page * size).Take(size);
+            int total = _finalBidRepository.GetAll().Count();
 
             List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb => new FinalBidOutputModel
             {
                 Id = fb.Id,
-                ListingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ? _listingRepository.GetAllListings().Select(l => l.FinalBidId).Single(i => i == fb.Id) : null,
+                ListingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ? _listingRepository.GetAllListings().Single(l => l.FinalBidId == fb.Id).Id : null,
                 Street = fb.Street,
                 City = fb.City,
                 PostalCode = fb.PostalCode,
@@ -40,7 +63,7 @@ namespace HemnetCrawler.Domain.Interactors
                 Fee = fb.Fee
             }).ToList();
 
-            return outputModels;
+            return new FinalBidsOutputModel(outputModels, total);
         }
 
         public static IQueryable<FinalBid> FinalBidsThroughRelevanceAlgorithm(int listingId, IListingRepository listingRepository, IFinalBidRepository finalBidRepository)
