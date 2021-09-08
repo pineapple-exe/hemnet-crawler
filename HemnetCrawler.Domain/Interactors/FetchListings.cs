@@ -15,10 +15,32 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRepository = listingRepository;
         }
 
-        public List<ListingOutputModel> ListListings()
+        public ListingOutputModel GetListing(int listingId)
         {
-            IQueryable<Listing> allListings = _listingRepository.GetAllListings().Take(100);
+            Listing listing = _listingRepository.GetAllListings().ToList().Find(l => l.Id == listingId);
+            int[] imageIds = _listingRepository.GetAllImages().ToList().Where(img => img.ListingId == listing.Id).Select(img => img.Id).ToArray();
+
+            return new ListingOutputModel 
+            {   
+                Id = listing.Id,
+                Street = listing.Street,
+                City = listing.City,
+                PostalCode = listing.PostalCode,
+                Price = listing.Price,
+                Rooms = listing.Rooms,
+                HomeType = listing.HomeType,
+                LivingArea = listing.LivingArea,
+                Fee = listing.Fee,
+                ImageIds = imageIds,
+                FinalBidId = listing.FinalBidId
+            };
+        }
+
+        public PaginatedListingsOutputModel ListListings(int page, int size)
+        {
+            IQueryable<Listing> allListings = _listingRepository.GetAllListings().Skip(size * page).Take(size);
             IQueryable<Image> images = _listingRepository.GetAllImages();
+            int total = _listingRepository.GetAllListings().Count();
 
             List<ListingOutputModel> outputModels = allListings.Select(l => new ListingOutputModel
             {
@@ -35,7 +57,7 @@ namespace HemnetCrawler.Domain.Interactors
                 FinalBidId = l.FinalBidId
             }).ToList();
 
-            return outputModels;
+            return new PaginatedListingsOutputModel(outputModels, total);
         }
     }
 }

@@ -13,7 +13,7 @@ export default function Listing(props) {
         }))
             .then(resp => resp.json())
             .then(data => setListing(data))
-        }, [props.match.params.id]
+    }, [props.match.params.id]
     );
 
     if (!listing) {

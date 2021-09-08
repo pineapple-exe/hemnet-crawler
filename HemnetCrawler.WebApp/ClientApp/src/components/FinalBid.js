@@ -13,7 +13,7 @@ export default function FinalBid(props) {
             }))
             .then(resp => resp.json())
             .then(data => setFinalBid(data))
-        }, [props.match.params.id]
+    }, [props.match.params.id]
     );
 
     if (!finalBid) {

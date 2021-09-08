@@ -13,7 +13,7 @@ export default function FinalBids() {
             .then(data => {
                 setFinalBids(data);
             })
-        }, []
+    }, []
     );
 
     const filledTableBody = finalBids.map(fb =>

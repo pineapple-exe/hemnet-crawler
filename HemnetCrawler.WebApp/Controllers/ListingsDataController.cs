@@ -19,15 +19,15 @@ namespace HemnetCrawler.WebPage.Controllers
         }
 
         [HttpGet("listings")]
-        public List<ListingOutputModel> GetListings()
+        public PaginatedListingsOutputModel GetListings(int page, int size)
         {
-            return _fetchListings.ListListings();
+            return _fetchListings.ListListings(page, size);
         }
 
         [HttpGet("listing")]
         public ListingOutputModel GetListing(int listingId)
         {
-            return _fetchListings.ListListings().Find(l => l.Id == listingId);
+            return _fetchListings.GetListing(listingId);
         }
 
         [HttpGet("image")]
