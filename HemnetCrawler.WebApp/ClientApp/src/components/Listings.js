@@ -114,8 +114,6 @@ export default function Listings() {
         }
     }
 
-/*    const paginate = (pageNumber) => setCurrentPage(pageNumber);*/
-
     if (loading) {
         return (
             <p>Please wait while loading listings...</p>

@@ -18,7 +18,7 @@ namespace HemnetCrawler.Domain.Interactors
         public ListingOutputModel GetListing(int listingId)
         {
             Listing listing = _listingRepository.GetAllListings().ToList().Find(l => l.Id == listingId);
-            int[] imageIds = _listingRepository.GetAllImages().ToList().Where(img => img.ListingId == listing.Id).Select(img => img.Id).ToArray();
+            int[] imageIds = _listingRepository.GetAllImages().Where(img => img.ListingId == listing.Id).Select(img => img.Id).ToArray();
 
             return new ListingOutputModel 
             {   

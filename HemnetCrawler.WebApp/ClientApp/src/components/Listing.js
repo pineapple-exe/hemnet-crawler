@@ -18,7 +18,7 @@ export default function Listing(props) {
 
     if (!listing) {
         return (
-            <h3>Please wait while loading Listing...</h3>
+            <h3>Please wait while loading listing...</h3>
         );
     } else {
         const gallery = listing.imageIds.map(imageId => (
