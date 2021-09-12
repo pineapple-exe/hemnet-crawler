@@ -9,9 +9,9 @@ namespace HemnetCrawler.Domain.Tests.Unit
     public class FetchListingsTest
     {
         [Fact]
-        public void ListListings_MultiplePages_ReturnsCorrectSubsetAndTotal()
+        public void ListListings_MoreListingsThanPageSize_CorrectSubsetAndTotal()
         {
-            // Arrange
+            //Arrange
             FakeListingRepository repository = new();
             FetchListings fetchListings = new(repository);
 
@@ -25,10 +25,12 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 new Listing() { Id = 6 } 
             });
 
-            // Act
+            //Act
             ListingsOutputModel listingsOutputModel = fetchListings.ListListings(1, 2);
 
-            // Assert
+            //Assert
+            Assert.Equal(2, listingsOutputModel.ListingsSubset.Count);
+
             Assert.Equal(3, listingsOutputModel.ListingsSubset[0].Id);
             Assert.Equal(4, listingsOutputModel.ListingsSubset[1].Id);
 
