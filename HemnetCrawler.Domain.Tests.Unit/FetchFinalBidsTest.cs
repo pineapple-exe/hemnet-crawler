@@ -12,7 +12,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
         [Fact]
         public void ListRelevantFinalBids_AddedListingsAndFinalBid_OneRelevance()
         {
-            // Arrange
+            //Arrange
             FakeFinalBidRepository finalBidRepository = new();
             FakeListingRepository listingRepository = new();
             FakeListingRatingRepository listingRatingRepository = new();
@@ -42,10 +42,10 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
 
-            // Act
+            //Act
             List<FinalBidEstimationOutputModel> output = fetchFinalBids.ListRelevantFinalBids(2649);
 
-            // Assert
+            //Assert
             Assert.Single(output);
         }
 
@@ -88,15 +88,14 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
 
             finalBidRepository.FinalBids.AddRange(new List<FinalBid>() 
-                {
-                    new FinalBid() { Id = 1 },
-                    new FinalBid() { Id = 2 },
-                    new FinalBid() { Id = 3 },
-                    new FinalBid() { Id = 4 },
-                    new FinalBid() { Id = 5 },
-                    new FinalBid() { Id = 6 }
-                }
-            );
+            {
+                new FinalBid() { Id = 1 },
+                new FinalBid() { Id = 2 },
+                new FinalBid() { Id = 3 },
+                new FinalBid() { Id = 4 },
+                new FinalBid() { Id = 5 },
+                new FinalBid() { Id = 6 }
+            });
 
             //Act
             FinalBidsOutputModel output = fetchFinalBids.ListFinalBids(1, 2);
