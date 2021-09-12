@@ -76,5 +76,38 @@ namespace HemnetCrawler.Domain.Tests.Unit
             //Assert
             Assert.Null(output.ListingId);
         }
+
+        [Fact]
+        public void ListFinalBids_MoreFinalBidsThanPageSize_CorrectSubsetAndTotal()
+        {
+            //Arrange
+            FakeFinalBidRepository finalBidRepository = new();
+            FakeListingRepository listingRepository = new();
+            FakeListingRatingRepository listingRatingRepository = new();
+
+            FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
+
+            finalBidRepository.FinalBids.AddRange(new List<FinalBid>() 
+                {
+                    new FinalBid() { Id = 1 },
+                    new FinalBid() { Id = 2 },
+                    new FinalBid() { Id = 3 },
+                    new FinalBid() { Id = 4 },
+                    new FinalBid() { Id = 5 },
+                    new FinalBid() { Id = 6 }
+                }
+            );
+
+            //Act
+            FinalBidsOutputModel output = fetchFinalBids.ListFinalBids(1, 2);
+
+            //Assert
+            Assert.Equal(2, output.FinalBidsSubset.Count);
+
+            Assert.Equal(3, output.FinalBidsSubset[0].Id);
+            Assert.Equal(4, output.FinalBidsSubset[1].Id);
+
+            Assert.Equal(6, output.Total);
+        }
     }
 }
