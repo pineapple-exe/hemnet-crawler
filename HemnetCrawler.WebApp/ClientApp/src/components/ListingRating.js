@@ -22,8 +22,7 @@ export function ListingRating(props) {
                 setKitchen(data.kitchenRating)
                 setBathroom(data.bathroomRating)
             })
-    },
-        [props.listingId]
+    }, [props.listingId]
     );
 
     const latestClick = (num, type) => {

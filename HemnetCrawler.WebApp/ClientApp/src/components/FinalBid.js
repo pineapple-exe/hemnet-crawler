@@ -13,12 +13,12 @@ export default function FinalBid(props) {
             }))
             .then(resp => resp.json())
             .then(data => setFinalBid(data))
-        }, [props.match.params.id]
+    }, [props.match.params.id]
     );
 
     if (!finalBid) {
         return (
-            <h3>Please wait while loading Final bid...</h3>
+            <h3>Please wait while loading final bid...</h3>
         );
     } else {
         const listingLinkProperty = (listingId) => {

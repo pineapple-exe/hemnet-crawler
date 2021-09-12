@@ -13,12 +13,12 @@ export default function Listing(props) {
         }))
             .then(resp => resp.json())
             .then(data => setListing(data))
-        }, [props.match.params.id]
+    }, [props.match.params.id]
     );
 
     if (!listing) {
         return (
-            <h3>Please wait while loading Listing...</h3>
+            <h3>Please wait while loading listing...</h3>
         );
     } else {
         const gallery = listing.imageIds.map(imageId => (

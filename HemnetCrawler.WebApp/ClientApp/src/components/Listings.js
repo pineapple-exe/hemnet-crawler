@@ -2,10 +2,14 @@
 import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
-import { prettySEK } from './Utils.js';
+import { prettySEK, pagination } from './Utils.js';
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
+    const [total, setTotal] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [listingsPerPage] = React.useState(50);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -17,12 +21,19 @@ export default function Listings() {
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
     useEffect(() => {
-        fetch('/ListingsData/listings')
+        setLoading(true);
+
+        fetch('/ListingsData/listings?' + new URLSearchParams({
+            page: currentPage,
+            size: listingsPerPage
+        }))
             .then(resp => resp.json())
             .then(data => {
-                setListings(data)
-            })},
-        []
+                setListings(data.listingsSubset);
+                setTotal(data.total);
+            })
+            .then(setLoading(false))
+    }, [currentPage, listingsPerPage]
     );
 
     const filterListings = (listings) => {
@@ -49,10 +60,10 @@ export default function Listings() {
         </tr>
     );
 
-    const handleHomeTypeFilter = (e) => {
+    const handleHomeTypeFilter = (event) => {
         setFilter({
             ...usersFilter,
-            homeType: e.target.value,
+            homeType: event.target.value,
         });
     }
 
@@ -102,43 +113,51 @@ export default function Listings() {
         }
     }
 
-    return (
-        <div>
-            <form>
-                <label>Home type:</label>
-                <select className="filter" onChange={handleHomeTypeFilter} >
-                    <option value="All">*</option>
-                    <option value="Tomt">Tomt</option>
-                    <option value="Villa">Villa</option>
-                    <option value="Lägenhet">Lägenhet</option>
-                </select>
-            </form>
+    if (loading) {
+        return (
+            <p>Please wait while loading listings...</p>
+        );
+    } else {
+        return (
+            <div>
+                <form>
+                    <label>Home type:</label>
+                    <select className="filter" onChange={handleHomeTypeFilter} >
+                        <option value="All">*</option>
+                        <option value="Tomt">Tomt</option>
+                        <option value="Villa">Villa</option>
+                        <option value="Lägenhet">Lägenhet</option>
+                    </select>
+                </form>
 
-            {alternativeRoomsFilter()}
+                {alternativeRoomsFilter()}
 
-            <form>
-                <label>Street:</label>
-                <input type="text" value={usersFilter.street} onChange={handleStreetFilter}/>
-            </form>
+                <form>
+                    <label>Street:</label>
+                    <input type="text" value={usersFilter.street} onChange={handleStreetFilter}/>
+                </form>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Street</th>
-                        <th>City</th>
-                        <th>Postal code</th>
-                        <th>Price</th>
-                        <th>Rooms</th>
-                        <th>Home type</th>
-                        <th>Living area</th>
-                        <th>Fee</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filledTableBody}
-                </tbody>
-             </table>
-        </div>
-    );
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Street</th>
+                            <th>City</th>
+                            <th>Postal code</th>
+                            <th>Price</th>
+                            <th>Rooms</th>
+                            <th>Home type</th>
+                            <th>Living area</th>
+                            <th>Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filledTableBody}
+                    </tbody>
+                </table>
+                {pagination(total, listingsPerPage, currentPage, setCurrentPage)}
+{/*                <Pagination entititiesPerPage={listingsPerPage} totalEntities={total} paginate={paginate} />*/}
+            </div>
+        );
+    }
 }

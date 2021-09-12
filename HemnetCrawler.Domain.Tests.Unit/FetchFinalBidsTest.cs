@@ -3,7 +3,6 @@ using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 
 namespace HemnetCrawler.Domain.Tests.Unit

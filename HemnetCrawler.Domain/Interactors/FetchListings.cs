@@ -15,27 +15,44 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRepository = listingRepository;
         }
 
-        public List<ListingOutputModel> ListListings()
+        private static ListingOutputModel MapListingToOutputModel(Listing listing, int[] imageIds)
         {
-            IQueryable<Listing> allListings = _listingRepository.GetAllListings().Take(100);
+            return new ListingOutputModel
+            {
+                Id = listing.Id,
+                Street = listing.Street,
+                City = listing.City,
+                PostalCode = listing.PostalCode,
+                Price = listing.Price,
+                Rooms = listing.Rooms,
+                HomeType = listing.HomeType,
+                LivingArea = listing.LivingArea,
+                Fee = listing.Fee,
+                ImageIds = imageIds,
+                FinalBidId = listing.FinalBidId
+            };
+        }
+
+        public ListingOutputModel GetListing(int listingId)
+        {
+            Listing listing = _listingRepository.GetAllListings().ToList().Find(l => l.Id == listingId);
+            int[] imageIds = _listingRepository.GetAllImages().Where(img => img.ListingId == listing.Id).Select(img => img.Id).ToArray();
+
+            return MapListingToOutputModel(listing, imageIds);
+        }
+
+        public ListingsOutputModel ListListings(int page, int size)
+        {
+            IQueryable<Listing> allListings = _listingRepository.GetAllListings().Skip(size * page).Take(size);
             IQueryable<Image> images = _listingRepository.GetAllImages();
 
-            List<ListingOutputModel> outputModels = allListings.Select(l => new ListingOutputModel
-            {
-                Id = l.Id,
-                Street = l.Street,
-                City = l.City,
-                PostalCode = l.PostalCode,
-                Price = l.Price,
-                Rooms = l.Rooms,
-                HomeType = l.HomeType,
-                LivingArea = l.LivingArea,
-                Fee = l.Fee,
-                ImageIds = images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray(),
-                FinalBidId = l.FinalBidId
-            }).ToList();
+            int total = _listingRepository.GetAllListings().Count();
 
-            return outputModels;
+            List<ListingOutputModel> outputModels = allListings.Select(l => 
+                MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
+                ).ToList();
+
+            return new ListingsOutputModel(outputModels, total);
         }
     }
 }
