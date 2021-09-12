@@ -54,8 +54,8 @@ namespace HemnetCrawler.Domain.Interactors
 
             List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb =>
                 MapFinalBidToOutputModel(fb, _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ?
-                                                _listingRepository.GetAllListings().Single(l => l.FinalBidId == fb.Id).Id :
-                                                null)
+                                             _listingRepository.GetAllListings().Single(l => l.FinalBidId == fb.Id).Id :
+                                             null)
                 ).ToList();
 
             return new FinalBidsOutputModel(outputModels, total);

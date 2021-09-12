@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './entityProfile.css';
 import { prettySEK, entityProperty } from './Utils.js';
@@ -8,11 +7,11 @@ export default function FinalBid(props) {
     const [finalBid, setFinalBid] = React.useState(null);
 
     useEffect(() => {
-        fetch('/HemnetData/finalBid?' + new URLSearchParams({
+        fetch('/FinalBidsData/finalBid?' + new URLSearchParams({
             finalBidId: props.match.params.id,
             }))
-            .then(resp => resp.json())
-            .then(data => setFinalBid(data))
+                .then(resp => resp.json())
+                .then(data => setFinalBid(data))
         }, [props.match.params.id]
     );
 
