@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
 import { prettySEK, pagination } from './Utils.js';
-/*import Pagination from './Pagination.js';*/
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
