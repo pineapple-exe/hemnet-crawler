@@ -9,6 +9,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
     class FakeListingRepository : IListingRepository
     {
         public List<Listing> Listings = new();
+        public List<Image> Images = new();
 
         public void AddImage(Image image)
         {
@@ -22,7 +23,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public IQueryable<Image> GetAllImages()
         {
-            throw new NotImplementedException();
+            return Images.Select(i => (Image)i.Clone()).AsQueryable();
         }
 
         public IQueryable<Listing> GetAllListings()

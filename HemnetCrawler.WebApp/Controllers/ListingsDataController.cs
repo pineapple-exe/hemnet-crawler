@@ -19,7 +19,7 @@ namespace HemnetCrawler.WebPage.Controllers
         }
 
         [HttpGet("listings")]
-        public PaginatedListingsOutputModel GetListings(int page, int size)
+        public ListingsOutputModel GetListings(int page, int size)
         {
             return _fetchListings.ListListings(page, size);
         }
