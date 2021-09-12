@@ -19,12 +19,12 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRatingRepository = listingRatingRepository;
         }
 
-        private static FinalBidOutputModel MapFinalBidToOutputModel(FinalBid finalBid, int? listingId)
+        private static FinalBidOutputModel MapFinalBidToOutputModel(FinalBid finalBid, Listing listing)
         {
             return new FinalBidOutputModel
             {
                 Id = finalBid.Id,
-                ListingId = listingId,
+                ListingId = listing?.Id,
                 Street = finalBid.Street,
                 City = finalBid.City,
                 PostalCode = finalBid.PostalCode,
@@ -42,9 +42,9 @@ namespace HemnetCrawler.Domain.Interactors
         public FinalBidOutputModel GetFinalBid(int finalBidId)
         {
             FinalBid finalBid = _finalBidRepository.GetAll().Where(fb => fb.Id == finalBidId).Single();
-            int? listingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == finalBidId) ? _listingRepository.GetAllListings().Single(l => l.FinalBidId == finalBidId).Id : null;
+            Listing listing = _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == finalBid.Id);
 
-            return MapFinalBidToOutputModel(finalBid, listingId);
+            return MapFinalBidToOutputModel(finalBid, listing);
         }
 
         public FinalBidsOutputModel ListFinalBids(int page, int size)
@@ -53,9 +53,7 @@ namespace HemnetCrawler.Domain.Interactors
             int total = _finalBidRepository.GetAll().Count();
 
             List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb =>
-                MapFinalBidToOutputModel(fb, _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ?
-                                             _listingRepository.GetAllListings().Single(l => l.FinalBidId == fb.Id).Id :
-                                             null)
+                MapFinalBidToOutputModel(fb, _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == fb.Id))
                 ).ToList();
 
             return new FinalBidsOutputModel(outputModels, total);
