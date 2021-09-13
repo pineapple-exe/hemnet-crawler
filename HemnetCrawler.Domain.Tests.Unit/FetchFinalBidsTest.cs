@@ -12,7 +12,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
         [Fact]
         public void ListRelevantFinalBids_AddedListingsAndFinalBid_OneRelevance()
         {
-            // Arrange
+            //Arrange
             FakeFinalBidRepository finalBidRepository = new();
             FakeListingRepository listingRepository = new();
             FakeListingRatingRepository listingRatingRepository = new();
@@ -42,10 +42,10 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
 
-            // Act
+            //Act
             List<FinalBidEstimationOutputModel> output = fetchFinalBids.ListRelevantFinalBids(2649);
 
-            // Assert
+            //Assert
             Assert.Single(output);
         }
 
@@ -71,10 +71,42 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            FinalBidOutputModel output = fetchFinalBids.ListFinalBids().First();
+            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20).FinalBidsSubset.First();
 
             //Assert
             Assert.Null(output.ListingId);
+        }
+
+        [Fact]
+        public void ListFinalBids_MoreFinalBidsThanPageSize_CorrectSubsetAndTotal()
+        {
+            //Arrange
+            FakeFinalBidRepository finalBidRepository = new();
+            FakeListingRepository listingRepository = new();
+            FakeListingRatingRepository listingRatingRepository = new();
+
+            FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
+
+            finalBidRepository.FinalBids.AddRange(new List<FinalBid>() 
+            {
+                new FinalBid() { Id = 1 },
+                new FinalBid() { Id = 2 },
+                new FinalBid() { Id = 3 },
+                new FinalBid() { Id = 4 },
+                new FinalBid() { Id = 5 },
+                new FinalBid() { Id = 6 }
+            });
+
+            //Act
+            EntitiesPage output = fetchFinalBids.ListFinalBids(1, 2);
+
+            //Assert
+            Assert.Equal(2, output.FinalBidsSubset.Count);
+
+            Assert.Equal(3, output.FinalBidsSubset[0].Id);
+            Assert.Equal(4, output.FinalBidsSubset[1].Id);
+
+            Assert.Equal(6, output.Total);
         }
     }
 }

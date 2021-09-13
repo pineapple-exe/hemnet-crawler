@@ -1,6 +1,7 @@
 ﻿using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Models;
 using HemnetCrawler.Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,28 +20,44 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRatingRepository = listingRatingRepository;
         }
 
-        public List<FinalBidOutputModel> ListFinalBids()
+        private static FinalBidOutputModel MapFinalBidToOutputModel(FinalBid finalBid, Listing listing)
         {
-            IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll();
-
-            List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb => new FinalBidOutputModel
+            return new FinalBidOutputModel
             {
-                Id = fb.Id,
-                ListingId = _listingRepository.GetAllListings().Any(l => l.FinalBidId == fb.Id) ? _listingRepository.GetAllListings().Select(l => l.FinalBidId).Single(i => i == fb.Id) : null,
-                Street = fb.Street,
-                City = fb.City,
-                PostalCode = fb.PostalCode,
-                Price = fb.Price,
-                SoldDate = fb.SoldDate,
-                DemandedPrice = fb.DemandedPrice,
-                PriceDevelopment = fb.PriceDevelopment,
-                HomeType = fb.HomeType,
-                Rooms = fb.Rooms,
-                LivingArea = fb.LivingArea,
-                Fee = fb.Fee
-            }).ToList();
+                Id = finalBid.Id,
+                ListingId = listing?.Id,
+                Street = finalBid.Street,
+                City = finalBid.City,
+                PostalCode = finalBid.PostalCode,
+                Price = finalBid.Price,
+                SoldDate = finalBid.SoldDate,
+                DemandedPrice = finalBid.DemandedPrice,
+                PriceDevelopment = finalBid.PriceDevelopment,
+                HomeType = finalBid.HomeType,
+                Rooms = finalBid.Rooms,
+                LivingArea = finalBid.LivingArea,
+                Fee = finalBid.Fee
+            };
+        }
 
-            return outputModels;
+        public FinalBidOutputModel GetFinalBid(int finalBidId)
+        {
+            FinalBid finalBid = _finalBidRepository.GetAll().Where(fb => fb.Id == finalBidId).Single();
+            Listing listing = _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == finalBid.Id);
+
+            return MapFinalBidToOutputModel(finalBid, listing);
+        }
+
+        public EntitiesPage<FinalBidOutputModel> ListFinalBids(int page, int size)
+        {
+            IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll().Skip(page * size).Take(size);
+            int total = _finalBidRepository.GetAll().Count();
+
+            List<FinalBidOutputModel> outputModels = allFinalBids.Select(fb =>
+                MapFinalBidToOutputModel(fb, _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == fb.Id))
+                ).ToList();
+
+            return new EntitiesPage<FinalBidOutputModel>(outputModels, total);
         }
 
         public static IQueryable<FinalBid> FinalBidsThroughRelevanceAlgorithm(int listingId, IListingRepository listingRepository, IFinalBidRepository finalBidRepository)
