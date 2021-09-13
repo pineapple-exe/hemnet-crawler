@@ -71,7 +71,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20).FinalBidsSubset.First();
+            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20).Subset.First();
 
             //Assert
             Assert.Null(output.ListingId);
@@ -98,15 +98,15 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            EntitiesPage output = fetchFinalBids.ListFinalBids(1, 2);
+            EntitiesPage<FinalBidOutputModel> outputModels = fetchFinalBids.ListFinalBids(1, 2);
 
             //Assert
-            Assert.Equal(2, output.FinalBidsSubset.Count);
+            Assert.Equal(2, outputModels.Subset.Count);
 
-            Assert.Equal(3, output.FinalBidsSubset[0].Id);
-            Assert.Equal(4, output.FinalBidsSubset[1].Id);
+            Assert.Equal(3, outputModels.Subset[0].Id);
+            Assert.Equal(4, outputModels.Subset[1].Id);
 
-            Assert.Equal(6, output.Total);
+            Assert.Equal(6, outputModels.Total);
         }
     }
 }

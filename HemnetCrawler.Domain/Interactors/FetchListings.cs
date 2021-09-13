@@ -41,7 +41,7 @@ namespace HemnetCrawler.Domain.Interactors
             return MapListingToOutputModel(listing, imageIds);
         }
 
-        public ListingsOutputModel ListListings(int page, int size)
+        public EntitiesPage<ListingOutputModel> ListListings(int page, int size)
         {
             IQueryable<Listing> allListings = _listingRepository.GetAllListings().Skip(size * page).Take(size);
             IQueryable<Image> images = _listingRepository.GetAllImages();
@@ -52,7 +52,7 @@ namespace HemnetCrawler.Domain.Interactors
                 MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
                 ).ToList();
 
-            return new ListingsOutputModel(outputModels, total);
+            return new EntitiesPage<ListingOutputModel>(outputModels, total);
         }
     }
 }

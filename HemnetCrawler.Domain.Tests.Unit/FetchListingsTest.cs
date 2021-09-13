@@ -26,15 +26,15 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            ListingsOutputModel listingsOutputModel = fetchListings.ListListings(1, 2);
+            EntitiesPage<ListingOutputModel> outputModels = fetchListings.ListListings(1, 2);
 
             //Assert
-            Assert.Equal(2, listingsOutputModel.ListingsSubset.Count);
+            Assert.Equal(2, outputModels.Subset.Count);
 
-            Assert.Equal(3, listingsOutputModel.ListingsSubset[0].Id);
-            Assert.Equal(4, listingsOutputModel.ListingsSubset[1].Id);
+            Assert.Equal(3, outputModels.Subset[0].Id);
+            Assert.Equal(4, outputModels.Subset[1].Id);
 
-            Assert.Equal(6, listingsOutputModel.Total);
+            Assert.Equal(6, outputModels.Total);
         }
     }
 }
