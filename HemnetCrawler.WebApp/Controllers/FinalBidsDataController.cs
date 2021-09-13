@@ -22,7 +22,7 @@ namespace HemnetCrawler.WebApp.Controllers
         }
 
         [HttpGet("finalBids")]
-        public FinalBidsOutputModel GetFinalBids(int page, int size)
+        public EntitiesPage GetFinalBids(int page, int size)
         {
             return _fetchFinalBids.ListFinalBids(page, size);
         }

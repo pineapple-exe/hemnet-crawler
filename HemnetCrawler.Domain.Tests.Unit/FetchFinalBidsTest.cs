@@ -98,7 +98,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            FinalBidsOutputModel output = fetchFinalBids.ListFinalBids(1, 2);
+            EntitiesPage output = fetchFinalBids.ListFinalBids(1, 2);
 
             //Assert
             Assert.Equal(2, output.FinalBidsSubset.Count);

@@ -1,6 +1,7 @@
 ﻿using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Models;
 using HemnetCrawler.Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,7 +48,7 @@ namespace HemnetCrawler.Domain.Interactors
             return MapFinalBidToOutputModel(finalBid, listing);
         }
 
-        public FinalBidsOutputModel ListFinalBids(int page, int size)
+        public EntitiesPage<FinalBidOutputModel> ListFinalBids(int page, int size)
         {
             IQueryable<FinalBid> allFinalBids = _finalBidRepository.GetAll().Skip(page * size).Take(size);
             int total = _finalBidRepository.GetAll().Count();
@@ -56,7 +57,7 @@ namespace HemnetCrawler.Domain.Interactors
                 MapFinalBidToOutputModel(fb, _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == fb.Id))
                 ).ToList();
 
-            return new FinalBidsOutputModel(outputModels, total);
+            return new EntitiesPage<FinalBidOutputModel>(outputModels, total);
         }
 
         public static IQueryable<FinalBid> FinalBidsThroughRelevanceAlgorithm(int listingId, IListingRepository listingRepository, IFinalBidRepository finalBidRepository)
