@@ -12,7 +12,8 @@ export default function FinalBidEstimation(props) {
         }))
             .then(resp => resp.json())
             .then(data => { setFinalBids(data.finalBids) });
-    }, [props.match.params.id]);
+    }, [props.match.params.id]
+    );
 
     const getEstimatedFinalPrice = () => {
         fetch('/ListingsData/estimatedPrice?' + new URLSearchParams({
