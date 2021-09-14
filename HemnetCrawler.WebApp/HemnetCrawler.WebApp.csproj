@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HemnetCrawler.Data\HemnetCrawler.Data.csproj" />
     <ProjectReference Include="..\HemnetCrawler.Domain\HemnetCrawler.Domain.csproj" />
+    <ProjectReference Include="..\HemnetCrawler.MockTestData\HemnetCrawler.MockTestData.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
