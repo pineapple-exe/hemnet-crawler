@@ -26,8 +26,14 @@ namespace HemnetCrawler.Domain.Interactors
             return imageData;
         }
 
-        public double? GetAveragePrice(int listingId)
+        public double? GetEstimatedPrice(int listingId)
         {
+            Listing theListing = _listingRepository.GetAllListings().Single(l => l.Id == listingId);
+            FinalBid finalBid = _finalBidRepository.GetAll().FirstOrDefault(fb => fb.Id == theListing.FinalBidId);
+
+            if (finalBid!= null) 
+                return finalBid.Price;
+
             IQueryable<FinalBid> relevantFinalBids = FetchFinalBids.FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository);
 
             if (relevantFinalBids.Any())

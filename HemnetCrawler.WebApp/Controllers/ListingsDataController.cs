@@ -41,7 +41,7 @@ namespace HemnetCrawler.WebPage.Controllers
         [HttpGet("estimatedPrice")]
         public IActionResult GetAveragePrice(int listingId)
         {
-            return Ok(new { price = _listingQualities.GetAveragePrice(listingId) });
+            return Ok(new { price = _listingQualities.GetEstimatedPrice(listingId) });
         }
 
         [HttpGet("listingRating")]
