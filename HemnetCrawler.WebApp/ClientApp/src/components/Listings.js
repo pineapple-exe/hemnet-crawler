@@ -29,7 +29,7 @@ export default function Listings() {
         }))
             .then(resp => resp.json())
             .then(data => {
-                setListings(data.listingsSubset);
+                setListings(data.subset);
                 setTotal(data.total);
             })
             .then(setLoading(false))

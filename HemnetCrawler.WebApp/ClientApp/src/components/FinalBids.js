@@ -19,7 +19,7 @@ export default function FinalBids() {
         }))
             .then(resp => resp.json())
             .then(data => {
-                setFinalBids(data.finalBidsSubset);
+                setFinalBids(data.subset);
                 setTotal(data.total);
             })
             .then(setLoading(false))
