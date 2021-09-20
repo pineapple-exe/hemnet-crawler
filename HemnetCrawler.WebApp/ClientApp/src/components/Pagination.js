@@ -1,11 +1,5 @@
 ﻿import React from 'react';
 
-//export default function Pagination(props) {
-//    return (
-//        <p>Hiii, I'm a component! {props.totalEntities} {props.entitiesPerPage}</p>
-//    );
-//}
-
 export default function Pagination(props) {
     let pageNumbers = [];
     const currentPage = props.currentPageZeroBased + 1;
