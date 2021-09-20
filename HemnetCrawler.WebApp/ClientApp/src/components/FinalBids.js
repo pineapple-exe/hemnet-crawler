@@ -2,7 +2,8 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
-import { prettySEK, pagination } from './Utils.js';
+import { prettySEK } from './Utils.js';
+import Pagination from './Pagination.js';
 
 export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
@@ -69,7 +70,7 @@ export default function FinalBids() {
                         {filledTableBody}
                     </tbody>
                 </table>
-                {pagination(total, finalBidsPerPage, currentPage, setCurrentPage)}
+                <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPage} setCurrentPage={setCurrentPage} />
             </div>
         );
     }

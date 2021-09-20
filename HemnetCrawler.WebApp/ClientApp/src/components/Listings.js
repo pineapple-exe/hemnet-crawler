@@ -2,7 +2,8 @@
 import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
-import { prettySEK, pagination } from './Utils.js';
+import { prettySEK } from './Utils.js';
+import Pagination from './Pagination.js';
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
@@ -155,8 +156,7 @@ export default function Listings() {
                         {filledTableBody}
                     </tbody>
                 </table>
-                {pagination(total, listingsPerPage, currentPage, setCurrentPage)}
-{/*                <Pagination entititiesPerPage={listingsPerPage} totalEntities={total} paginate={paginate} />*/}
+                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPage} setCurrentPage={setCurrentPage} />
             </div>
         );
     }
