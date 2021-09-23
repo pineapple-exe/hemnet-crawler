@@ -4,7 +4,6 @@ using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
@@ -174,7 +173,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act-Assert
-            Assert.Throws<NullReferenceException>(() => fetchFinalBids.GetFinalBid(4));
+            Assert.Throws<NotFoundException>(() => fetchFinalBids.GetFinalBid(4));
         }
     }
 }

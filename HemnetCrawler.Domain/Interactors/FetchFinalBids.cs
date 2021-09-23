@@ -43,6 +43,9 @@ namespace HemnetCrawler.Domain.Interactors
         public FinalBidOutputModel GetFinalBid(int finalBidId)
         {
             FinalBid finalBid = _finalBidRepository.GetAll().Where(fb => fb.Id == finalBidId).FirstOrDefault();
+
+            if (finalBid == null) throw new NotFoundException("Final Bid");
+
             Listing listing = _listingRepository.GetAllListings().FirstOrDefault(l => l.FinalBidId == finalBid.Id);
 
             return MapFinalBidToOutputModel(finalBid, listing);

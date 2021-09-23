@@ -39,7 +39,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             ListingQualities listingQualities = new(listingRepository, finalBidRepository, listingRatingRepository);
 
             //Act-Assert
-            Assert.Throws<InvalidOperationException>(() => listingQualities.GetImageData(1));
+            Assert.Throws<InvalidOperationException>(() => listingQualities.GetImageData(1)); //Vad vill man ha här egentligen?
         }
 
         [Fact]
@@ -109,8 +109,8 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             //Assert
             Assert.Single(listingRatings);
-            Assert.Equal(2, listingRatings.First().KitchenRating);
-            Assert.Null(listingRatings.First().BathroomRating);
+            Assert.Equal(2, listingRatings.Single().KitchenRating);
+            Assert.Null(listingRatings.Single().BathroomRating);
         }
 
         [Fact]

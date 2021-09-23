@@ -3,7 +3,6 @@ using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 using System.Collections.Generic;
-using System;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {
@@ -45,7 +44,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act & Assert
-            Assert.Throws<NullReferenceException>(() => fetchListings.GetListing(4));
+            Assert.Throws<NotFoundException>(() => fetchListings.GetListing(4));
         }
 
         [Fact]
