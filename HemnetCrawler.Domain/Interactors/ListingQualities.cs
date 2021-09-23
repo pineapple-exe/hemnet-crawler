@@ -21,13 +21,23 @@ namespace HemnetCrawler.Domain.Interactors
 
         public byte[] GetImageData(int imageId)
         {
-            byte[] imageData = _listingRepository.GetAllImages().First(img => img.Id == imageId).Data;
+            IQueryable<Image> allImageData = _listingRepository.GetAllImages();
+
+            if (!allImageData.Any()) throw new NotFoundException("Image Data");
+
+            byte[] imageData = allImageData.FirstOrDefault(img => img.Id == imageId).Data;
 
             return imageData;
         }
 
-        public double? GetAveragePrice(int listingId)
+        public double? GetEstimatedPrice(int listingId)
         {
+            Listing theListing = _listingRepository.GetAllListings().Single(l => l.Id == listingId);
+            FinalBid finalBid = _finalBidRepository.GetAll().FirstOrDefault(fb => fb.Id == theListing.FinalBidId);
+
+            if (finalBid!= null) 
+                return finalBid.Price;
+
             IQueryable<FinalBid> relevantFinalBids = FetchFinalBids.FinalBidsThroughRelevanceAlgorithm(listingId, _listingRepository, _finalBidRepository);
 
             if (relevantFinalBids.Any())

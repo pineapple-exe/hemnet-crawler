@@ -9,10 +9,8 @@ namespace HemnetCrawler.Domain.Tests.Unit
     public class FinalBidListingAssociaterTest
     {
         [Fact]
-        public void AddFinalBidsToListings_MatchAlternatives_BestMatch()
+        public void AlgorithmAddFinalBidsToListings_MatchAlternatives_BestMatch()
         {
-            // Vill: Bekräfta att Listings får FinalBidId tillhörande det FinalBid med flest likheter.
-
             // Arrange
             FakeFinalBidRepository finalBidRepository = new();
             FakeListingRepository listingRepository = new();
@@ -82,7 +80,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
         }
 
         [Fact]
-        public void AddFinalBidsToListings_NoFinalBids_FinalBidIdNull()
+        public void AlgorithmAddFinalBidsToListings_NoFinalBids_FinalBidIdNull()
         {
             // Arrange
             FakeFinalBidRepository finalBidRepository = new();

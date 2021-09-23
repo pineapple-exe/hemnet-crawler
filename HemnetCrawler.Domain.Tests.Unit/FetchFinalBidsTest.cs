@@ -50,6 +50,28 @@ namespace HemnetCrawler.Domain.Tests.Unit
         }
 
         [Fact]
+        public void ListRelevantFinalBids_ListingButNoFinalBids_NoRelevance()
+        {
+            //Arrange
+            FakeFinalBidRepository finalBidRepository = new();
+            FakeListingRepository listingRepository = new();
+            FakeListingRatingRepository listingRatingRepository = new();
+
+            FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
+
+            listingRepository.Listings.Add(new Listing()
+            {
+                Id = 729
+            });
+
+            //Act
+            List<FinalBidEstimationOutputModel> output = fetchFinalBids.ListRelevantFinalBids(729);
+
+            //Assert
+            Assert.Empty(output);
+        }
+
+        [Fact]
         public void ListFinalBids_AddedFinalBidWithoutListing_ListingIdIsNull()
         {
             //Arrange
@@ -107,6 +129,51 @@ namespace HemnetCrawler.Domain.Tests.Unit
             Assert.Equal(4, outputModels.Subset[1].Id);
 
             Assert.Equal(6, outputModels.Total);
+        }
+
+        [Fact]
+        public void GetFinalBid_ExistingFinalBid_CorrectFinalBid()
+        {
+            //Arrange
+            FakeFinalBidRepository finalBidRepository = new();
+            FakeListingRepository listingRepository = new();
+            FakeListingRatingRepository listingRatingRepository = new();
+
+            FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
+
+            finalBidRepository.FinalBids.AddRange(new List<FinalBid>()
+            {
+                new FinalBid() { Id = 1 },
+                new FinalBid() { Id = 2 },
+                new FinalBid() { Id = 3 }
+            });
+
+            //Act
+            FinalBidOutputModel outputModel = fetchFinalBids.GetFinalBid(3);
+
+            //Assert
+            Assert.Equal(3, outputModel.Id);
+        }
+
+        [Fact]
+        public void GetFinalBid_NonExistingId_Exception()
+        {
+            //Arrange
+            FakeFinalBidRepository finalBidRepository = new();
+            FakeListingRepository listingRepository = new();
+            FakeListingRatingRepository listingRatingRepository = new();
+
+            FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
+
+            finalBidRepository.FinalBids.AddRange(new List<FinalBid>()
+            {
+                new FinalBid() { Id = 1 },
+                new FinalBid() { Id = 2 },
+                new FinalBid() { Id = 3 }
+            });
+
+            //Act-Assert
+            Assert.Throws<NotFoundException>(() => fetchFinalBids.GetFinalBid(4));
         }
     }
 }

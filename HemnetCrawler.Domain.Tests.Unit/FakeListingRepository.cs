@@ -13,7 +13,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
         public void AddImage(Image image)
         {
-            throw new NotImplementedException();
+            Images.Add((Image)image.Clone());
         }
 
         public void AddListing(Listing listing)

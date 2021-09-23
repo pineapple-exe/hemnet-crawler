@@ -10,7 +10,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 {
     class FakeListingRatingRepository : IListingRatingRepository
     {
-        List<ListingRating> listingRatings = new();
+        public List<ListingRating> listingRatings = new();
 
         public void AddListingRating(ListingRating rating)
         {
