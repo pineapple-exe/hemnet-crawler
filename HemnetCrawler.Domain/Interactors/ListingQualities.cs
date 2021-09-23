@@ -21,7 +21,11 @@ namespace HemnetCrawler.Domain.Interactors
 
         public byte[] GetImageData(int imageId)
         {
-            byte[] imageData = _listingRepository.GetAllImages().First(img => img.Id == imageId).Data;
+            IQueryable<Image> allImageData = _listingRepository.GetAllImages();
+
+            if (!allImageData.Any()) throw new NotFoundException("Image Data");
+
+            byte[] imageData = allImageData.FirstOrDefault(img => img.Id == imageId).Data;
 
             return imageData;
         }

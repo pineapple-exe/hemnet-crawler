@@ -39,7 +39,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             ListingQualities listingQualities = new(listingRepository, finalBidRepository, listingRatingRepository);
 
             //Act-Assert
-            Assert.Throws<InvalidOperationException>(() => listingQualities.GetImageData(1)); //Vad vill man ha här egentligen?
+            Assert.Throws<NotFoundException>(() => listingQualities.GetImageData(1));
         }
 
         [Fact]
