@@ -3,6 +3,8 @@ using HemnetCrawler.Data.Repositories;
 using HemnetCrawler.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System;
 
 namespace HemnetCrawler.MockTestData
 {
@@ -10,15 +12,18 @@ namespace HemnetCrawler.MockTestData
     {
         static void Main(string[] args)
         {
-            HemnetCrawlerDbContext context = new();
+            string databaseName = "HemnetCrawlerTest";
+            CreateDatabase(databaseName);
 
-            CreateTestDatabaseWithSchema(context);
+            HemnetCrawlerDbContext context = new($"Server=localhost;Database={databaseName};Trusted_Connection=True;");
+            context.Database.Migrate();
+
             CreateMockData(context);
         }
 
-        static void CreateTestDatabaseWithSchema(HemnetCrawlerDbContext context)
+        static void CreateDatabase(string databaseName)
         {
-            string sql = "CREATE DATABASE HemnetCrawlerTest";
+            string sql = $"CREATE DATABASE {databaseName}";
 
             using SqlConnection connection = new("Server=localhost;Database=master;Trusted_Connection=True;");
 
@@ -26,8 +31,6 @@ namespace HemnetCrawler.MockTestData
 
             command.Connection.Open();
             command.ExecuteNonQuery();
-
-            context.Database.Migrate();
         }
 
         static void CreateMockData(HemnetCrawlerDbContext context)
@@ -35,15 +38,45 @@ namespace HemnetCrawler.MockTestData
             FinalBidRepository finalBidRepository = new(context);
             ListingRepository listingRepository = new(context);
 
-            listingRepository.AddListing(new Listing()
-            {
-                Id = 1,
-                FinalBidId = 100
+            finalBidRepository.AddFinalBid(new FinalBid()
+            { 
+                HemnetId = 100,
+                Href = "https://www.hemnet.se/salda/lagenhet-3rum-goteborgs-kommun-testvagen-1-b-100",
+                LastUpdated = DateTimeOffset.Now,
+                Street = "Testvägen 1 B",
+                City = "Teststaden",
+                Price = 200,
+                SoldDate = new DateTimeOffset(new DateTime(2021, 10, 4)),
+                DemandedPrice = 100,
+                PriceDevelopment = "+100 kr(+100%)",
+                HomeType = "Lägenhet",
+                OwnershipType = "Bostadsrätt",
+                Rooms = "3 rum",
+                PropertyArea = 75,
+                ConstructionYear = "2021"
             });
 
-            finalBidRepository.AddFinalBid(new FinalBid()
+            listingRepository.AddListing(new Listing() 
             {
-                Id = 100
+                HemnetId = 100,
+                Href = "https://www.hemnet.se/bostad/lagenhet-3rum-goteborgs-kommun-testvagen-1-b-100",
+                LastUpdated = DateTimeOffset.Now.AddDays(-10),
+                NewConstruction = true,
+                Street = "Testvägen 1 B",
+                City = "Teststaden",
+                Description = "Nybyggt hem i ett lugnt men centralt område.",
+                HomeType = "Lägenhet",
+                OwnershipType = "Bostadsrätt",
+                Rooms = "3 rum",
+                Balcony = false,
+                Floor = "Andra våningen",
+                PropertyArea = 75,
+                ConstructionYear = "2021",
+                HomeOwnersAssociation = "Bostadsföreningen med stort B!",
+                EnergyClassification = "C",
+                Visits = 32,
+                Published = DateTimeOffset.Now.AddDays(-20),
+                FinalBidId = finalBidRepository.GetAll().First().Id 
             });
         }
     }

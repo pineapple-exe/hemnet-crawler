@@ -5,6 +5,7 @@ namespace HemnetCrawler.Data
 {
     public class HemnetCrawlerDbContext : DbContext
     {
+        private string _connectionString = "Server=localhost;Database=UggeboiAndPinegal;Trusted_Connection=True;";
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<ListingRating> ListingRatings { get; set; }
@@ -20,10 +21,14 @@ namespace HemnetCrawler.Data
 
         }
 
+        public HemnetCrawlerDbContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=localhost;Database=UggeboiAndPinegal;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(_connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
