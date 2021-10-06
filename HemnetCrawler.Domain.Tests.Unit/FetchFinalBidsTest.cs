@@ -120,15 +120,15 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            EntitiesPage<FinalBidOutputModel> outputModels = fetchFinalBids.ListFinalBids(1, 2);
+            EntitiesPage<FinalBidOutputModel> output = fetchFinalBids.ListFinalBids(1, 2);
 
             //Assert
-            Assert.Equal(2, outputModels.Subset.Count);
+            Assert.Equal(2, output.Subset.Count);
 
-            Assert.Equal(3, outputModels.Subset[0].Id);
-            Assert.Equal(4, outputModels.Subset[1].Id);
+            Assert.Equal(3, output.Subset[0].Id);
+            Assert.Equal(4, output.Subset[1].Id);
 
-            Assert.Equal(6, outputModels.Total);
+            Assert.Equal(6, output.Total);
         }
 
         [Fact]
