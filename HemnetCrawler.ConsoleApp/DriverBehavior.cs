@@ -46,10 +46,7 @@ namespace HemnetCrawler.ConsoleApp
 
                 try
                 {
-                    IWebElement element = findElement(findBy);
-                    Thread.Sleep(1000);
-
-                    return element;
+                    return findElement(findBy);
                 }
                 catch (NoSuchElementException)
                 {
@@ -76,7 +73,6 @@ namespace HemnetCrawler.ConsoleApp
                 DateTime progressed = DateTime.Now;
 
                 elements = findElements(findBy);
-                Thread.Sleep(1000);
 
                 if (elements.Count == 0)
                 {
