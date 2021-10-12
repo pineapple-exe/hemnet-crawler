@@ -65,17 +65,6 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-<<<<<<< HEAD
-            EntitiesPage<ListingOutputModel> listingsOutputModel = fetchListings.ListListings(1, 2);
-
-            //Assert
-            Assert.Equal(2, listingsOutputModel.ListingsSubset.Count);
-
-            Assert.Equal(3, listingsOutputModel.ListingsSubset[0].Id);
-            Assert.Equal(4, listingsOutputModel.ListingsSubset[1].Id);
-
-            Assert.Equal(6, listingsOutputModel.Total);
-=======
             EntitiesPage<ListingOutputModel> models = fetchListings.ListListings(1, 2);
 
             //Assert
@@ -99,7 +88,6 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             //Assert
             Assert.Empty(models.Subset);
->>>>>>> master
         }
     }
 }
