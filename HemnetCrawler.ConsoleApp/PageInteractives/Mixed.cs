@@ -65,14 +65,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                 if (listing != null)
                 {
-                    repository.AddListing(listing);
-                    logger.Log($"A new Listing with Id {listing.Id} was created. Located on {listing.Street}, {listing.City}.");
-
                     IEnumerable<Image> images = ListingPage.CreateImageEntities(driver, listing);
                     foreach (Image img in images)
                     {
                         repository.AddImage(img);
                     }
+                    repository.AddListing(listing);
+                    logger.Log($"A new Listing with Id {listing.Id} was created. Located on {listing.Street}, {listing.City}.");
                 }
             }
         }
