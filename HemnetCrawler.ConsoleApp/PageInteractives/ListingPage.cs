@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -171,16 +172,25 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
-                    imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
-
                     while (true)
                     {
-                        if (!Uri.TryCreate(null, imgElement.GetAttribute("src"), out imgSrc)) // denna kod saknar effekt?
+                        imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
+
+                        try
+                        { 
+                            string potentiallyLegitUri = imgElement.GetAttribute("src");
+
+                            if (potentiallyLegitUri.StartsWith("http://") || potentiallyLegitUri.StartsWith("https://"))
+                            {
+                                imgSrc = new Uri(potentiallyLegitUri);
+                                break;
+                            }
+                        }
+                        catch (StaleElementReferenceException)
                         {
+                            Thread.Sleep(250);
                             continue;
                         }
-
-                        break;
                     }
 
                     Image image = new()
