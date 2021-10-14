@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
@@ -187,6 +188,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         }
                         catch (StaleElementReferenceException)
                         {
+                            Thread.Sleep(250);
                             continue;
                         }
                     }
