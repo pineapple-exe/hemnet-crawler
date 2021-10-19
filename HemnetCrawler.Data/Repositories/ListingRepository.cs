@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 
@@ -29,6 +30,17 @@ namespace HemnetCrawler.Data.Repositories
         {
             _context.Update(listing);
             _context.SaveChanges();
+        }
+
+        public void DeleteListing(Listing listing)
+        {
+            _context.Remove(listing);
+            _context.SaveChanges();
+        }
+
+        public void DeleteImages(List<Image> images)
+        {
+            _context.RemoveRange(images);
         }
 
         public IQueryable<Listing> GetAllListings()

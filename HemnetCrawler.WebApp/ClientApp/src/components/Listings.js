@@ -47,6 +47,18 @@ export default function Listings() {
             );
     }
 
+    const deleteListing = (listingId) => {
+        fetch('/ListingsData/deleteListing?' + new URLSearchParams({
+            listingId: listingId
+        }), {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(listingId) })
+                .then(console.log('hej, vi har gjort delete-request'));
+    }
+
     const filledTableBody = filterListings(listings).map(l =>
         <tr className="listing" key={l.id}>
             <td><Link to={`/listing/${l.id}`}>{l.id}</Link></td>
@@ -58,6 +70,13 @@ export default function Listings() {
             <td>{l.homeType}</td>
             <td>{l.livingArea}</td>
             <td>{prettySEK(l.fee)}</td>
+            <td>
+                <div className="delete">
+                    <button onClick={() => deleteListing(l.id) }>
+                        <img src="/img/trash-can.png" alt="trash-bin" />
+                    </button>
+                </div>
+            </td>
         </tr>
     );
 
@@ -150,6 +169,7 @@ export default function Listings() {
                             <th>Home type</th>
                             <th>Living area</th>
                             <th>Fee</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>

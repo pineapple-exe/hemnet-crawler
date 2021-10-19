@@ -30,6 +30,12 @@ namespace HemnetCrawler.Data.Repositories
             _context.SaveChanges();
         }
 
+        public void DeleteListingRating(ListingRating rating)
+        {
+            _context.Remove(rating);
+            _context.SaveChanges();
+        }
+
         public IQueryable<ListingRating> GetAll()
         {
             return _context.ListingRatings;
