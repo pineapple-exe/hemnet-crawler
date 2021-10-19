@@ -18,6 +18,10 @@ div.delete {
     padding: 0px;
 }
 
+.delete h3 {
+    color: red;
+}
+
 .delete img {
     background: none;
     width: 1.5rem;

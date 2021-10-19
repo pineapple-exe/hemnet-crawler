@@ -11,6 +11,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
+    const [deletionProcess, setDeletionProcess] = React.useState({ 'step': 0, 'listing': null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -34,7 +35,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, listingsPerPage]
+    }, [currentPage, listingsPerPage, deletionProcess]
     );
 
     const filterListings = (listings) => {
@@ -47,16 +48,36 @@ export default function Listings() {
             );
     }
 
+    const deletePush = (listingId) => {
+        if (deletionProcess.step === 1) {
+            deleteListing(listingId);
+            setDeletionProcess({ 'step': 0, 'listing': null });
+        } else {
+            setDeletionProcess({ 'step': deletionProcess.step + 1, 'listing': listingId });
+        }
+    }
+
     const deleteListing = (listingId) => {
         fetch('/ListingsData/deleteListing?' + new URLSearchParams({
             listingId: listingId
         }), {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(listingId) })
-                .then(console.log('hej, vi har gjort delete-request'));
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(listingId)
+            }
+        );
+    }
+
+    const deletionInitiatedX = (listingId) => {
+        if (deletionProcess.step === 1 && deletionProcess.listing === listingId) {
+            return (
+                <button onClick={() => setDeletionProcess({'step': 0, 'listing': null})}>
+                    <h3>X</h3>
+                </button>
+            );
+        }
     }
 
     const filledTableBody = filterListings(listings).map(l =>
@@ -72,9 +93,11 @@ export default function Listings() {
             <td>{prettySEK(l.fee)}</td>
             <td>
                 <div className="delete">
-                    <button onClick={() => deleteListing(l.id) }>
+                    <button onClick={() => deletePush(l.id)}>
                         <img src="/img/trash-can.png" alt="trash-bin" />
                     </button>
+
+                    {deletionInitiatedX(l.id)}
                 </div>
             </td>
         </tr>
