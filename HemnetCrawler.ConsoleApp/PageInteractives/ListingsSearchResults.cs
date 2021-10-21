@@ -89,6 +89,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
             searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+            searchResults.RemoveAll(l => l.GetAttribute("data-gtm-item-info").Contains("raketen"));
 
             List<ListingLink> links = new();
 
