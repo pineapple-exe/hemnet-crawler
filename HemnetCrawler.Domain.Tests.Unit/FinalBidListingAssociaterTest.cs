@@ -17,7 +17,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FinalBid finalBidBestMatch = new()
             {
-                SoldDate = DateTimeOffset.MaxValue,
+                SoldDate = DateTime.MaxValue,
                 Id = 1,
                 Street = "Månljusgatan 1C",
                 HomeType = "Lägenhet",
@@ -30,7 +30,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FinalBid finalBidNextBestMatch = new()
             {
-                SoldDate = DateTimeOffset.MaxValue,
+                SoldDate = DateTime.MaxValue,
                 Id = 2,
                 Street = "Muslångatan 1C",
                 HomeType = "Lägenhet",
@@ -43,7 +43,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FinalBid finalBidWorstMatch = new()
             {
-                SoldDate = DateTimeOffset.MaxValue,
+                SoldDate = DateTime.MaxValue,
                 Id = 3,
                 Street = "Kokongvägen 3",
                 PostalCode = 41410,
@@ -58,7 +58,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             listingRepository.AddListing(new()
             {
-                Published = DateTimeOffset.MinValue,
+                Published = DateTime.MinValue,
                 Street = "Månljusgatan 2C",
                 HomeType = "Lägenhet",
                 PostalCode = 41822,

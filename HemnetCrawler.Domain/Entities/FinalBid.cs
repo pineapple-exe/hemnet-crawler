@@ -12,7 +12,7 @@ namespace HemnetCrawler.Domain.Entities
         public string City { get; set; }
         public int? PostalCode { get; set; }
         public int Price { get; set; }
-        public DateTimeOffset SoldDate { get; set; }
+        public DateTime SoldDate { get; set; }
         public int DemandedPrice { get; set; }
         public string PriceDevelopment { get; set; }
         public int? PricePerSquareMeter { get; set; }
