@@ -28,15 +28,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             }
         }
 
-        public static void SpecifyAndSortResults(IWebDriver driver)
+        public static void SpecifyAndSortResults(IWebDriver driver, ILogger logger)
         {
+            string sortByText = "Tidigast såld/överlåten först";
+
             DriverBehavior.FindElements(driver, By.CssSelector("div.result-type-toggle__label")).Where(e => e.Text == "Slutpriser").First().Click();
 
             IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("#search-results-sort-by"));
             IReadOnlyCollection<IWebElement> options = DriverBehavior.FindElements(sortBy, By.CssSelector("option"));
 
             sortBy.Click();
-            options.Where(e => e.Text == "Tidigast såld/överlåten först").First().Click();
+            options.Where(e => e.Text == sortByText).First().Click();
+
+            logger.Log($"Search results are ordered by {sortByText}.");
         }
 
         public static void AddAgeFilter(IWebDriver driver, IFinalBidRepository repository, ILogger logger)
