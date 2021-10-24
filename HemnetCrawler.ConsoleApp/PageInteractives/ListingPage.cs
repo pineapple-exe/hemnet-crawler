@@ -154,15 +154,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         public static string DetectMediaType(byte[] imageData)
         {
-            int jpegSignature = BitConverter.ToInt16(imageData, 0);
-            if (jpegSignature == 65496) 
+            ushort jpegSignature = BitConverter.ToUInt16(imageData, 0);
+            if (jpegSignature == 55551) 
                 return "image/jpeg";
 
-            long pngSignature = BitConverter.ToInt64(imageData, 0);
-            if (pngSignature == 727905341920923785) 
+            ulong pngSignature = BitConverter.ToUInt64(imageData, 0);
+            if (pngSignature == 727905341920923785UL) 
                 return "image/png";
 
-            return "Unknown";
+            return "";
         }
 
         public static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)

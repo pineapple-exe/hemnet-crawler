@@ -9,7 +9,7 @@ namespace HemnetCrawler.Data
         public void Configure(EntityTypeBuilder<Image> builder)
         {
             builder.Property(e => e.Data).IsRequired();
-            builder.Property(e => e.ContentType).IsRequired().HasMaxLength(9);
+            builder.Property(e => e.ContentType).IsRequired().HasMaxLength(10);
         }
     }
 }
