@@ -203,14 +203,21 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                                 imgSrc = new Uri(potentiallyLegitUri);
                                 break;
                             }
+                            else if (urlSearchAttempts > 9)
+                            {
+                                throw new Exception("Never ending loop de loop");
+                            }
+                            else
+                            {
+                                Thread.Sleep(250);
+                                continue;
+                            }
                         }
                         catch (StaleElementReferenceException)
                         {
                             Thread.Sleep(250);
                             continue;
                         }
-
-                        if (urlSearchAttempts > 9) throw new Exception("");
                     }
 
                     byte[] imgData = webWizard.DownloadData(imgSrc);
