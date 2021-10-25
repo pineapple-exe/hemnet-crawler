@@ -186,8 +186,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
+                    int urlSearchAttempts = 0;
+
                     while (true)
                     {
+                        urlSearchAttempts++;
+
                         imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
 
                         try
@@ -205,6 +209,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                             Thread.Sleep(250);
                             continue;
                         }
+
+                        if (urlSearchAttempts > 9) throw new Exception("");
                     }
 
                     byte[] imgData = webWizard.DownloadData(imgSrc);
