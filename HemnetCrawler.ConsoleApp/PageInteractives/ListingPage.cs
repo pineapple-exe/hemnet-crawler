@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -151,6 +152,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return listing;
         }
 
+        public static string DetectMediaType(byte[] imageData)
+        {
+            ushort jpegSignature = BitConverter.ToUInt16(imageData, 0);
+            if (jpegSignature == 55551) 
+                return "image/jpeg";
+
+            ulong pngSignature = BitConverter.ToUInt64(imageData, 0);
+            if (pngSignature == 727905341920923785UL) 
+                return "image/png";
+
+            return "";
+        }
+
         public static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
             bool hasImages = driver.PageSource.Contains("property-gallery__fullscreen-button");
@@ -193,11 +207,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         }
                     }
 
+                    byte[] imgData = webWizard.DownloadData(imgSrc);
+
                     Image image = new()
                     {
                         Listing = listing,
-                        Data = webWizard.DownloadData(imgSrc),
-                        ContentType = "Unknown"
+                        Data = imgData,
+                        ContentType = DetectMediaType(imgData)
                     };
 
                     yield return image;

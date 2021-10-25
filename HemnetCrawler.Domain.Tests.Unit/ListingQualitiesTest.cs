@@ -22,7 +22,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             listingRepository.AddImage(new Image() { Id = 1, Data = Array.Empty<byte>() });
 
             //Act
-            byte[] imageData = listingQualities.GetImageData(1);
+            byte[] imageData = listingQualities.GetImage(1);
 
             //Assert
             Assert.Empty(imageData);
@@ -39,7 +39,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             ListingQualities listingQualities = new(listingRepository, finalBidRepository, listingRatingRepository);
 
             //Act-Assert
-            Assert.Throws<NotFoundException>(() => listingQualities.GetImageData(1));
+            Assert.Throws<NotFoundException>(() => listingQualities.GetImage(1));
         }
 
         [Fact]
