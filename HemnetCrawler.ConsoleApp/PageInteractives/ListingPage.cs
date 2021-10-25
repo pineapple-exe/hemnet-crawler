@@ -113,7 +113,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
             string publishedDate = publishedPattern.Match(driver.PageSource).Value;
-            listing.Published = DateTimeOffset.Parse(publishedDate);
+            listing.Published = DateTime.Parse(publishedDate);
 
             listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
 
