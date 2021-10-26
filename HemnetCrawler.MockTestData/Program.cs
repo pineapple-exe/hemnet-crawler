@@ -46,7 +46,7 @@ namespace HemnetCrawler.MockTestData
                 Street = "Testvägen 1 B",
                 City = "Teststaden",
                 Price = 200,
-                SoldDate = new DateTimeOffset(new DateTime(2021, 10, 4)),
+                SoldDate = new DateTime(2021, 10, 4),
                 DemandedPrice = 100,
                 PriceDevelopment = "+100 kr(+100%)",
                 HomeType = "Lägenhet",
@@ -75,7 +75,7 @@ namespace HemnetCrawler.MockTestData
                 HomeOwnersAssociation = "Bostadsföreningen med stort B!",
                 EnergyClassification = "C",
                 Visits = 32,
-                Published = DateTimeOffset.Now.AddDays(-20),
+                Published = DateTime.Now.AddDays(-20),
                 FinalBidId = finalBidRepository.GetAll().First().Id 
             });
         }

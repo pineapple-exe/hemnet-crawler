@@ -32,14 +32,14 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             finalBidListingAssociater.AlgorithmAddFinalBidsToListings(); //Dessa matchningar loggas inte, vilket skapar asymmetri.
         }
 
-        private static void GeneralSearchAndCollect<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, T, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
+        private static void GeneralSearchAndCollect<T>(Action<IWebDriver, ILogger> orderSearchResults, Action<IWebDriver, T, ILogger> addAgeFilter, Action<IWebDriver, T, ILogger> leafThroughPagesAndCreateRecords, T repository, ILogger logger)
         {
             using ChromeDriver driver = new();
             
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver, logger);
 
-            orderSearchResults(driver);
+            orderSearchResults(driver, logger);
 
             addAgeFilter(driver, repository, logger);
             leafThroughPagesAndCreateRecords(driver, repository, logger);
@@ -57,14 +57,14 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             GeneralSearchAndCollect(FinalBidsSearchResults.SpecifyAndSortResults, FinalBidsSearchResults.AddAgeFilter, Mixed.LeafThroughFinalBidPagesAndCreateRecords, repository, logger);
         }
 
-        private static void GeneralComplementOldRecordsWithHrefs<T>(Action<IWebDriver> orderSearchResults, Action<IWebDriver, T, ILogger> collectHrefs, T repository, ILogger logger)
+        private static void GeneralComplementOldRecordsWithHrefs<T>(Action<IWebDriver, ILogger> orderSearchResults, Action<IWebDriver, T, ILogger> collectHrefs, T repository, ILogger logger)
         {
             using ChromeDriver driver = new();
 
             StartPage.EnterHemnet(driver);
             StartPage.AddSearchBase(driver, logger);
 
-            orderSearchResults(driver);
+            orderSearchResults(driver, logger);
 
             collectHrefs(driver, repository, logger);
 

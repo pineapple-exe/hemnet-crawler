@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -112,7 +113,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
             string publishedDate = publishedPattern.Match(driver.PageSource).Value;
-            listing.Published = DateTimeOffset.Parse(publishedDate);
+            listing.Published = DateTime.Parse(publishedDate);
 
             listing.Description = DriverBehavior.FindElement(driver, By.CssSelector(".property-description")).Text;
 
@@ -151,6 +152,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             return listing;
         }
 
+        public static string DetectMediaType(byte[] imageData)
+        {
+            ushort jpegSignature = BitConverter.ToUInt16(imageData, 0);
+            if (jpegSignature == 55551) 
+                return "image/jpeg";
+
+            ulong pngSignature = BitConverter.ToUInt64(imageData, 0);
+            if (pngSignature == 727905341920923785UL) 
+                return "image/png";
+
+            return "";
+        }
+
         public static IEnumerable<Image> CreateImageEntities(IWebDriver driver, Listing listing)
         {
             bool hasImages = driver.PageSource.Contains("property-gallery__fullscreen-button");
@@ -172,8 +186,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
+                    int urlSearchAttempts = 0;
+
                     while (true)
                     {
+                        urlSearchAttempts++;
+
                         imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
 
                         try
@@ -185,6 +203,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                                 imgSrc = new Uri(potentiallyLegitUri);
                                 break;
                             }
+                            else if (urlSearchAttempts > 9)
+                            {
+                                throw new Exception("Never ending loop de loop");
+                            }
+                            else
+                            {
+                                Thread.Sleep(250);
+                                continue;
+                            }
                         }
                         catch (StaleElementReferenceException)
                         {
@@ -193,11 +220,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         }
                     }
 
+                    byte[] imgData = webWizard.DownloadData(imgSrc);
+
                     Image image = new()
                     {
                         Listing = listing,
-                        Data = webWizard.DownloadData(imgSrc),
-                        ContentType = "Unknown"
+                        Data = imgData,
+                        ContentType = DetectMediaType(imgData)
                     };
 
                     yield return image;

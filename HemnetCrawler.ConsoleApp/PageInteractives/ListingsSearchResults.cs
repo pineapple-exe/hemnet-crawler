@@ -11,12 +11,16 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
     internal class ListingsSearchResults
     {
-        public static void SortSearchResults(IWebDriver driver)
+        public static void SortSearchResults(IWebDriver driver, ILogger logger)
         {
+            string sortByText = "Äldst först";
+
             IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("select.form-control__select"));
             sortBy.Click();
             IReadOnlyCollection<IWebElement> sortOptions = DriverBehavior.FindElements(sortBy, By.CssSelector("option"));
-            sortOptions.Where(o => o.Text == "Äldst först").First().Click();
+            sortOptions.Where(o => o.Text == sortByText).First().Click();
+
+            logger.Log($"Search results are ordered by {sortByText}.");
         }
 
         public static void AddAgeFilter(IWebDriver driver, IListingRepository repository, ILogger logger)
@@ -89,6 +93,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
             searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+            searchResults.RemoveAll(l => l.GetAttribute("data-gtm-item-info").Contains("raketen"));
 
             List<ListingLink> links = new();
 

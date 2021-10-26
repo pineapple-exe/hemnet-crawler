@@ -19,15 +19,14 @@ namespace HemnetCrawler.Domain.Interactors
             _listingRatingRepository = listingRatingRepository;
         }
 
-        public byte[] GetImageData(int imageId)
+        public ImageOutputModel GetImage(int imageId)
         {
-            IQueryable<Image> allImageData = _listingRepository.GetAllImages();
+            Image image = _listingRepository.GetAllImages().FirstOrDefault(img => img.Id == imageId);
 
-            if (!allImageData.Any()) throw new NotFoundException("Image Data");
-
-            byte[] imageData = allImageData.FirstOrDefault(img => img.Id == imageId).Data;
-
-            return imageData;
+            if (image == null)
+                throw new NotFoundException("Image");
+            else
+                return new ImageOutputModel(image.Data, image.ContentType);
         }
 
         public double? GetEstimatedPrice(int listingId)

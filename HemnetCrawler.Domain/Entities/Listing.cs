@@ -29,7 +29,7 @@ namespace HemnetCrawler.Domain.Entities
         public int? Utilities { get; set; }
         public string EnergyClassification { get; set; }
         public int Visits { get; set; }
-        public DateTimeOffset Published { get; set; }
+        public DateTime Published { get; set; }
         public int? FinalBidId { get; set; }
         public FinalBid FinalBid { get; set; }
 

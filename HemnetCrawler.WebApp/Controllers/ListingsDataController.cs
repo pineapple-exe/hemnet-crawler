@@ -34,9 +34,9 @@ namespace HemnetCrawler.WebPage.Controllers
         [HttpGet("image")]
         public IActionResult GetImage(int imageId)
         {
-           byte[] imageData = _listingQualities.GetImageData(imageId);
+           ImageOutputModel image = _listingQualities.GetImage(imageId);
 
-           return File(imageData, "image/jpeg");
+           return File(image.Data, string.IsNullOrEmpty(image.ContentType) ? "image/jpeg" : image.ContentType);
         }
 
         [HttpGet("estimatedPrice")]
