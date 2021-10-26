@@ -11,7 +11,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-    const [deletionProcess, setDeletionProcess] = React.useState({ 'step': 0, 'listing': null });
+    const [deletionProcess, setDeletionProcess] = React.useState({ step: 0, listing: null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -61,11 +61,7 @@ export default function Listings() {
         fetch('/ListingsData/deleteListing?' + new URLSearchParams({
             listingId: listingId
         }), {
-                method: 'DELETE',
-                //headers: {
-                //    'Content-Type': 'application/json'
-                //},
-                //body: JSON.stringify(listingId)
+                method: 'DELETE'
             }
         );
     }
