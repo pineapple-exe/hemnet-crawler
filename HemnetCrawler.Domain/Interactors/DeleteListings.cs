@@ -18,13 +18,17 @@ namespace HemnetCrawler.Domain.Interactors
 
         public void DeleteListing(int listingId)
         {
-            Listing listingToBeDeleted = _listingRepository.GetAllListings().Single(l => l.Id == listingId);
+            Listing listingToBeDeleted = _listingRepository.GetAllListings().SingleOrDefault(l => l.Id == listingId);
             ListingRating listingRatingToBeDeleted = _listingRatingRepository.GetAll().SingleOrDefault(lr => lr.ListingId == listingId);
             List<Image> imagesToBeDeleted = _listingRepository.GetAllImages().Where(img => img.ListingId == listingId).ToList();
 
             if (listingRatingToBeDeleted != null) _listingRatingRepository.DeleteListingRating(listingRatingToBeDeleted);
             if (imagesToBeDeleted != null) _listingRepository.DeleteImages(imagesToBeDeleted);
-            _listingRepository.DeleteListing(listingToBeDeleted);
+
+            if (listingToBeDeleted == null) 
+                throw new NotFoundException("Listing to be deleted not found."); 
+            else 
+                _listingRepository.DeleteListing(listingToBeDeleted);
         }
     }
 }
