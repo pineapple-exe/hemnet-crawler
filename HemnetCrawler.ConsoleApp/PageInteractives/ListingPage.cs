@@ -186,8 +186,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                     DriverBehavior.Scroll(driver, "div.all-images", 0, yPosition);
 
+                    int urlSearchAttempts = 0;
+
                     while (true)
                     {
+                        urlSearchAttempts++;
+
                         imgElement = DriverBehavior.FindElement(container, By.CssSelector("img.all-images__image.all-images__image--loaded"));
 
                         try
@@ -198,6 +202,15 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                             {
                                 imgSrc = new Uri(potentiallyLegitUri);
                                 break;
+                            }
+                            else if (urlSearchAttempts > 9)
+                            {
+                                throw new Exception("Never ending loop de loop");
+                            }
+                            else
+                            {
+                                Thread.Sleep(250);
+                                continue;
                             }
                         }
                         catch (StaleElementReferenceException)
