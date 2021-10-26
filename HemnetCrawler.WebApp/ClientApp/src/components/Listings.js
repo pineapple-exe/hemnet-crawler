@@ -11,7 +11,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-    const [deletionProcess, setDeletionProcess] = React.useState({ step: 0, listing: null });
+    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, listing: null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -49,11 +49,11 @@ export default function Listings() {
     }
 
     const deletePush = (listingId) => {
-        if (deletionProcess.step === 1) {
+        if (deletionProcess.deletePending) {
             deleteListing(listingId);
-            setDeletionProcess({ 'step': 0, 'listing': null });
+            setDeletionProcess({ 'deletePending': false, 'listing': null });
         } else {
-            setDeletionProcess({ 'step': deletionProcess.step + 1, 'listing': listingId });
+            setDeletionProcess({ 'deletePending': true, 'listing': listingId });
         }
     }
 
@@ -67,9 +67,9 @@ export default function Listings() {
     }
 
     const deletionInitiatedX = (listingId) => {
-        if (deletionProcess.step === 1 && deletionProcess.listing === listingId) {
+        if (deletionProcess.deletePending && deletionProcess.listing === listingId) {
             return (
-                <button onClick={() => setDeletionProcess({'step': 0, 'listing': null})}>
+                <button onClick={() => setDeletionProcess({'deletePending': false, 'listing': null})}>
                     <h3>X</h3>
                 </button>
             );
