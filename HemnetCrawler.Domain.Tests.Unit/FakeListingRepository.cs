@@ -21,6 +21,16 @@ namespace HemnetCrawler.Domain.Tests.Unit
             Listings.Add((Listing)listing.Clone());
         }
 
+        public void DeleteImages(List<Image> images)
+        {
+            Images.RemoveAll(i => images.Contains(i));
+        }
+
+        public void DeleteListing(Listing listing)
+        {
+            Listings.RemoveAll(l => l.Id == listing.Id);
+        }
+
         public IQueryable<Image> GetAllImages()
         {
             return Images.Select(i => (Image)i.Clone()).AsQueryable();

@@ -11,6 +11,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
+    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, listing: null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -34,7 +35,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, listingsPerPage]
+    }, [currentPage, listingsPerPage, deletionProcess]
     );
 
     const filterListings = (listings) => {
@@ -45,6 +46,34 @@ export default function Listings() {
                 (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
                 (usersFilter.street ? l.street.includes(usersFilter.street) : true)
             );
+    }
+
+    const deletePush = (listingId) => {
+        if (deletionProcess.deletePending) {
+            deleteListing(listingId);
+            setDeletionProcess({ 'deletePending': false, 'listing': null });
+        } else {
+            setDeletionProcess({ 'deletePending': true, 'listing': listingId });
+        }
+    }
+
+    const deleteListing = (listingId) => {
+        fetch('/ListingsData/deleteListing?' + new URLSearchParams({
+            listingId: listingId
+        }), {
+                method: 'DELETE'
+            }
+        );
+    }
+
+    const deletionInitiatedX = (listingId) => {
+        if (deletionProcess.deletePending && deletionProcess.listing === listingId) {
+            return (
+                <button onClick={() => setDeletionProcess({'deletePending': false, 'listing': null})}>
+                    <h3>X</h3>
+                </button>
+            );
+        }
     }
 
     const filledTableBody = filterListings(listings).map(l =>
@@ -58,6 +87,15 @@ export default function Listings() {
             <td>{l.homeType}</td>
             <td>{l.livingArea}</td>
             <td>{prettySEK(l.fee)}</td>
+            <td>
+                <div className="delete">
+                    <button onClick={() => deletePush(l.id)}>
+                        <img src="/img/trash-can.png" alt="trash-bin" />
+                    </button>
+
+                    {deletionInitiatedX(l.id)}
+                </div>
+            </td>
         </tr>
     );
 
@@ -150,6 +188,7 @@ export default function Listings() {
                             <th>Home type</th>
                             <th>Living area</th>
                             <th>Fee</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>

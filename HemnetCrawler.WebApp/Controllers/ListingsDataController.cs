@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
 
@@ -11,11 +10,13 @@ namespace HemnetCrawler.WebPage.Controllers
     {
         private readonly FetchListings _fetchListings;
         private readonly ListingQualities _listingQualities;
+        private readonly DeleteListings _deleteListings;
 
-        public ListingsDataController(FetchListings fetchListings, ListingQualities listingQualities)
+        public ListingsDataController(FetchListings fetchListings, ListingQualities listingQualities, DeleteListings deleteListings)
         {
             _fetchListings = fetchListings;
             _listingQualities = listingQualities;
+            _deleteListings = deleteListings;
         }
 
         [HttpGet("listings")]
@@ -54,6 +55,14 @@ namespace HemnetCrawler.WebPage.Controllers
         public IActionResult AddListingRating(ListingRatingInputModel ratingModel)
         {
             _listingQualities.AddListingRating(ratingModel.ListingId, ratingModel.KitchenRating, ratingModel.BathroomRating);
+
+            return Ok();
+        }
+
+        [HttpDelete("deleteListing")]
+        public IActionResult DeleteListing(int listingId)
+        {
+            _deleteListings.DeleteListing(listingId);
 
             return Ok();
         }
