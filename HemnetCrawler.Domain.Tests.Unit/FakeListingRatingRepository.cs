@@ -17,6 +17,11 @@ namespace HemnetCrawler.Domain.Tests.Unit
             listingRatings.Add(rating);
         }
 
+        public void DeleteListingRating(ListingRating rating)
+        {
+            listingRatings.Remove(rating);
+        }
+
         public IQueryable<ListingRating> GetAll()
         {
             return listingRatings.AsQueryable();
