@@ -62,10 +62,10 @@ export default function Listings() {
             listingId: listingId
         }), {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(listingId)
+                //headers: {
+                //    'Content-Type': 'application/json'
+                //},
+                //body: JSON.stringify(listingId)
             }
         );
     }
