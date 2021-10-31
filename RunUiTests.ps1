@@ -1,0 +1,1 @@
+dotnet build HemnetCrawler.WebApp.sln
