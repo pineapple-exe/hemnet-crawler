@@ -16,15 +16,20 @@ namespace HemnetCrawler.MockTestData
             DeleteDatabase(databaseName);
             CreateDatabase(databaseName);
 
-            HemnetCrawlerDbContext context = new($"Server=localhost;Database={databaseName};Trusted_Connection=True;");
+            HemnetCrawlerDbContext context = new(CreateConnectionString(databaseName));
             context.Database.Migrate();
 
             CreateMockData(context);
         }
 
+        static string CreateConnectionString(string databaseName)
+        {
+            return $"Server=localhost;Database={databaseName};Trusted_Connection=True;";
+        }
+
         static void ExecuteSqlNonQuery(string sql)
         {
-            using SqlConnection connection = new("Server=localhost;Database=master;Trusted_Connection=True;");
+            using SqlConnection connection = new(CreateConnectionString("master"));
 
             SqlCommand command = new(sql, connection);
 
