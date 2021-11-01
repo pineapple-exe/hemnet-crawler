@@ -1,2 +1,2 @@
 dotnet build HemnetCrawler.WebApp.sln
-& c:\Projects\hemnet-crawler\HemnetCrawler.MockTestData\Program.exe
+& C:\Projects\hemnet-crawler\HemnetCrawler.MockTestData\bin\Debug\net5.0\HemnetCrawler.MockTestData.exe
