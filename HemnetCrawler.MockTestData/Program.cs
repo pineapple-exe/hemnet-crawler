@@ -22,10 +22,8 @@ namespace HemnetCrawler.MockTestData
             CreateMockData(context);
         }
 
-        static void DeleteDatabase(string databaseName)
+        static void ExecuteSqlNonQuery(string sql)
         {
-            string sql = $"DROP DATABASE IF EXISTS {databaseName}";
-
             using SqlConnection connection = new("Server=localhost;Database=master;Trusted_Connection=True;");
 
             SqlCommand command = new(sql, connection);
@@ -34,16 +32,18 @@ namespace HemnetCrawler.MockTestData
             command.ExecuteNonQuery();
         }
 
+        static void DeleteDatabase(string databaseName)
+        {
+            string sql = $"DROP DATABASE IF EXISTS {databaseName}";
+
+            ExecuteSqlNonQuery(sql);
+        }
+
         static void CreateDatabase(string databaseName)
         {
             string sql = $"CREATE DATABASE {databaseName}";
 
-            using SqlConnection connection = new("Server=localhost;Database=master;Trusted_Connection=True;");
-
-            SqlCommand command = new(sql, connection);
-
-            command.Connection.Open();
-            command.ExecuteNonQuery();
+            ExecuteSqlNonQuery(sql);
         }
 
         static void CreateMockData(HemnetCrawlerDbContext context)
