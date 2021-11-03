@@ -4,7 +4,7 @@ import './tables.css';
 import './listingsMisc.css';
 import { prettySEK } from './Utils.js';
 import Pagination from './Pagination.js';
-import './DeleteEntity.js';
+/*import './DeleteEntity.js';*/
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
@@ -12,7 +12,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-/*    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, listing: null });*/
+    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, listing: null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -49,33 +49,33 @@ export default function Listings() {
             );
     }
 
-    //const deletePush = (listingId) => {
-    //    if (deletionProcess.deletePending) {
-    //        deleteListing(listingId);
-    //        setDeletionProcess({ 'deletePending': false, 'listing': null });
-    //    } else {
-    //        setDeletionProcess({ 'deletePending': true, 'listing': listingId });
-    //    }
-    //}
+    const deletePush = (listingId) => {
+        if (deletionProcess.deletePending) {
+            deleteListing(listingId);
+            setDeletionProcess({ 'deletePending': false, 'listing': null });
+        } else {
+            setDeletionProcess({ 'deletePending': true, 'listing': listingId });
+        }
+    }
 
-    //const deleteListing = (listingId) => {
-    //    fetch('/ListingsData/deleteListing?' + new URLSearchParams({
-    //        listingId: listingId
-    //    }), {
-    //            method: 'DELETE'
-    //        }
-    //    );
-    //}
+    const deleteListing = (listingId) => {
+        fetch('/ListingsData/deleteListing?' + new URLSearchParams({
+            listingId: listingId
+        }), {
+                method: 'DELETE'
+            }
+        );
+    }
 
-    //const deletionInitiatedX = (listingId) => {
-    //    if (deletionProcess.deletePending && deletionProcess.listing === listingId) {
-    //        return (
-    //            <button onClick={() => setDeletionProcess({'deletePending': false, 'listing': null})}>
-    //                <h3>X</h3>
-    //            </button>
-    //        );
-    //    }
-    //}
+    const deletionInitiatedX = (listingId) => {
+        if (deletionProcess.deletePending && deletionProcess.listing === listingId) {
+            return (
+                <button onClick={() => setDeletionProcess({'deletePending': false, 'listing': null})}>
+                    <h3>X</h3>
+                </button>
+            );
+        }
+    }
 
     const filledTableBody = filterListings(listings).map(l =>
         <tr className="listing" key={l.id}>
@@ -89,13 +89,13 @@ export default function Listings() {
             <td>{l.livingArea}</td>
             <td>{prettySEK(l.fee)}</td>
             <td>
-                {/*<div className="delete">*/}
-                {/*    <button onClick={() => deletePush(l.id)}>*/}
-                {/*        <img src="/img/trash-can.png" alt="trash-bin" />*/}
-                {/*    </button>*/}
+                <div className="delete">
+                    <button onClick={() => deletePush(l.id)}>
+                        <img src="/img/trash-can.png" alt="trash-bin" />
+                    </button>
 
-                {/*    {deletionInitiatedX(l.id)}*/}
-                {/*</div>*/}
+                    {deletionInitiatedX(l.id)}
+                </div>
             </td>
         </tr>
     );

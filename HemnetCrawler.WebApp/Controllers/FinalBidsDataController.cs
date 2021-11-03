@@ -9,10 +9,12 @@ namespace HemnetCrawler.WebApp.Controllers
     public class FinalBidsDataController : ControllerBase
     {
         private readonly FetchFinalBids _fetchFinalBids;
+        private readonly DeleteFinalBids _deleteFinalBids;
 
-        public FinalBidsDataController(FetchFinalBids fetchFinalBids)
+        public FinalBidsDataController(FetchFinalBids fetchFinalBids, DeleteFinalBids deleteFinalBids)
         {
             _fetchFinalBids = fetchFinalBids;
+            _deleteFinalBids = deleteFinalBids;
         }
 
         [HttpGet("finalBid")]
@@ -31,6 +33,14 @@ namespace HemnetCrawler.WebApp.Controllers
         public IActionResult GetRelevantFinalBids(int listingId)
         {
             return Ok(new { finalBids = _fetchFinalBids.ListRelevantFinalBids(listingId) });
+        }
+
+        [HttpDelete("deleteFinalBid")]
+        public IActionResult DeleteFinalBid(int finalBidId)
+        {
+            _deleteFinalBids.DeleteFinalBid(finalBidId);
+
+            return Ok();
         }
     }
 }

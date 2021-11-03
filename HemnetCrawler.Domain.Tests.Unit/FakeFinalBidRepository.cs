@@ -14,6 +14,11 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBids.Add(finalBid);
         }
 
+        public void DeleteFinalBid(FinalBid finalBid)
+        {
+            FinalBids.Remove(finalBid);
+        }
+
         public IQueryable<FinalBid> GetAll()
         {
             return FinalBids.AsQueryable();

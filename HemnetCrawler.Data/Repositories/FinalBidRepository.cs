@@ -25,6 +25,12 @@ namespace HemnetCrawler.Data.Repositories
             _context.SaveChanges();
         }
 
+        public void DeleteFinalBid(FinalBid finalBid)
+        {
+            _context.Remove(finalBid);
+            _context.SaveChanges();
+        }
+
         public IQueryable<FinalBid> GetAll()
         {
             return _context.FinalBids;

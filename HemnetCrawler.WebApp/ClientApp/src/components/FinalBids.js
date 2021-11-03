@@ -11,6 +11,7 @@ export default function FinalBids() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
+    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, finalBid: null });
 
     useEffect(() => {
         setLoading(true);
@@ -24,8 +25,36 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, finalBidsPerPage]
+    }, [currentPage, finalBidsPerPage, deletionProcess]
     );
+
+    const deletePush = (finalBidId) => {
+        if (deletionProcess.deletePending) {
+            deleteFinalBid(finalBidId);
+            setDeletionProcess({ 'deletePending': false, 'finalBid': null });
+        } else {
+            setDeletionProcess({ 'deletePending': true, 'finalBid': finalBidId });
+        }
+    }
+
+    const deleteFinalBid = (finalBidId) => {
+        fetch('/FinalBidsData/deleteFinalBid?' + new URLSearchParams({
+            finalBidId: finalBidId
+        }), {
+            method: 'DELETE'
+        }
+        );
+    }
+
+    const deletionInitiatedX = (finalBidId) => {
+        if (deletionProcess.deletePending && deletionProcess.finalBid === finalBidId) {
+            return (
+                <button onClick={() => setDeletionProcess({ 'deletePending': false, 'finalBid': null })}>
+                    <h3>X</h3>
+                </button>
+            );
+        }
+    }
 
     const filledTableBody = finalBids.map(fb =>
         <tr className="final-bid" key={fb.id}>
@@ -40,6 +69,14 @@ export default function FinalBids() {
             <td>{prettySEK(fb.fee)}</td>
             <td>{fb.soldDate}</td>
             <td>{prettySEK(fb.demandedPrice)}</td>
+            <td>
+                <div className="delete">
+                    <button onClick={() => deletePush(fb.id)}>
+                        <img src="/img/trash-can.png" alt="trash-bin" />
+                    </button>
+                    {deletionInitiatedX(fb.id)}
+                </div>
+            </td>
         </tr>
     );
 
@@ -64,6 +101,7 @@ export default function FinalBids() {
                             <th>Fee</th>
                             <th>Sold date</th>
                             <th>Demanded price</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
