@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import './tables.css';
 import { prettySEK } from './Utils.js';
 import Pagination from './Pagination.js';
+import DeleteEntity from './DeleteEntity.js';
 
 export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
@@ -11,7 +12,6 @@ export default function FinalBids() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
-    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, finalBid: null });
 
     useEffect(() => {
         setLoading(true);
@@ -25,17 +25,8 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, finalBidsPerPage, deletionProcess]
+    }, [currentPage, finalBidsPerPage]
     );
-
-    const deletePush = (finalBidId) => {
-        if (deletionProcess.deletePending) {
-            deleteFinalBid(finalBidId);
-            setDeletionProcess({ 'deletePending': false, 'finalBid': null });
-        } else {
-            setDeletionProcess({ 'deletePending': true, 'finalBid': finalBidId });
-        }
-    }
 
     const deleteFinalBid = (finalBidId) => {
         fetch('/FinalBidsData/deleteFinalBid?' + new URLSearchParams({
@@ -44,16 +35,6 @@ export default function FinalBids() {
             method: 'DELETE'
         }
         );
-    }
-
-    const deletionInitiatedX = (finalBidId) => {
-        if (deletionProcess.deletePending && deletionProcess.finalBid === finalBidId) {
-            return (
-                <button onClick={() => setDeletionProcess({ 'deletePending': false, 'finalBid': null })}>
-                    <h3>X</h3>
-                </button>
-            );
-        }
     }
 
     const filledTableBody = finalBids.map(fb =>
@@ -70,12 +51,7 @@ export default function FinalBids() {
             <td>{fb.soldDate}</td>
             <td>{prettySEK(fb.demandedPrice)}</td>
             <td>
-                <div className="delete">
-                    <button onClick={() => deletePush(fb.id)}>
-                        <img src="/img/trash-can.png" alt="trash-bin" />
-                    </button>
-                    {deletionInitiatedX(fb.id)}
-                </div>
+                <DeleteEntity id={fb.id} deleteEntity={deleteFinalBid} />
             </td>
         </tr>
     );

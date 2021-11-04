@@ -1,44 +1,33 @@
-﻿import React, { useEffect } from 'react';
+﻿import React from 'react';
 
-export default function DeleteEntity() {
-    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, id: null });
+export default function DeleteEntity(props) {
+    const [deletePending, setDeletePending] = React.useState(false);
 
-    const deletePush = (id) => {
-        if (deletionProcess.deletePending) {
-            deleteListing(listingId);
-            setDeletionProcess({ 'deletePending': false, 'id': null });
+    const deletePush = () => {
+        if (deletePending) {
+            props.deleteEntity(props.id);
+            setDeletePending(false);
         } else {
-            setDeletionProcess({ 'deletePending': true, 'id': id });
+            setDeletePending(true);
         }
     }
 
-    const deleteEntity = (type, id) => {
-        fetch('/ListingsData/deleteListing?' + new URLSearchParams({
-            listingId: listingId
-        }), {
-            method: 'DELETE'
-        }
-        );
-    }
-
-    const deletionInitiatedX = (id) => {
-        if (deletionProcess.deletePending && deletionProcess.id === id) {
+    const deleteInitiatedX = () => {
+        if (deletePending) {
             return (
-                <button onClick={() => setDeletionProcess({ 'deletePending': false, 'id': null })}>
+                <button onClick={() => setDeletePending(false)}>
                     <h3>X</h3>
                 </button>
             );
         }
     }
 
-    const createDeleteElements = (id) => {
-        return (
-            <div className="delete">
-                <button onClick={() => deletePush(id)}>
-                    <img src="/img/trash-can.png" alt="trash-bin" />
-                </button>
-                {deletionInitiatedX(id)}
-            </div>
-        );
-    }
+    return (
+        <div className="delete">
+            <button onClick={() => deletePush()}>
+                <img src="/img/trash-can.png" alt="trash-bin" />
+            </button>
+            {deleteInitiatedX()}
+        </div>
+    );
 }
