@@ -25,7 +25,7 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, finalBidsPerPage]
+    }, [currentPage, finalBidsPerPage, finalBids]
     );
 
     const deleteFinalBid = (finalBidId) => {

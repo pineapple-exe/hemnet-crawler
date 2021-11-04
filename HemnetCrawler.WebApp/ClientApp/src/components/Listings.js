@@ -35,7 +35,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, listingsPerPage]
+    }, [currentPage, listingsPerPage, listings]
     );
 
     const filterListings = (listings) => {
