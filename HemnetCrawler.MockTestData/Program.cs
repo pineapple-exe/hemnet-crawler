@@ -13,24 +13,42 @@ namespace HemnetCrawler.MockTestData
         static void Main(string[] args)
         {
             string databaseName = "HemnetCrawlerTest";
+            DeleteDatabase(databaseName);
             CreateDatabase(databaseName);
 
-            HemnetCrawlerDbContext context = new($"Server=localhost;Database={databaseName};Trusted_Connection=True;");
+            HemnetCrawlerDbContext context = new(CreateConnectionString(databaseName));
             context.Database.Migrate();
 
             CreateMockData(context);
+        }
+
+        static string CreateConnectionString(string databaseName)
+        {
+            return $"Server=localhost;Database={databaseName};Trusted_Connection=True;";
+        }
+
+        static void ExecuteSqlNonQuery(string sql)
+        {
+            using SqlConnection connection = new(CreateConnectionString("master"));
+
+            SqlCommand command = new(sql, connection);
+
+            command.Connection.Open();
+            command.ExecuteNonQuery();
+        }
+
+        static void DeleteDatabase(string databaseName)
+        {
+            string sql = $"DROP DATABASE IF EXISTS {databaseName}";
+
+            ExecuteSqlNonQuery(sql);
         }
 
         static void CreateDatabase(string databaseName)
         {
             string sql = $"CREATE DATABASE {databaseName}";
 
-            using SqlConnection connection = new("Server=localhost;Database=master;Trusted_Connection=True;");
-
-            SqlCommand command = new(sql, connection);
-
-            command.Connection.Open();
-            command.ExecuteNonQuery();
+            ExecuteSqlNonQuery(sql);
         }
 
         static void CreateMockData(HemnetCrawlerDbContext context)
