@@ -18,14 +18,7 @@ namespace HemnetCrawler.Domain.Interactors
 
         public void DeleteFinalBid(int finalBidId)
         {
-            FinalBid finalBidToBeDeleted = _finalBidRepository.GetAll().SingleOrDefault(l => l.Id == finalBidId);
-
-            if (finalBidToBeDeleted == null)
-                throw new NotFoundException("Final bid to be deleted not found.");
-            else
-                _finalBidRepository.DeleteFinalBid(finalBidToBeDeleted);
-
-            IQueryable<Listing> listingsToBeAltered = _listingRepository.GetAllListings().Where(l => l.FinalBidId == finalBidId);
+            List<Listing> listingsToBeAltered = _listingRepository.GetAllListings().Where(l => l.FinalBidId == finalBidId).ToList();
 
             if (listingsToBeAltered.Any())
             {
@@ -35,6 +28,13 @@ namespace HemnetCrawler.Domain.Interactors
                     _listingRepository.UpdateListing(listing);
                 }
             }
+
+            FinalBid finalBidToBeDeleted = _finalBidRepository.GetAll().SingleOrDefault(l => l.Id == finalBidId);
+
+            if (finalBidToBeDeleted == null)
+                throw new NotFoundException("Final bid to be deleted not found.");
+            else
+                _finalBidRepository.DeleteFinalBid(finalBidToBeDeleted);
         }
     }
 }

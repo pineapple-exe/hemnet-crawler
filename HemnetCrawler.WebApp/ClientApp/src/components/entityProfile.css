@@ -33,3 +33,24 @@ li {
     font-weight: bold;
     color: lightcoral;
 }
+
+div.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete button {
+    background: none;
+    padding: 0px;
+}
+
+.delete h3 {
+    color: red;
+}
+
+.delete img {
+    background: none;
+    width: 1.5rem;
+    height: 1.5rem;
+}

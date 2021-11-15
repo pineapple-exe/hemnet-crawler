@@ -39,7 +39,7 @@ export default function FinalBids() {
 
     const filledTableBody = finalBids.map(fb =>
         <tr className="final-bid" key={fb.id}>
-            <td><Link to={`/finalBid/${fb.id}`}>{fb.id}</Link></td>
+            <td><Link className="id" to={`/finalBid/${fb.id}`}>{fb.id}</Link></td>
             <td>{fb.street}</td>
             <td>{fb.city}</td>
             <td>{fb.postalCode}</td>

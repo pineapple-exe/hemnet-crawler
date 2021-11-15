@@ -59,7 +59,7 @@ export default function Listings() {
 
     const filledTableBody = filterListings(listings).map(l =>
         <tr className="listing" key={l.id}>
-            <td><Link to={`/listing/${l.id}`}>{l.id}</Link></td>
+            <td><Link className="id" to={`/listing/${l.id}`}>{l.id}</Link></td>
             <td>{l.street}</td>
             <td>{l.city}</td>
             <td>{l.postalCode}</td>

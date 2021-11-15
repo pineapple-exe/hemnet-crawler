@@ -15,7 +15,7 @@ export default function DeleteEntity(props) {
     const deleteInitiatedX = () => {
         if (deletePending) {
             return (
-                <button onClick={() => setDeletePending(false)}>
+                <button className="cancel" onClick={() => setDeletePending(false)}>
                     <h3>X</h3>
                 </button>
             );
@@ -24,7 +24,7 @@ export default function DeleteEntity(props) {
 
     return (
         <div className="delete">
-            <button onClick={() => deletePush()}>
+            <button className="delete" onClick={() => deletePush()}>
                 <img src="/img/trash-can.png" alt="trash-bin" />
             </button>
             {deleteInitiatedX()}
