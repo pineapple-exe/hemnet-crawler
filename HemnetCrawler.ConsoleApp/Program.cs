@@ -22,7 +22,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             ConsoleLogger logger = new();
 
-            //SearchAndCollectListings(listingRepository, logger);
+            SearchAndCollectListings(listingRepository, logger);
             SearchAndCollectFinalBids(finalBidRepository, logger);
 
             CollectHrefsForOldListings(listingRepository, logger);
