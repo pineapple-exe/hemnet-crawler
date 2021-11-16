@@ -11,6 +11,10 @@ li {
     color: #980A57;
 }
 
+.final-bid {
+    margin-left: 4px;
+}
+
 .unknown-value {
     font-style: italic;
     color: #D5D5D5;
