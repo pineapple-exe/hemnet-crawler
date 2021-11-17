@@ -6,7 +6,7 @@ const ratingTypes = ['kitchen', 'bathroom'];
 const enterFirstListing = () => {
     cy.visit(`${data.baseUrl}listings`);
 
-    cy.get('td').first().click();
+    cy.get('td > a').first().click();
 }
 
 describe('Listings', () => {
@@ -50,15 +50,17 @@ describe('Rating options', () => {
         enterFirstListing();
 
         for (let i = 0; i < ratingTypes.length; i++) {
-            cy.get(`div.${ratingTypes[i]}-rating>p`).should('not.be.empty');
+            cy.get(`div.${ratingTypes[i]}-rating > p`).should('not.be.empty');
         }
     });
 
     it('Checks the existence of options', () => {
         enterFirstListing();
 
-        for (let i = 0; i < ratingTypes.length; i++) {
-            cy.get(`div.${ratingTypes[i]}-rating>button`).should('have.length', 3);
+        for (let j = 0; j < ratingTypes.length; j++) {
+            cy.get(`div.${ratingTypes[j]}-rating > button`).should(($buttons) => {
+                expect($buttons).to.have.length(3);
+            });
         }
     });
 
@@ -76,7 +78,7 @@ describe('Rating options', () => {
         }
     });
 
-    it('Checks Rate Listing button responsivity', () => {
+    it('Checks Submit rating button responsivity', () => {
         enterFirstListing();
 
         cy.get(`div.${ratingTypes[0]}-rating>button`).not('.already-chosen').first().click();
