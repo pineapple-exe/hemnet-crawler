@@ -29,6 +29,7 @@ namespace HemnetCrawler.WebPage
             services.AddTransient<FetchListings>();
             services.AddTransient<ListingQualities>();
             services.AddTransient<DeleteListings>();
+            services.AddTransient<DeleteFinalBids>();
             services.AddTransient<IListingRepository, ListingRepository>();
             services.AddTransient<IFinalBidRepository, FinalBidRepository>();
             services.AddTransient<IListingRatingRepository, ListingRatingRepository>();

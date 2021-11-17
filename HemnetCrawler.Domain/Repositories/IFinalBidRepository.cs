@@ -8,5 +8,6 @@ namespace HemnetCrawler.Domain.Repositories
         void AddFinalBid(FinalBid finalBid);
         void UpdateFinalBid(FinalBid finalBid);
         IQueryable<FinalBid> GetAll();
+        void DeleteFinalBid(FinalBid finalBid);
     }
 }

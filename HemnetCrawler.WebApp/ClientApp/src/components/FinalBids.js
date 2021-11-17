@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import './tables.css';
 import { prettySEK } from './Utils.js';
 import Pagination from './Pagination.js';
+import DeleteEntity from './DeleteEntity.js';
 
 export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
@@ -24,12 +25,21 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, finalBidsPerPage]
+    }, [currentPage, finalBidsPerPage, finalBids]
     );
+
+    const deleteFinalBid = (finalBidId) => {
+        fetch('/FinalBidsData/deleteFinalBid?' + new URLSearchParams({
+            finalBidId: finalBidId
+        }), {
+            method: 'DELETE'
+        }
+        );
+    }
 
     const filledTableBody = finalBids.map(fb =>
         <tr className="final-bid" key={fb.id}>
-            <td><Link to={`/finalBid/${fb.id}`}>{fb.id}</Link></td>
+            <td><Link className="id" to={`/finalBid/${fb.id}`}>{fb.id}</Link></td>
             <td>{fb.street}</td>
             <td>{fb.city}</td>
             <td>{fb.postalCode}</td>
@@ -40,6 +50,9 @@ export default function FinalBids() {
             <td>{prettySEK(fb.fee)}</td>
             <td>{fb.soldDate}</td>
             <td>{prettySEK(fb.demandedPrice)}</td>
+            <td>
+                <DeleteEntity id={fb.id} deleteEntity={deleteFinalBid} />
+            </td>
         </tr>
     );
 
@@ -64,6 +77,7 @@ export default function FinalBids() {
                             <th>Fee</th>
                             <th>Sold date</th>
                             <th>Demanded price</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -11,6 +11,10 @@ li {
     color: #980A57;
 }
 
+.final-bid {
+    margin-left: 4px;
+}
+
 .unknown-value {
     font-style: italic;
     color: #D5D5D5;
@@ -32,4 +36,25 @@ li {
 .estimation-key {
     font-weight: bold;
     color: lightcoral;
+}
+
+div.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete button {
+    background: none;
+    padding: 0px;
+}
+
+.delete h3 {
+    color: red;
+}
+
+.delete img {
+    background: none;
+    width: 1.5rem;
+    height: 1.5rem;
 }

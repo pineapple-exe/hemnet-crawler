@@ -5,7 +5,7 @@ namespace HemnetCrawler.Data
 {
     public class HemnetCrawlerDbContext : DbContext
     {
-        private string _connectionString = "Server=localhost;Database=TestUggeboiAndPinegal;Trusted_Connection=True;";
+        private string _connectionString = "Server=localhost;Database=HemnetCrawlerTest;Trusted_Connection=True;";
 
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Image> Images { get; set; }

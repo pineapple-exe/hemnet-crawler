@@ -74,6 +74,24 @@ namespace HemnetCrawler.MockTestData
                 ConstructionYear = "2021"
             });
 
+            finalBidRepository.AddFinalBid(new FinalBid()
+            {
+                HemnetId = 101,
+                Href = "https://www.hemnet.se/salda/lagenhet-1,5rum-kalleback-goteborgs-kommun-ostgatan-2-acceptpris-74256",
+                LastUpdated = DateTimeOffset.Now,
+                Street = "Testvägen 2 B",
+                City = "Teststaden",
+                Price = 300,
+                SoldDate = new DateTime(2021, 10, 4),
+                DemandedPrice = 100,
+                PriceDevelopment = "+100 kr(+100%)",
+                HomeType = "Lägenhet",
+                OwnershipType = "Bostadsrätt",
+                Rooms = "1,5 rum",
+                PropertyArea = 75,
+                ConstructionYear = "2021"
+            });
+
             listingRepository.AddListing(new Listing() 
             {
                 HemnetId = 100,

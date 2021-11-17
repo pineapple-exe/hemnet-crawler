@@ -4,6 +4,7 @@ import './tables.css';
 import './listingsMisc.css';
 import { prettySEK } from './Utils.js';
 import Pagination from './Pagination.js';
+import DeleteEntity from './DeleteEntity.js';
 
 export default function Listings() {
     const [listings, setListings] = React.useState([]);
@@ -11,7 +12,6 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-    const [deletionProcess, setDeletionProcess] = React.useState({ deletePending: false, listing: null });
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -35,7 +35,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, listingsPerPage, deletionProcess]
+    }, [currentPage, listingsPerPage, listings]
     );
 
     const filterListings = (listings) => {
@@ -48,15 +48,6 @@ export default function Listings() {
             );
     }
 
-    const deletePush = (listingId) => {
-        if (deletionProcess.deletePending) {
-            deleteListing(listingId);
-            setDeletionProcess({ 'deletePending': false, 'listing': null });
-        } else {
-            setDeletionProcess({ 'deletePending': true, 'listing': listingId });
-        }
-    }
-
     const deleteListing = (listingId) => {
         fetch('/ListingsData/deleteListing?' + new URLSearchParams({
             listingId: listingId
@@ -66,19 +57,9 @@ export default function Listings() {
         );
     }
 
-    const deletionInitiatedX = (listingId) => {
-        if (deletionProcess.deletePending && deletionProcess.listing === listingId) {
-            return (
-                <button onClick={() => setDeletionProcess({'deletePending': false, 'listing': null})}>
-                    <h3>X</h3>
-                </button>
-            );
-        }
-    }
-
     const filledTableBody = filterListings(listings).map(l =>
         <tr className="listing" key={l.id}>
-            <td><Link to={`/listing/${l.id}`}>{l.id}</Link></td>
+            <td><Link className="id" to={`/listing/${l.id}`}>{l.id}</Link></td>
             <td>{l.street}</td>
             <td>{l.city}</td>
             <td>{l.postalCode}</td>
@@ -88,13 +69,7 @@ export default function Listings() {
             <td>{l.livingArea}</td>
             <td>{prettySEK(l.fee)}</td>
             <td>
-                <div className="delete">
-                    <button onClick={() => deletePush(l.id)}>
-                        <img src="/img/trash-can.png" alt="trash-bin" />
-                    </button>
-
-                    {deletionInitiatedX(l.id)}
-                </div>
+                <DeleteEntity id={l.id} deleteEntity={deleteListing} />
             </td>
         </tr>
     );

@@ -36,7 +36,7 @@ export default function Listing(props) {
                     <li>
                         <span className="property-name">Final bid:</span>
                         <span className="property-value">
-                            <Link to={`/finalBid/${finalBidId}`}>
+                            <Link className="final-bid" to={`/finalBid/${finalBidId}`}>
                                 {finalBidId}
                             </Link>
                         </span>
@@ -49,15 +49,15 @@ export default function Listing(props) {
             <div className="listing-container">
                 <ul className="listing-properties">
                     <li><span className="property-name">Id:</span> <span className="property-value">{listing.id}</span></li>
-                    {finalBidLinkProperty(listing.finalBidId)}
                     <li><span className="property-name">Street:</span> <span className="property-value">{listing.street}</span></li>
                     <li><span className="property-name">City:</span> <span className="property-value">{listing.city}</span></li>
                     <li><span className="property-name">Postal code:</span> <span className="property-value">{entityProperty(listing.postalCode)}</span></li>
                     <li><span className="property-name">Price:</span> <span className="property-value">{entityProperty(prettySEK(listing.price))}</span></li>
-                    <li><span className="property-name">Rooms:</span> <span className="property-value">{listing.rooms === null ? '-' : listing.rooms}</span></li>
+                    <li><span className="property-name">Rooms:</span> <span className="property-value">{listing.rooms === null ? 'unknown' : listing.rooms}</span></li>
                     <li><span className="property-name">Home type:</span> <span className="property-value">{listing.homeType}</span></li>
-                    <li><span className="property-name">Living area:</span> <span className="property-value">{listing.livingArea === null ? '-' : listing.livingArea}</span></li>
+                    <li><span className="property-name">Living area:</span> <span className="property-value">{listing.livingArea === null ? 'unknown' : listing.livingArea}</span></li>
                     <li><span className="property-name">Fee:</span> <span className="property-value">{entityProperty(prettySEK(listing.fee))}</span></li>
+                    {finalBidLinkProperty(listing.finalBidId)}
                 </ul>
 
                 <Link className="estimation-link" to={`/finalBidEstimation/${listing.id}`}>
