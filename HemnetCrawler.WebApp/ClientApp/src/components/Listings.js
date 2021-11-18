@@ -127,6 +127,29 @@ export default function Listings() {
         }
     }
 
+    const tableHead = (propertyNames) => {
+        const clickables = (names) => (
+            <>
+                {names.map(name => (
+                    <th>
+                        <button className="order-by">
+                            {name}
+                        </button>
+                    </th>
+                ))}
+            </>
+        );
+
+        return (
+            <thead>
+                <tr>
+                    {clickables(propertyNames)}
+                    <th>Delete</th>
+                </tr>
+            </thead>
+        );
+    }
+
     if (loading) {
         return (
             <p>Please wait while loading listings...</p>
@@ -152,20 +175,7 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Street</th>
-                            <th>City</th>
-                            <th>Postal code</th>
-                            <th>Price</th>
-                            <th>Rooms</th>
-                            <th>Home type</th>
-                            <th>Living area</th>
-                            <th>Fee</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
+                    {tableHead(['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'])}
                     <tbody>
                         {filledTableBody}
                     </tbody>
