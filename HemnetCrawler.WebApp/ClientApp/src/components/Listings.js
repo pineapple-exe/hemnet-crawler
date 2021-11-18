@@ -44,7 +44,7 @@ export default function Listings() {
                 (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
                 (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
                 (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
-                (usersFilter.street ? l.street.includes(usersFilter.street) : true)
+                (usersFilter.street ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
             );
     }
 
