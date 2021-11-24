@@ -75,8 +75,6 @@ namespace HemnetCrawler.Domain.Interactors
 
         public static List<ListingOutputModel> OrderListings(List<ListingOutputModel> outputModels, Order order, string by)
         {
-            IEnumerable<ListingOutputModel> orderedModels = outputModels;
-
             return
                 by == "id" ? OrderByStation(outputModels, order, l => l.Id) :
                 by == "street" ? OrderByStation(outputModels, order, l => l.Street) :
