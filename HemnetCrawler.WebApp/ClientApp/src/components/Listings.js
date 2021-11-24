@@ -7,11 +7,15 @@ import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
 export default function Listings() {
+    const propertyNames = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'];
+
     const [listings, setListings] = React.useState([]);
     const [total, setTotal] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
+    const [order, setOrder] = React.useState(0);
+    const [by, setBy] = React.useState(propertyNames[0]);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -27,15 +31,17 @@ export default function Listings() {
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
             page: currentPage,
-            size: listingsPerPage
+            size: listingsPerPage,
+            order: order,
+            by: by
         }))
             .then(resp => resp.json())
             .then(data => {
                 setListings(data.subset);
                 setTotal(data.total);
             })
-            .then(setLoading(false))
-    }, [currentPage, listingsPerPage, listings]
+            .then(setLoading(false)).then(console.log(order + ' ' + by))
+    }, [currentPage, listingsPerPage, listings, order, by]
     );
 
     const filterListings = (listings) => {
@@ -127,12 +133,17 @@ export default function Listings() {
         }
     }
 
+    const reEvaluateOrderBy = (propertyName) => {
+        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+        setBy(propertyName);
+    }
+
     const tableHead = (propertyNames) => {
         const clickables = (names) => (
             <>
                 {names.map(name => (
                     <th>
-                        <button className="order-by">
+                        <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
                             {name}
                         </button>
                     </th>
@@ -175,7 +186,7 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    {tableHead(['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'])}
+                    {tableHead(propertyNames)}
                     <tbody>
                         {filledTableBody}
                     </tbody>

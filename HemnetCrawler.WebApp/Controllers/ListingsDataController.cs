@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
+using static HemnetCrawler.Domain.Interactors.FetchListings;
 
 namespace HemnetCrawler.WebPage.Controllers
 {
@@ -20,9 +21,9 @@ namespace HemnetCrawler.WebPage.Controllers
         }
 
         [HttpGet("listings")]
-        public EntitiesPage<ListingOutputModel> GetListings(int page, int size)
+        public EntitiesPage<ListingOutputModel> GetListings(int page, int size, Order order, string by)
         {
-            return _fetchListings.ListListings(page, size);
+            return _fetchListings.ListListings(page, size, order, by.ToLower());
         }
 
         [HttpGet("listing")]
