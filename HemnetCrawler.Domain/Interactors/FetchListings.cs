@@ -51,7 +51,7 @@ namespace HemnetCrawler.Domain.Interactors
             Descending
         }
 
-        public static List<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
+        public static IEnumerable<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
         {
             CultureInfo culture = new("sv-SE");
             StringComparer stringComparer = StringComparer.Create(culture, false);
@@ -60,20 +60,20 @@ namespace HemnetCrawler.Domain.Interactors
             if (order == SortDirection.Ascending)
             {
                 if (typeof(T) == typeof(string)) 
-                    return listings.OrderBy(stringOrderByRule, stringComparer).ToList();
+                    return listings.OrderBy(stringOrderByRule, stringComparer);
                 else 
-                    return listings.OrderBy(orderByRule).ToList();
+                    return listings.OrderBy(orderByRule);
             }
             else
             {
                 if (typeof(T) == typeof(string))
-                    return listings.OrderByDescending(stringOrderByRule, stringComparer).ToList();
+                    return listings.OrderByDescending(stringOrderByRule, stringComparer);
                 else
-                    return listings.OrderByDescending(orderByRule).ToList();
+                    return listings.OrderByDescending(orderByRule);
             }
         }
 
-        public static List<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
+        public static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
         {
             return
                 by == "id" ? OrderByStation(listings, order, l => l.Id) :
@@ -85,7 +85,7 @@ namespace HemnetCrawler.Domain.Interactors
                 by == "home type" ? OrderByStation(listings, order, l => l.HomeType) :
                 by == "living area" ? OrderByStation(listings, order, l => l.LivingArea) :
                 by == "fee" ? OrderByStation(listings, order, l => l.Fee) :
-                listings.ToList();
+                listings;
         }
 
         public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection order = SortDirection.Ascending, string by = "id")
