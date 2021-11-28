@@ -3,6 +3,8 @@ using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Globalization;
 
 namespace HemnetCrawler.Domain.Interactors
 {
@@ -43,19 +45,61 @@ namespace HemnetCrawler.Domain.Interactors
 
             return MapListingToOutputModel(listing, imageIds);
         }
-
-        public EntitiesPage<ListingOutputModel> ListListings(int page, int size)
+        public enum SortDirection
         {
-            IQueryable<Listing> allListings = _listingRepository.GetAllListings().Skip(size * page).Take(size);
+            Ascending,
+            Descending
+        }
+
+        private static IEnumerable<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
+        {
+            CultureInfo culture = new("sv-SE");
+            StringComparer stringComparer = StringComparer.Create(culture, false);
+            string stringOrderByRule(Listing l) => (string)Convert.ChangeType(orderByRule(l), typeof(string));
+
+            if (order == SortDirection.Ascending)
+            {
+                if (typeof(T) == typeof(string)) 
+                    return listings.OrderBy(stringOrderByRule, stringComparer);
+                else 
+                    return listings.OrderBy(orderByRule);
+            }
+            else
+            {
+                if (typeof(T) == typeof(string))
+                    return listings.OrderByDescending(stringOrderByRule, stringComparer);
+                else
+                    return listings.OrderByDescending(orderByRule);
+            }
+        }
+
+        private static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
+        {
+            return
+                by == "id" ? OrderByStation(listings, order, l => l.Id) :
+                by == "street" ? OrderByStation(listings, order, l => l.Street) :
+                by == "city" ? OrderByStation(listings, order, l => l.City) :
+                by == "postal code" ? OrderByStation(listings, order, l => l.PostalCode) :
+                by == "price" ? OrderByStation(listings, order, l => l.Price) :
+                by == "rooms" ? OrderByStation(listings, order, l => l.Rooms) :
+                by == "home type" ? OrderByStation(listings, order, l => l.HomeType) :
+                by == "living area" ? OrderByStation(listings, order, l => l.LivingArea) :
+                by == "fee" ? OrderByStation(listings, order, l => l.Fee) :
+                listings;
+        }
+
+        public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection order = SortDirection.Ascending, string by = "id")
+        {
+            IEnumerable<Listing> allListings = OrderListings(_listingRepository.GetAllListings(), order, by).Skip(size * pageIndex).Take(size);
             IQueryable<Image> images = _listingRepository.GetAllImages();
 
             int total = _listingRepository.GetAllListings().Count();
 
-            List<ListingOutputModel> outputModels = allListings.Select(l => 
+            IEnumerable<ListingOutputModel> outputModels = allListings.Select(l => 
                 MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
-                ).ToList();
+                );
 
-            return new EntitiesPage<ListingOutputModel>(outputModels, total);
+            return new ItemsPage<ListingOutputModel>(outputModels, total);
         }
     }
 }

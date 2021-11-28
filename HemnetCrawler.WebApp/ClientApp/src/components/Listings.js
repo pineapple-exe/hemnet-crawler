@@ -7,11 +7,15 @@ import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
 export default function Listings() {
+    const propertyNames = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'];
+
     const [listings, setListings] = React.useState([]);
     const [total, setTotal] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = React.useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
+    const [order, setOrder] = React.useState(0);
+    const [by, setBy] = React.useState(propertyNames[0]);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -26,16 +30,18 @@ export default function Listings() {
         setLoading(true);
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
-            page: currentPage,
-            size: listingsPerPage
+            pageIndex: currentPageIndex,
+            size: listingsPerPage,
+            order: order,
+            by: by
         }))
             .then(resp => resp.json())
             .then(data => {
-                setListings(data.subset);
+                setListings(data.items);
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, listingsPerPage, listings]
+    }, [currentPageIndex, listingsPerPage, listings, order, by]
     );
 
     const filterListings = (listings) => {
@@ -44,7 +50,7 @@ export default function Listings() {
                 (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
                 (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
                 (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
-                (usersFilter.street ? l.street.includes(usersFilter.street) : true)
+                (usersFilter.street ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
             );
     }
 
@@ -127,6 +133,34 @@ export default function Listings() {
         }
     }
 
+    const reEvaluateOrderBy = (propertyName) => {
+        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+        setBy(propertyName);
+    }
+
+    const tableHead = (propertyNames) => {
+        const clickables = (names) => (
+            <>
+                {names.map(name => (
+                    <th>
+                        <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
+                            {name}
+                        </button>
+                    </th>
+                ))}
+            </>
+        );
+
+        return (
+            <thead>
+                <tr>
+                    {clickables(propertyNames)}
+                    <th>Delete</th>
+                </tr>
+            </thead>
+        );
+    }
+
     if (loading) {
         return (
             <p>Please wait while loading listings...</p>
@@ -152,25 +186,12 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Street</th>
-                            <th>City</th>
-                            <th>Postal code</th>
-                            <th>Price</th>
-                            <th>Rooms</th>
-                            <th>Home type</th>
-                            <th>Living area</th>
-                            <th>Fee</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
+                    {tableHead(propertyNames)}
                     <tbody>
                         {filledTableBody}
                     </tbody>
                 </table>
-                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPage} setCurrentPage={setCurrentPage} />
+                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
             </div>
         );
     }

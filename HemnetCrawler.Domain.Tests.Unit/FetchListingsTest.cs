@@ -65,13 +65,13 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            EntitiesPage<ListingOutputModel> models = fetchListings.ListListings(1, 2);
+            ItemsPage<ListingOutputModel> models = fetchListings.ListListings(1, 2);
 
             //Assert
-            Assert.Equal(2, models.Subset.Count);
+            Assert.Equal(2, models.Items.Count);
 
-            Assert.Equal(3, models.Subset[0].Id);
-            Assert.Equal(4, models.Subset[1].Id);
+            Assert.Equal(3, models.Items[0].Id);
+            Assert.Equal(4, models.Items[1].Id);
 
             Assert.Equal(6, models.Total);
         }
@@ -84,10 +84,32 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FetchListings fetchListings = new(repository);
 
             //Act
-            EntitiesPage<ListingOutputModel> models = fetchListings.ListListings(1, 2);
+            ItemsPage<ListingOutputModel> models = fetchListings.ListListings(1, 2);
 
             //Assert
-            Assert.Empty(models.Subset);
+            Assert.Empty(models.Items);
+        }
+
+        [Fact]
+        public void ListListings_OrderPaginatedListings_CorrectOrder()
+        {
+            //Arrange
+            FakeListingRepository repository = new();
+            FetchListings fetchListings = new(repository);
+
+            repository.Listings.AddRange(new List<Listing>()
+            {
+                new Listing() { Id = 1 },
+                new Listing() { Id = 2 },
+                new Listing() { Id = 3 },
+                new Listing() { Id = 4 }
+            });
+
+            //Act
+            ItemsPage<ListingOutputModel> firstPage = fetchListings.ListListings(0, 2, FetchListings.SortDirection.Descending);
+
+            //Assert
+            Assert.Equal(4, firstPage.Items[0].Id);
         }
     }
 }

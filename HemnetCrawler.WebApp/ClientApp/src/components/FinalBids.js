@@ -10,22 +10,22 @@ export default function FinalBids() {
     const [finalBids, setFinalBids] = React.useState([]);
     const [total, setTotal] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = React.useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
 
     useEffect(() => {
         setLoading(true);
         fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
-            page: currentPage,
+            pageIndex: currentPageIndex,
             size: finalBidsPerPage
         }))
             .then(resp => resp.json())
             .then(data => {
-                setFinalBids(data.subset);
+                setFinalBids(data.items);
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPage, finalBidsPerPage, finalBids]
+    }, [currentPageIndex, finalBidsPerPage, finalBids]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -84,7 +84,7 @@ export default function FinalBids() {
                         {filledTableBody}
                     </tbody>
                 </table>
-                <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPage} setCurrentPage={setCurrentPage} />
+                <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
             </div>
         );
     }

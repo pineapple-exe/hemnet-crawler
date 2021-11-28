@@ -9,7 +9,7 @@ tr:nth-of-type(odd) {
 
 tr.listing:hover {
     color: white;
-    background-color: #FF963A;
+    background-color: #85B3FF;
 }
 
 Link {
@@ -28,4 +28,17 @@ td, th {
     padding: 6px;
     border: 1px solid #ccc;
     text-align: left;
+}
+
+th > button.order-by {
+    border: none;
+    outline: none;
+    padding: 0px;
+    background-color: #980A57;
+    color: white;
+    font-weight: bold;
+}
+
+th > button.order-by:hover {
+    color: #85B3FF;
 }
