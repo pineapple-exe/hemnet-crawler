@@ -95,9 +95,9 @@ namespace HemnetCrawler.Domain.Interactors
 
             int total = _listingRepository.GetAllListings().Count();
 
-            List<ListingOutputModel> outputModels = allListings.Select(l => 
+            IEnumerable<ListingOutputModel> outputModels = allListings.Select(l => 
                 MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
-                ).ToList();
+                );
 
             return new ItemsPage<ListingOutputModel>(outputModels, total);
         }

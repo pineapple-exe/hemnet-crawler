@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HemnetCrawler.Domain.Models
 {
@@ -7,9 +8,9 @@ namespace HemnetCrawler.Domain.Models
         public List<T> Items { get; }
         public int Total { get; }
 
-        public ItemsPage(List<T> items, int total)
+        public ItemsPage(IEnumerable<T> items, int total)
         {
-            Items = items;
+            Items = items.ToList();
             Total = total;
         }
     }
