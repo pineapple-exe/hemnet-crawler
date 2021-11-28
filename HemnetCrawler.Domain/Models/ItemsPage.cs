@@ -2,14 +2,14 @@
 
 namespace HemnetCrawler.Domain.Models
 {
-    public class EntitiesPage<T>
+    public class ItemsPage<T>
     {
-        public List<T> Subset { get; }
+        public List<T> Items { get; }
         public int Total { get; }
 
-        public EntitiesPage(List<T> subset, int total)
+        public ItemsPage(List<T> items, int total)
         {
-            Subset = subset;
+            Items = items;
             Total = total;
         }
     }

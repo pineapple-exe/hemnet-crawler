@@ -12,7 +12,7 @@ export default function Listings() {
     const [listings, setListings] = React.useState([]);
     const [total, setTotal] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = React.useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
     const [order, setOrder] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
@@ -30,18 +30,18 @@ export default function Listings() {
         setLoading(true);
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
-            page: currentPage,
+            pageIndex: currentPageIndex,
             size: listingsPerPage,
             order: order,
             by: by
         }))
             .then(resp => resp.json())
             .then(data => {
-                setListings(data.subset);
+                setListings(data.items);
                 setTotal(data.total);
             })
-            .then(setLoading(false)).then(console.log(order + ' ' + by))
-    }, [currentPage, listingsPerPage, listings, order, by]
+            .then(setLoading(false))
+    }, [currentPageIndex, listingsPerPage, listings, order, by]
     );
 
     const filterListings = (listings) => {
@@ -191,7 +191,7 @@ export default function Listings() {
                         {filledTableBody}
                     </tbody>
                 </table>
-                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPage} setCurrentPage={setCurrentPage} />
+                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
             </div>
         );
     }
