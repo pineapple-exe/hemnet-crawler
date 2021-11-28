@@ -51,7 +51,7 @@ namespace HemnetCrawler.Domain.Interactors
             Descending
         }
 
-        public static IEnumerable<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
+        private static IEnumerable<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
         {
             CultureInfo culture = new("sv-SE");
             StringComparer stringComparer = StringComparer.Create(culture, false);
@@ -73,7 +73,7 @@ namespace HemnetCrawler.Domain.Interactors
             }
         }
 
-        public static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
+        private static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
         {
             return
                 by == "id" ? OrderByStation(listings, order, l => l.Id) :
