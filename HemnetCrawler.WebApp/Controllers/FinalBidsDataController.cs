@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.WebApp.Controllers
 {
@@ -24,9 +25,9 @@ namespace HemnetCrawler.WebApp.Controllers
         }
 
         [HttpGet("finalBids")]
-        public ItemsPage<FinalBidOutputModel> GetFinalBids(int page, int size)
+        public ItemsPage<FinalBidOutputModel> GetFinalBids(int page, int size, SortDirection order, string by)
         {
-            return _fetchFinalBids.ListFinalBids(page, size);
+            return _fetchFinalBids.ListFinalBids(page, size, order, by.ToLower());
         }
 
         [HttpGet("relevantFinalBids")]

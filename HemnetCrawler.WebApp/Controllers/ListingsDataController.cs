@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
-using static HemnetCrawler.Domain.Interactors.FetchListings;
+using HemnetCrawler.Domain;
 
 namespace HemnetCrawler.WebPage.Controllers
 {

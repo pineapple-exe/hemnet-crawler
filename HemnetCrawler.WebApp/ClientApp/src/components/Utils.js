@@ -16,3 +16,26 @@ export const entityProperty = (propertyValue) => {
         return propertyValue;
     }
 }
+
+export const tableHead = (propertyNames, reEvaluateOrderBy) => {
+    const clickables = (names) => (
+        <>
+            {names.map(name => (
+                <th>
+                    <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
+                        {name}
+                    </button>
+                </th>
+            ))}
+        </>
+    );
+
+    return (
+        <thead>
+            <tr>
+                {clickables(propertyNames)}
+                <th>Delete</th>
+            </tr>
+        </thead>
+    );
+}

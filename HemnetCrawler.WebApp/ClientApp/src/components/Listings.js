@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
-import { prettySEK } from './Utils.js';
+import { prettySEK, tableHead } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
@@ -138,29 +138,6 @@ export default function Listings() {
         setBy(propertyName);
     }
 
-    const tableHead = (propertyNames) => {
-        const clickables = (names) => (
-            <>
-                {names.map(name => (
-                    <th>
-                        <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
-                            {name}
-                        </button>
-                    </th>
-                ))}
-            </>
-        );
-
-        return (
-            <thead>
-                <tr>
-                    {clickables(propertyNames)}
-                    <th>Delete</th>
-                </tr>
-            </thead>
-        );
-    }
-
     if (loading) {
         return (
             <p>Please wait while loading listings...</p>
@@ -186,7 +163,7 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    {tableHead(propertyNames)}
+                    {tableHead(propertyNames, reEvaluateOrderBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>

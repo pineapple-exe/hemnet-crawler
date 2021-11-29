@@ -2,22 +2,28 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
-import { prettySEK } from './Utils.js';
+import { prettySEK, tableHead } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
 export default function FinalBids() {
+    const propertyNames = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee', 'Sold date', 'Demanded price'];
+
     const [finalBids, setFinalBids] = React.useState([]);
     const [total, setTotal] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
+    const [order, setOrder] = React.useState(0);
+    const [by, setBy] = React.useState(propertyNames[0]);
 
     useEffect(() => {
         setLoading(true);
         fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
             pageIndex: currentPageIndex,
-            size: finalBidsPerPage
+            size: finalBidsPerPage,
+            order: order,
+            by: by
         }))
             .then(resp => resp.json())
             .then(data => {
@@ -25,7 +31,7 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPageIndex, finalBidsPerPage, finalBids]
+    }, [currentPageIndex, finalBidsPerPage, finalBids, order, by]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -56,6 +62,11 @@ export default function FinalBids() {
         </tr>
     );
 
+    const reEvaluateOrderBy = (propertyName) => {
+        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+        setBy(propertyName);
+    }
+
     if (loading) {
         return (
             <p>Please wait while loading final bids...</p>
@@ -64,22 +75,7 @@ export default function FinalBids() {
         return (
             <div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Street</th>
-                            <th>City</th>
-                            <th>Postal code</th>
-                            <th>Price</th>
-                            <th>Rooms</th>
-                            <th>Home type</th>
-                            <th>Living area</th>
-                            <th>Fee</th>
-                            <th>Sold date</th>
-                            <th>Demanded price</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
+                    {tableHead(propertyNames, reEvaluateOrderBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>
