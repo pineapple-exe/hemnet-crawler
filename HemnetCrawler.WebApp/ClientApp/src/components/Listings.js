@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
-import { prettySEK } from './Utils.js';
+import { prettySEK, tableHead } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
@@ -14,9 +14,8 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-    const [order, setOrder] = React.useState(0);
+    const [sortDirection, setSortDirection] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
-    const [deleteFlip, setDeleteFlip] = React.useState(0);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -27,13 +26,13 @@ export default function Listings() {
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
-    useEffect(() => {
+    const fetchListings = () => {
         setLoading(true);
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
             pageIndex: currentPageIndex,
             size: listingsPerPage,
-            order: order,
+            sortDirection: sortDirection,
             by: by
         }))
             .then(resp => resp.json())
@@ -42,7 +41,11 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false));
-    }, [currentPageIndex, listingsPerPage, order, by, deleteFlip]
+    }
+
+    useEffect(() =>
+        fetchListings(),
+        [currentPageIndex, listingsPerPage, sortDirection, by]
     );
 
     const filterListings = (listings) => {
@@ -61,8 +64,7 @@ export default function Listings() {
         }), {
                 method: 'DELETE'
         }
-        ).then(() => setDeleteFlip(deleteFlip + 1));
-
+        ).then(() => fetchListings());
     }
 
     const filledTableBody = filterListings(listings).map(l =>
@@ -135,32 +137,9 @@ export default function Listings() {
         }
     }
 
-    const reEvaluateOrderBy = (propertyName) => {
-        setOrder(by !== propertyName ? 0 : order === 0 ? 1 : 0);
+    const reEvaluateSortDirectionBy = (propertyName) => {
+        setSortDirection(by !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setBy(propertyName);
-    }
-
-    const tableHead = (propertyNames) => {
-        const clickables = (names) => (
-            <>
-                {names.map(name => (
-                    <th>
-                        <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
-                            {name}
-                        </button>
-                    </th>
-                ))}
-            </>
-        );
-
-        return (
-            <thead>
-                <tr>
-                    {clickables(propertyNames)}
-                    <th>Delete</th>
-                </tr>
-            </thead>
-        );
     }
 
     if (loading) {
@@ -189,7 +168,7 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    {tableHead(propertyNames)}
+                    {tableHead(propertyNames, reEvaluateSortDirectionBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>
