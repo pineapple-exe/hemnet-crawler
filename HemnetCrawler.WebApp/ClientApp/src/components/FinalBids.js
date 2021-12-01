@@ -14,7 +14,7 @@ export default function FinalBids() {
     const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
-    const [order, setOrder] = React.useState(0);
+    const [sortDirection, setSortDirection] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function FinalBids() {
         fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
             pageIndex: currentPageIndex,
             size: finalBidsPerPage,
-            order: order,
+            sortDirection: sortDirection,
             by: by
         }))
             .then(resp => resp.json())
@@ -31,7 +31,7 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPageIndex, finalBidsPerPage, finalBids, order, by]
+    }, [currentPageIndex, finalBidsPerPage, finalBids, sortDirection, by]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -62,8 +62,8 @@ export default function FinalBids() {
         </tr>
     );
 
-    const reEvaluateOrderBy = (propertyName) => {
-        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+    const reEvaluateSortDirectionBy = (propertyName) => {
+        setSortDirection(by != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
         setBy(propertyName);
     }
 
@@ -75,7 +75,7 @@ export default function FinalBids() {
         return (
             <div>
                 <table>
-                    {tableHead(propertyNames, reEvaluateOrderBy)}
+                    {tableHead(propertyNames, reEvaluateSortDirectionBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>

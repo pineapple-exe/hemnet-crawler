@@ -14,7 +14,7 @@ export default function Listings() {
     const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
-    const [order, setOrder] = React.useState(0);
+    const [sortDirection, setSortDirection] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
 
     const [usersFilter, setFilter] = React.useState({
@@ -32,7 +32,7 @@ export default function Listings() {
         fetch('/ListingsData/listings?' + new URLSearchParams({
             pageIndex: currentPageIndex,
             size: listingsPerPage,
-            order: order,
+            sortDirection: sortDirection,
             by: by
         }))
             .then(resp => resp.json())
@@ -41,7 +41,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPageIndex, listingsPerPage, listings, order, by]
+    }, [currentPageIndex, listingsPerPage, listings, sortDirection, by]
     );
 
     const filterListings = (listings) => {
@@ -133,8 +133,8 @@ export default function Listings() {
         }
     }
 
-    const reEvaluateOrderBy = (propertyName) => {
-        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+    const reEvaluateSortDirectionBy = (propertyName) => {
+        setSortDirection(by != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
         setBy(propertyName);
     }
 
@@ -163,7 +163,7 @@ export default function Listings() {
                 </form>
 
                 <table>
-                    {tableHead(propertyNames, reEvaluateOrderBy)}
+                    {tableHead(propertyNames, reEvaluateSortDirectionBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>
