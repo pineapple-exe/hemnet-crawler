@@ -65,7 +65,7 @@ export default function Pagination(props) {
 
     const scrollAndPaginate = (pageNumber) => {
         window.scrollTo(0, 0);
-        props.setCurrentPage(pageNumber);
+        props.setCurrentPageIndex(pageNumber);
     }
 
     const tail = () => {

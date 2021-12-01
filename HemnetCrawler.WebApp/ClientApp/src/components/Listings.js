@@ -16,12 +16,13 @@ export default function Listings() {
     const [listingsPerPage] = React.useState(50);
     const [order, setOrder] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
+    const [deleteFlip, setDeleteFlip] = React.useState(0);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
-        roomsMinimum: null,
-        roomsMaximum: null,
-        street: null,
+        roomsMinimum: '',
+        roomsMaximum: '',
+        street: '',
     });
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
@@ -40,17 +41,17 @@ export default function Listings() {
                 setListings(data.items);
                 setTotal(data.total);
             })
-            .then(setLoading(false))
-    }, [currentPageIndex, listingsPerPage, listings, order, by]
+            .then(setLoading(false));
+    }, [currentPageIndex, listingsPerPage, order, by, deleteFlip]
     );
 
     const filterListings = (listings) => {
         return listings
             .filter(l =>
                 (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
-                (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
-                (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
-                (usersFilter.street ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
+                (hasRooms && usersFilter.roomsMinimum !== '' ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
+                (hasRooms && usersFilter.roomsMaximum !== '' ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
+                (usersFilter.street !== '' ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
             );
     }
 
@@ -59,8 +60,9 @@ export default function Listings() {
             listingId: listingId
         }), {
                 method: 'DELETE'
-            }
-        );
+        }
+        ).then(() => setDeleteFlip(deleteFlip + 1));
+
     }
 
     const filledTableBody = filterListings(listings).map(l =>
@@ -134,7 +136,7 @@ export default function Listings() {
     }
 
     const reEvaluateOrderBy = (propertyName) => {
-        setOrder(by != propertyName ? 0 : order == 0 ? 1 : 0);
+        setOrder(by !== propertyName ? 0 : order === 0 ? 1 : 0);
         setBy(propertyName);
     }
 
@@ -175,6 +177,7 @@ export default function Listings() {
                         <option value="Tomt">Tomt</option>
                         <option value="Villa">Villa</option>
                         <option value="Lägenhet">Lägenhet</option>
+                        <option value="Gård med jordbruk">Gård med jordbruk</option>
                     </select>
                 </form>
 

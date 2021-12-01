@@ -56,6 +56,11 @@ export default function FinalBids() {
         </tr>
     );
 
+    const reEvaluateOrderBy = (propertyName) => {
+        setOrder(by !== propertyName ? 0 : order === 0 ? 1 : 0);
+        setBy(propertyName);
+    }
+
     if (loading) {
         return (
             <p>Please wait while loading final bids...</p>
