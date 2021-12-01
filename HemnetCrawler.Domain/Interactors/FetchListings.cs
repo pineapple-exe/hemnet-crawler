@@ -65,7 +65,7 @@ namespace HemnetCrawler.Domain.Interactors
         public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection order = SortDirection.Ascending, string by = "id")
         {
             IEnumerable<Listing> allListings = OrderListings(_listingRepository.GetAllListings(), order, by).Skip(size * pageIndex).Take(size);
-            List<Image> images = _listingRepository.GetAllImages().ToList();
+            IQueryable<Image> images = _listingRepository.GetAllImages();
 
             int total = _listingRepository.GetAllListings().Count();
 
