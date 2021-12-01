@@ -106,7 +106,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            ItemsPage<ListingOutputModel> firstPage = fetchListings.ListListings(0, 2, FetchListings.SortDirection.Descending);
+            ItemsPage<ListingOutputModel> firstPage = fetchListings.ListListings(0, 2, SortDirection.Descending);
 
             //Assert
             Assert.Equal(4, firstPage.Items[0].Id);

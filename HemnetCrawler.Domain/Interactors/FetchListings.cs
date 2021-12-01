@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Globalization;
+using static HemnetCrawler.Domain.Interactors.Utils;
 
 namespace HemnetCrawler.Domain.Interactors
 {
@@ -44,33 +45,6 @@ namespace HemnetCrawler.Domain.Interactors
             int[] imageIds = _listingRepository.GetAllImages().Where(img => img.ListingId == listing.Id).Select(img => img.Id).ToArray();
 
             return MapListingToOutputModel(listing, imageIds);
-        }
-        public enum SortDirection
-        {
-            Ascending,
-            Descending
-        }
-
-        private static IEnumerable<Listing> OrderByStation<T>(IQueryable<Listing> listings, SortDirection order, Func<Listing, T> orderByRule)
-        {
-            CultureInfo culture = new("sv-SE");
-            StringComparer stringComparer = StringComparer.Create(culture, false);
-            string stringOrderByRule(Listing l) => (string)Convert.ChangeType(orderByRule(l), typeof(string));
-
-            if (order == SortDirection.Ascending)
-            {
-                if (typeof(T) == typeof(string)) 
-                    return listings.OrderBy(stringOrderByRule, stringComparer);
-                else 
-                    return listings.OrderBy(orderByRule);
-            }
-            else
-            {
-                if (typeof(T) == typeof(string))
-                    return listings.OrderByDescending(stringOrderByRule, stringComparer);
-                else
-                    return listings.OrderByDescending(orderByRule);
-            }
         }
 
         private static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
