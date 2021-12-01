@@ -45,7 +45,7 @@ export default function FinalBids() {
         }), {
             method: 'DELETE'
         }
-        );
+        ).then(() => fetchFinalBids());
     }
 
     const filledTableBody = finalBids.map(fb =>
