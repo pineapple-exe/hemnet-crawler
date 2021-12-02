@@ -17,8 +17,9 @@ export default function FinalBids() {
     const [sortDirection, setSortDirection] = React.useState(0);
     const [by, setBy] = React.useState(propertyNames[0]);
 
-    useEffect(() => {
+    const fetchFinalBids = () => {
         setLoading(true);
+
         fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
             pageIndex: currentPageIndex,
             size: finalBidsPerPage,
@@ -31,7 +32,11 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPageIndex, finalBidsPerPage, finalBids, sortDirection, by]
+    }
+
+    useEffect(() =>
+        fetchFinalBids(),
+        [currentPageIndex, finalBidsPerPage, sortDirection, by]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -40,7 +45,7 @@ export default function FinalBids() {
         }), {
             method: 'DELETE'
         }
-        );
+        ).then(() => fetchFinalBids());
     }
 
     const filledTableBody = finalBids.map(fb =>

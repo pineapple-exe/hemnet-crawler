@@ -21,7 +21,7 @@ export const tableHead = (propertyNames, reEvaluateOrderBy) => {
     const clickables = (names) => (
         <>
             {names.map(name => (
-                <th>
+                <th key={name}>
                     <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
                         {name}
                     </button>
