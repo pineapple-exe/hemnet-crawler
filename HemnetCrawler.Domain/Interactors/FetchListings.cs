@@ -3,9 +3,6 @@ using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using System.Globalization;
-using static HemnetCrawler.Domain.Interactors.Utils;
 
 namespace HemnetCrawler.Domain.Interactors
 {
@@ -47,31 +44,17 @@ namespace HemnetCrawler.Domain.Interactors
             return MapListingToOutputModel(listing, imageIds);
         }
 
-        private static IEnumerable<Listing> OrderListings(IQueryable<Listing> listings, SortDirection order, string by)
+        public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
         {
-            return
-                by == "id" ? OrderByStation(listings, order, l => l.Id) :
-                by == "street" ? OrderByStation(listings, order, l => l.Street) :
-                by == "city" ? OrderByStation(listings, order, l => l.City) :
-                by == "postal code" ? OrderByStation(listings, order, l => l.PostalCode) :
-                by == "price" ? OrderByStation(listings, order, l => l.Price) :
-                by == "rooms" ? OrderByStation(listings, order, l => l.Rooms) :
-                by == "home type" ? OrderByStation(listings, order, l => l.HomeType) :
-                by == "living area" ? OrderByStation(listings, order, l => l.LivingArea) :
-                by == "fee" ? OrderByStation(listings, order, l => l.Fee) :
-                listings;
-        }
+            IEnumerable<Listing> listings = _listingRepository.GetAllListings().OrderBy(sortDirection, orderByProperty).Skip(size * pageIndex).Take(size);
+            List<int> listingIds = listings.Select(l => l.Id).ToList();
+            List<Image> images = _listingRepository.GetAllImages().Where(img => listingIds.Contains(img.ListingId)).ToList();
 
-        public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection order = SortDirection.Ascending, string by = "id")
-        {
-            IEnumerable<Listing> allListings = OrderListings(_listingRepository.GetAllListings(), order, by).Skip(size * pageIndex).Take(size);
-            IQueryable<Image> images = _listingRepository.GetAllImages();
-
-            int total = _listingRepository.GetAllListings().Count();
-
-            IEnumerable<ListingOutputModel> outputModels = allListings.Select(l => 
+            IEnumerable<ListingOutputModel> outputModels = listings.Select(l => 
                 MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
                 );
+
+            int total = _listingRepository.GetAllListings().Count();
 
             return new ItemsPage<ListingOutputModel>(outputModels, total);
         }

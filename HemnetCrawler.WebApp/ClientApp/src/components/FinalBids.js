@@ -15,7 +15,7 @@ export default function FinalBids() {
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
-    const [by, setBy] = React.useState(propertyNames[0]);
+    const [orderByProperty, setOrderByProperty] = React.useState(propertyNames[0]);
 
     useEffect(() => {
         setLoading(true);
@@ -23,7 +23,7 @@ export default function FinalBids() {
             pageIndex: currentPageIndex,
             size: finalBidsPerPage,
             sortDirection: sortDirection,
-            by: by
+            orderByProperty: orderByProperty
         }))
             .then(resp => resp.json())
             .then(data => {
@@ -31,7 +31,11 @@ export default function FinalBids() {
                 setTotal(data.total);
             })
             .then(setLoading(false))
-    }, [currentPageIndex, finalBidsPerPage, finalBids, sortDirection, by]
+    }
+
+    useEffect(() =>
+        fetchFinalBids(),
+        [currentPageIndex, finalBidsPerPage, finalBids, sortDirection, orderByProperty]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -63,8 +67,8 @@ export default function FinalBids() {
     );
 
     const reEvaluateSortDirectionBy = (propertyName) => {
-        setSortDirection(by != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
-        setBy(propertyName);
+        setSortDirection(orderByProperty != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
+        setOrderByProperty(propertyName);
     }
 
     if (loading) {
