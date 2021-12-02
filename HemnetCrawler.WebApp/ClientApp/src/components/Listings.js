@@ -19,14 +19,14 @@ export default function Listings() {
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
-        roomsMinimum: null,
-        roomsMaximum: null,
-        street: null,
+        roomsMinimum: '',
+        roomsMaximum: '',
+        street: '',
     });
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
     const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
-    useEffect(() => {
+    const fetchListings = () => {
         setLoading(true);
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
@@ -45,16 +45,16 @@ export default function Listings() {
 
     useEffect(() =>
         fetchListings(),
-        [currentPageIndex, listingsPerPage, listings, sortDirection, orderByProperty]
+        [currentPageIndex, listingsPerPage, sortDirection, by]
     );
 
     const filterListings = (listings) => {
         return listings
             .filter(l =>
                 (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
-                (hasRooms && usersFilter.roomsMinimum ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
-                (hasRooms && usersFilter.roomsMaximum ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
-                (usersFilter.street ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
+                (hasRooms && usersFilter.roomsMinimum !== '' ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
+                (hasRooms && usersFilter.roomsMaximum !== '' ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
+                (usersFilter.street !== '' ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
             );
     }
 
@@ -63,8 +63,8 @@ export default function Listings() {
             listingId: listingId
         }), {
                 method: 'DELETE'
-            }
-        );
+        }
+        ).then(() => fetchListings());
     }
 
     const filledTableBody = filterListings(listings).map(l =>
@@ -156,6 +156,7 @@ export default function Listings() {
                         <option value="Tomt">Tomt</option>
                         <option value="Villa">Villa</option>
                         <option value="Lägenhet">Lägenhet</option>
+                        <option value="Gård med jordbruk">Gård med jordbruk</option>
                     </select>
                 </form>
 
