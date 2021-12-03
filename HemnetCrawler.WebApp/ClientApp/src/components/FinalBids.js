@@ -2,12 +2,12 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
-import { prettySEK, tableHead } from './Utils.js';
+import { prettySEK, tableHead, turnIntoFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
 export default function FinalBids() {
-    const propertyNames = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee', 'Sold date', 'Demanded price'];
+    const propertyAliases = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee', 'Sold date', 'Demanded price'];
 
     const [finalBids, setFinalBids] = React.useState([]);
     const [total, setTotal] = React.useState(null);
@@ -15,7 +15,7 @@ export default function FinalBids() {
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
-    const [orderByProperty, setOrderByProperty] = React.useState(propertyNames[0]);
+    const [orderByProperty, setOrderByProperty] = React.useState(propertyAliases[0]);
 
     const fetchFinalBids = () => {
         setLoading(true);
@@ -24,7 +24,7 @@ export default function FinalBids() {
             pageIndex: currentPageIndex,
             size: finalBidsPerPage,
             sortDirection: sortDirection,
-            orderByProperty: orderByProperty
+            orderByProperty: turnIntoFormalPropertyName(orderByProperty)
         }))
             .then(resp => resp.json())
             .then(data => {
@@ -36,7 +36,7 @@ export default function FinalBids() {
 
     useEffect(() =>
         fetchFinalBids(),
-        [currentPageIndex, finalBidsPerPage, sortDirection, by]
+        [currentPageIndex, finalBidsPerPage, sortDirection, orderByProperty]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -80,7 +80,7 @@ export default function FinalBids() {
         return (
             <div>
                 <table>
-                    {tableHead(propertyNames, reEvaluateSortDirectionBy)}
+                    {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
                     <tbody>
                         {filledTableBody}
                     </tbody>
