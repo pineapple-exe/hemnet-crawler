@@ -55,7 +55,7 @@ namespace HemnetCrawler.Domain.Interactors
 
         public ItemsPage<FinalBidOutputModel> ListFinalBids(int pageIndex, int size, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
         {
-            IEnumerable<FinalBid> allFinalBids = _finalBidRepository.GetAll().OrderBy(sortDirection, orderByProperty).Skip(pageIndex * size).Take(size);
+            List<FinalBid> allFinalBids = _finalBidRepository.GetAll().OrderBy(sortDirection, orderByProperty).Skip(pageIndex * size).Take(size).ToList();
             int total = _finalBidRepository.GetAll().Count();
 
             List<int> allFinalBidsId = allFinalBids.Select(fb => fb.Id).ToList();
