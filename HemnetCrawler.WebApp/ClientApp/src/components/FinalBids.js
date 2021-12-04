@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
-import { prettySEK, tableHead, turnIntoFormalPropertyName } from './Utils.js';
+import { prettySEK, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
@@ -24,7 +24,7 @@ export default function FinalBids() {
             pageIndex: currentPageIndex,
             size: finalBidsPerPage,
             sortDirection: sortDirection,
-            orderByProperty: turnIntoFormalPropertyName(orderByProperty)
+            orderByProperty: convertToFormalPropertyName(orderByProperty)
         }))
             .then(resp => resp.json())
             .then(data => {

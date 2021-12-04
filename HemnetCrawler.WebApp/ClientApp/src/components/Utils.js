@@ -40,7 +40,7 @@ export const tableHead = (propertyNames, reEvaluateOrderBy) => {
     );
 }
 
-export const turnIntoFormalPropertyName = (propertyAlias) => {
+export const convertToFormalPropertyName = (propertyAlias) => {
     let formalPropertyName = propertyAlias[0].toUpperCase();
 
     for (let i = 1; i < propertyAlias.length; i++) {
