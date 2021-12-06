@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import './tables.css';
-import { prettySEK, tableHead, convertToFormalPropertyName } from './Utils.js';
+import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
@@ -71,22 +71,16 @@ export default function FinalBids() {
         setSortDirection(orderByProperty != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
         setOrderByProperty(propertyName);
     }
-
-    if (loading) {
-        return (
-            <p>Please wait while loading final bids...</p>
-        );
-    } else {
-        return (
-            <div>
-                <table>
-                    {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
-                    <tbody>
-                        {filledTableBody}
-                    </tbody>
-                </table>
-                <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
-            </div>
-        );
-    }
+    return (
+        <div className="finalbids table-container">
+            {loadingScreen(loading)}
+            <table>
+                {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
+                <tbody>
+                    {filledTableBody}
+                </tbody>
+            </table>
+            <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
+        </div>
+    );
 }
