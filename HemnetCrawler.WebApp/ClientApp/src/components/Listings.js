@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import './tables.css';
 import './listingsMisc.css';
-import { prettySEK, tableHead, convertToFormalPropertyName } from './Utils.js';
+import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 
@@ -41,7 +41,7 @@ export default function Listings() {
                 setTotal(data.total);
             })
             .then(setLoading(false));
-    }
+    };
 
     useEffect(() =>
         fetchListings(),
@@ -142,13 +142,9 @@ export default function Listings() {
         setOrderByProperty(propertyName);
     }
 
-    if (loading) {
-        return (
-            <p>Please wait while loading listings...</p>
-        );
-    } else {
-        return (
-            <div>
+    return (
+        <div className="listings table-container">
+            {loadingScreen(loading)}
                 <form>
                     <label>Home type:</label>
                     <select className="filter" onChange={handleHomeTypeFilter} >
@@ -175,6 +171,5 @@ export default function Listings() {
                 </table>
                 <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
             </div>
-        );
-    }
+    );
 }
