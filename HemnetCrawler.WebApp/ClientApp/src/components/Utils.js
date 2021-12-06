@@ -9,7 +9,7 @@ export const prettySEK = prettyMoney({
 
 export const loadingScreen = (loading) => {
     if (loading) return (
-        <div className={"overlay"}>
+        <div className="overlay">
             <div className="loader"></div>
         </div>
     );

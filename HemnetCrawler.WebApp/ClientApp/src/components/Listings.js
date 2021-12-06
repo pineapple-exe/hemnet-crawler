@@ -11,7 +11,7 @@ export default function Listings() {
 
     const [listings, setListings] = React.useState([]);
     const [total, setTotal] = React.useState(null);
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
