@@ -44,9 +44,13 @@ namespace HemnetCrawler.Domain.Interactors
             return MapListingToOutputModel(listing, imageIds);
         }
 
-        public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
+        public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, ListingsFilterInputModel filter, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
         {
-            List<Listing> listings = _listingRepository.GetAllListings().OrderBy(sortDirection, orderByProperty).Skip(size * pageIndex).Take(size).ToList();
+            List<Listing> listings = filter.ApplyFilter(_listingRepository.GetAllListings())
+                .OrderBy(sortDirection, orderByProperty)
+                .Skip(size * pageIndex)
+                .Take(size)
+                .ToList();
             List<int> listingIds = listings.Select(l => l.Id).ToList();
             List<Image> images = _listingRepository.GetAllImages().Where(img => listingIds.Contains(img.ListingId)).ToList();
 

@@ -4,12 +4,16 @@
 }
 
 tr:nth-of-type(odd) {
-    background: #eee;
+    background: #B294B6;
+}
+
+tr:nth-of-type(even) {
+    background: #856189;
 }
 
 tr.listing:hover {
     color: white;
-    background-color: #85B3FF;
+    background: #5F72C2;
 }
 
 Link {
@@ -19,7 +23,7 @@ Link {
 }
 
 th {
-    background: #980A57;
+    background: #4F1A55;
     color: white;
     font-weight: bold;
 }
@@ -28,17 +32,88 @@ td, th {
     padding: 6px;
     border: 1px solid #ccc;
     text-align: left;
+    color:white;
 }
 
 th > button.order-by {
     border: none;
     outline: none;
     padding: 0px;
-    background-color: #980A57;
+    background-color: #4F1A55;
     color: white;
     font-weight: bold;
 }
 
 th > button.order-by:hover {
     color: #85B3FF;
+}
+
+a.id {
+    color: black;
+}
+
+div.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete button {
+    background: none;
+    padding: 0px;
+}
+
+.delete h3 {
+    color: red;
+}
+
+.delete img {
+    background: none;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 9;
+    background-color: rgba(00, 00, 00, 0.5);
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+button.reset {
+    padding: 3px 10px;
+    font-size: small;
+    color: white;
+    background: #5F72C2;
+    font-weight: bold;
+}
+
+button.reset:hover {
+    color: white;
+    background-color: #85B3FF;
 }

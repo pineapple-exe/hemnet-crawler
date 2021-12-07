@@ -21,9 +21,9 @@ namespace HemnetCrawler.WebPage.Controllers
         }
 
         [HttpGet("listings")]
-        public ItemsPage<ListingOutputModel> GetListings(int pageIndex, int size, SortDirection sortDirection, string orderByProperty)
+        public ItemsPage<ListingOutputModel> GetListings(int pageIndex, int size, [FromQuery]ListingsFilterInputModel filter, SortDirection sortDirection, string orderByProperty)
         {
-            return _fetchListings.ListListings(pageIndex, size, sortDirection, orderByProperty);
+            return _fetchListings.ListListings(pageIndex, size, filter, sortDirection, orderByProperty);
         }
 
         [HttpGet("listing")]
