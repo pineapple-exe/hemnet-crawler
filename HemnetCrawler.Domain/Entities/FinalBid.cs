@@ -18,7 +18,7 @@ namespace HemnetCrawler.Domain.Entities
         public int? PricePerSquareMeter { get; set; }
         public string HomeType { get; set; }
         public string OwnershipType { get; set; }
-        public string Rooms { get; set; }
+        public double? Rooms { get; set; }
         public double? LivingArea { get; set; }
         public double? BiArea { get; set; }
         public int PropertyArea { get; set; }

@@ -4,14 +4,16 @@ using HemnetCrawler.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HemnetCrawler.Data.Migrations
 {
     [DbContext(typeof(HemnetCrawlerDbContext))]
-    partial class HemnetCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211207145807_ChangeRoomsToRoomsOld")]
+    partial class ChangeRoomsToRoomsOld
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +81,6 @@ namespace HemnetCrawler.Data.Migrations
 
                     b.Property<int>("PropertyArea")
                         .HasColumnType("int");
-
-                    b.Property<double?>("Rooms")
-                        .HasColumnType("float");
 
                     b.Property<string>("RoomsOld")
                         .HasColumnType("nvarchar(max)");
@@ -208,9 +207,6 @@ namespace HemnetCrawler.Data.Migrations
 
                     b.Property<DateTime>("Published")
                         .HasColumnType("Date");
-
-                    b.Property<double?>("Rooms")
-                        .HasColumnType("float");
 
                     b.Property<string>("RoomsOld")
                         .HasColumnType("nvarchar(max)");

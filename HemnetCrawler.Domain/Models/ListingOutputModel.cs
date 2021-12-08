@@ -9,7 +9,7 @@ namespace HemnetCrawler.Domain.Models
         public string City { get; init; }
         public int? PostalCode { get; init; }
         public int? Price { get; init; }
-        public string Rooms { get; init; }
+        public double? Rooms { get; init; }
         public string HomeType { get; init; }
         public double? LivingArea { get; init; }
         public int? Fee { get; init; }

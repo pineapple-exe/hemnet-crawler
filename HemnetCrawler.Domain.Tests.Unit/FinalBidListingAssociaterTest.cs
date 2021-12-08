@@ -25,7 +25,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 DemandedPrice = 200000,
                 OwnershipType = "Bostadsrätt",
                 Fee = 4000,
-                Rooms = "3"
+                Rooms = 3
             };
 
             FinalBid finalBidNextBestMatch = new()
@@ -38,7 +38,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 DemandedPrice = 200000,
                 OwnershipType = "Bostadsrätt",
                 Fee = 4000,
-                Rooms = "3 rum"
+                Rooms = 3
             };
 
             FinalBid finalBidWorstMatch = new()
@@ -49,7 +49,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 PostalCode = 41410,
                 OwnershipType = "Hyresrätt",
                 Fee = 3000,
-                Rooms = "1 rum"
+                Rooms = 1
             };
 
             finalBidRepository.AddFinalBid(finalBidBestMatch);
@@ -65,7 +65,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 Price = 200000,
                 OwnershipType = "Bostadsrätt",
                 Fee = 4000,
-                Rooms = "3 rum"
+                Rooms = 3
             });
 
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);
@@ -94,7 +94,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
                 Price = 200000,
                 OwnershipType = "Bostadsrätt",
                 Fee = 4000,
-                Rooms = "3 rum"
+                Rooms = 3
             });
 
             FinalBidListingAssociater associater = new(listingRepository, finalBidRepository);

@@ -21,13 +21,11 @@ namespace HemnetCrawler.Domain.Models
             }
             if (RoomsMinimum != null)
             {
-                var roomsMinimum = RoomsMinimum.ToString();
-                filtered = filtered.Where(l => l.Rooms == roomsMinimum);
+                filtered = filtered.Where(l => l.Rooms == (double)RoomsMinimum);
             }
             if (RoomsMaximum != null)
             {
-                var roomsMaximum = RoomsMinimum.ToString();
-                filtered = filtered.Where(l => l.Rooms == roomsMaximum);
+                filtered = filtered.Where(l => l.Rooms == (double)RoomsMaximum);
             }
             if (!string.IsNullOrEmpty(Street))
             {
