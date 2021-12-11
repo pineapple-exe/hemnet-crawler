@@ -83,17 +83,24 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
             foreach (IWebElement match in matches)
             {
-                if (match.Text == content)
+                if (match.Text.Contains(content))
                     return true;
             }
             return false;
         }
 
-        public static List<ListingLink> CollectListingLinks(IWebDriver driver, IListingRepository repository, ILogger logger)
+        public static List<IWebElement> FindListingElementsAndRemoveUnwanted(IWebDriver driver)
         {
             List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
-            searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+            searchResults.RemoveAll(l => ElementContainsSpecificText(l, "span.hcl-label", "Nybyggnadsprojekt"));
             searchResults.RemoveAll(l => l.GetAttribute("data-gtm-item-info").Contains("raketen"));
+
+            return searchResults;
+        }
+
+        public static List<ListingLink> CollectListingLinks(IWebDriver driver, IListingRepository repository, ILogger logger)
+        {
+            List<IWebElement> searchResults = FindListingElementsAndRemoveUnwanted(driver);
 
             List<ListingLink> links = new();
 
@@ -119,8 +126,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
         public static void CollectHrefsForPreExistingListings(IWebDriver driver, IListingRepository repository, ILogger logger)
         {
-            List<IWebElement> searchResults = DriverBehavior.FindElements(driver, By.CssSelector("li.normal-results__hit")).ToList();
-            searchResults.RemoveAll(l => ElementContainsSpecificText(l, ".listing-card__label--type", "Nybyggnadsprojekt"));
+            List<IWebElement> searchResults = FindListingElementsAndRemoveUnwanted(driver);
 
             foreach (IWebElement searchResult in searchResults)
             {

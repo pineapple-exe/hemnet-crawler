@@ -20,8 +20,8 @@ namespace HemnetCrawler.ConsoleApp
 
         public static double NumberPuristDouble(string impure)
         {
-            Regex nonDigitPattern = new("\\D+"); //Adjust pattern
-            return double.Parse(nonDigitPattern.Replace(impure, ""));
+            Regex number = new("\\d+,\\d|\\d+");
+            return double.Parse(number.Match(impure).ToString());
         }
     }
 }
