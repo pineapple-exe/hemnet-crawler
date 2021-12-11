@@ -21,15 +21,15 @@ namespace HemnetCrawler.Domain.Models
             }
             if (RoomsMinimum != null)
             {
-                filtered = filtered.Where(l => l.Rooms == (double)RoomsMinimum);
+                filtered = filtered.Where(l => l.Rooms >= (double)RoomsMinimum);
             }
             if (RoomsMaximum != null)
             {
-                filtered = filtered.Where(l => l.Rooms == (double)RoomsMaximum);
+                filtered = filtered.Where(l => l.Rooms <= (double)RoomsMaximum);
             }
             if (!string.IsNullOrEmpty(Street))
             {
-                filtered = filtered.Where(l => l.Street.ToLower() == Street.ToLower()); //testa sedan att addera Contains
+                filtered = filtered.Where(l => l.Street.ToLower().Contains(Street.ToLower()));
             }
 
             return filtered;
