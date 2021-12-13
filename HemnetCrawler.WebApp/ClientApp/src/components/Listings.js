@@ -188,7 +188,7 @@ export default function Listings() {
                 entitiesPerPage={listingsPerPage}
                 totalEntities={total}
                 currentPageZeroBased={currentPageIndex}
-                setCurrentPage={setCurrentPageIndex}
+                setCurrentPageIndex={setCurrentPageIndex}
             />
         </div>
     );

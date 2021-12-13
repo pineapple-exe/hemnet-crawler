@@ -33,8 +33,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         finalBid.OwnershipType = pair.Value;
                         break;
 
-                    case "Antal rum"://lös detta
-                        finalBid.Rooms = Utils.NumberPurist(pair.Value);
+                    case "Antal rum":
+                        finalBid.Rooms = Utils.NumberPuristDouble(pair.Value);
                         break;
 
                     case "Boarea":

@@ -44,9 +44,35 @@ namespace HemnetCrawler.Domain.Interactors
             return MapListingToOutputModel(listing, imageIds);
         }
 
+        internal static IQueryable<Listing> ApplyFilter(ListingsFilterInputModel filter, IQueryable<Listing> unfiltered)
+        {
+            IQueryable<Listing> filtered = unfiltered;
+
+            if (!string.IsNullOrEmpty(filter.HomeType))
+            {
+                filtered = filtered.Where(l => l.HomeType == filter.HomeType);
+            }
+            if (filter.RoomsMinimum != null)
+            {
+                filtered = filtered.Where(l => l.Rooms >= (double)filter.RoomsMinimum);
+            }
+            if (filter.RoomsMaximum != null)
+            {
+                filtered = filtered.Where(l => l.Rooms <= (double)filter.RoomsMaximum);
+            }
+            if (!string.IsNullOrEmpty(filter.Street))
+            {
+                filtered = filtered.Where(l => l.Street.ToLower().Contains(filter.Street.ToLower()));
+            }
+
+            return filtered;
+        }
+
         public ItemsPage<ListingOutputModel> ListListings(int pageIndex, int size, ListingsFilterInputModel filter, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
         {
-            List<Listing> listings = filter.ApplyFilter(_listingRepository.GetAllListings())
+            IQueryable<Listing> allFilteredListings = ApplyFilter(filter, _listingRepository.GetAllListings());
+
+            List<Listing> listings = allFilteredListings
                 .OrderBy(sortDirection, orderByProperty)
                 .Skip(size * pageIndex)
                 .Take(size)
@@ -58,7 +84,7 @@ namespace HemnetCrawler.Domain.Interactors
                 MapListingToOutputModel(l, images.Where(img => img.ListingId == l.Id).Select(img => img.Id).ToArray())
                 );
 
-            int total = _listingRepository.GetAllListings().Count();
+            int total = allFilteredListings.Count();
 
             return new ItemsPage<ListingOutputModel>(outputModels, total);
         }

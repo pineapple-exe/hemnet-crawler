@@ -44,7 +44,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         listing.OwnershipType = pair.Value;
                         break;
 
-                    case "Antal rum"://lös detta
+                    case "Antal rum":
                         listing.Rooms = Utils.NumberPuristDouble(pair.Value);
                         break;
 

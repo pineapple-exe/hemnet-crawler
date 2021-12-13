@@ -117,3 +117,20 @@ button.reset:hover {
     color: white;
     background-color: #85B3FF;
 }
+
+.page-link {
+    color: #5A4D4D;
+}
+
+    .page-link:hover {
+        color: #5A4D4D;
+        background-color: #CBF7E9;
+    }
+
+.page-link.selected {
+    background-color: #98D3C1;
+}
+
+    .page-link.selected:hover {
+        color: #5A4D4D;
+    }

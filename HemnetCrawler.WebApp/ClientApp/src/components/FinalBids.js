@@ -80,7 +80,12 @@ export default function FinalBids() {
                     {filledTableBody}
                 </tbody>
             </table>
-            <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
+            <Pagination
+                entitiesPerPage={finalBidsPerPage}
+                totalEntities={total}
+                currentPageZeroBased={currentPageIndex}
+                setCurrentPageIndex={setCurrentPageIndex}
+            />
         </div>
     );
 }
