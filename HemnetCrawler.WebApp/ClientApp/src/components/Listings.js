@@ -78,20 +78,18 @@ export default function Listings() {
     );
 
     const handleHomeTypeFilter = (event) => {
-        let refreshedFilter;
-
-        if (homeTypeValuesWithRooms.includes(event.target.value)) {
-            refreshedFilter = {
+        let refreshedFilter =
+            homeTypeValuesWithRooms.includes(event.target.value) ?
+            {
                 ...usersFilter,
                 homeType: event.target.value,
-            };
-        } else {
-            refreshedFilter = {
+            } :
+            {
                 ...usersFilter,
                 homeType: event.target.value,
                 roomsMinimum: ''
-            };
-        }
+            }
+
         setFilter(refreshedFilter);
     }
 

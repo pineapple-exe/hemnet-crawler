@@ -122,15 +122,15 @@ button.reset:hover {
     color: #5A4D4D;
 }
 
-    .page-link:hover {
-        color: #5A4D4D;
-        background-color: #CBF7E9;
-    }
+.page-link:hover {
+    color: #5A4D4D;
+    background-color: #CBF7E9;
+}
 
 .page-link.selected {
     background-color: #98D3C1;
 }
 
-    .page-link.selected:hover {
-        color: #5A4D4D;
-    }
+.page-link.selected:hover {
+    color: #5A4D4D;
+}
