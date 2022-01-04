@@ -5,6 +5,7 @@ import './listingsMisc.css';
 import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
+import EntityFiltering from './EntityFiltering.js';
 
 export default function Listings() {
     const propertyAliases = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'];
@@ -23,6 +24,7 @@ export default function Listings() {
         roomsMaximum: '',
         street: ''
     });
+
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
 
     const fetchListings = () => {
@@ -122,31 +124,31 @@ export default function Listings() {
         });
     }
 
-    const optionalRoomsFilter = () => {
-        if (homeTypeValuesWithRooms.includes(usersFilter.homeType)) {
-            return (
-                <form className="rooms-filters">
-                    <label>Minimum rooms:</label>
-                    <input
-                        type="number"
-                        onChange={handleRoomsMinimumFilter}
-                        min="0" max="50"
-                        placeholder={usersFilter.roomsMinimum}
-                    />
+    //const optionalRoomsFilter = () => {
+    //    if (homeTypeValuesWithRooms.includes(usersFilter.homeType)) {
+    //        return (
+    //            <form className="rooms-filters">
+    //                <label>Minimum rooms:</label>
+    //                <input
+    //                    type="number"
+    //                    onChange={handleRoomsMinimumFilter}
+    //                    min="0" max="50"
+    //                    placeholder={usersFilter.roomsMinimum}
+    //                />
 
-                    <label>Maximum rooms:</label>
-                    <input
-                        type="number"
-                        onChange={handleRoomsMaximumFilter}
-                        min="1" max="50"
-                        placeholder={usersFilter.roomsMaximum}
-                    />
+    //                <label>Maximum rooms:</label>
+    //                <input
+    //                    type="number"
+    //                    onChange={handleRoomsMaximumFilter}
+    //                    min="1" max="50"
+    //                    placeholder={usersFilter.roomsMaximum}
+    //                />
 
-                    <button className="reset" onClick={() => resetRoomsFilter}>Reset</button>
-                </form>
-            );
-        }
-    }
+    //                <button className="reset" onClick={() => resetRoomsFilter}>Reset</button>
+    //            </form>
+    //        );
+    //    }
+    //}
 
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
@@ -157,23 +159,35 @@ export default function Listings() {
         <div className="listings table-container">
             {loadingScreen(loading)}
 
-            <form>
-                <label>Home type:</label>
-                <select className="filter" onChange={handleHomeTypeFilter} >
-                    <option value="All">*</option>
-                    <option value="Tomt">Tomt</option>
-                    <option value="Villa">Villa</option>
-                    <option value="Lägenhet">Lägenhet</option>
-                    <option value="Gård med jordbruk">Gård med jordbruk</option>
-                </select>
-            </form>
+            <EntityFiltering
+                filter={usersFilter}
+                homeTypeValuesWithRooms={homeTypeValuesWithRooms}
+                handleHomeTypeFilter={handleHomeTypeFilter}
+                handleRoomsMaximumFilter={handleRoomsMaximumFilter}
+                handleRoomsMinimumFilter={handleRoomsMinimumFilter}
+                handleStreetFilter={handleStreetFilter}
+                resetRoomsFilter={resetRoomsFilter}
+            />
 
-            {optionalRoomsFilter()}
+            {/*<div className="entity-filters">*/}
+            {/*    <form>*/}
+            {/*        <label>Home type:</label>*/}
+            {/*        <select className="filter" onChange={handleHomeTypeFilter} >*/}
+            {/*            <option value="All">*</option>*/}
+            {/*            <option value="Tomt">Tomt</option>*/}
+            {/*            <option value="Villa">Villa</option>*/}
+            {/*            <option value="Lägenhet">Lägenhet</option>*/}
+            {/*            <option value="Gård med jordbruk">Gård med jordbruk</option>*/}
+            {/*        </select>*/}
+            {/*    </form>*/}
 
-            <form>
-                <label>Street:</label>
-                <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>
-            </form>
+            {/*    {optionalRoomsFilter()}*/}
+
+            {/*    <form>*/}
+            {/*        <label>Street:</label>*/}
+            {/*        <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>*/}
+            {/*    </form>*/}
+            {/*</div>*/}
 
             <table>
                 {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
