@@ -18,7 +18,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 switch (pair.Key)
                 {
                     case "Begärt pris":
-                            finalBid.DemandedPrice = Utils.DigitPurist(pair.Value);
+                            finalBid.DemandedPrice = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Prisutveckling":
@@ -34,19 +34,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         break;
 
                     case "Antal rum":
-                        finalBid.Rooms = pair.Value;
+                        finalBid.Rooms = Utils.NumberPuristDouble(pair.Value);
                         break;
 
                     case "Boarea":
-                        finalBid.LivingArea = Utils.DigitPurist(pair.Value);
+                        finalBid.LivingArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Biarea":
-                        finalBid.BiArea = Utils.DigitPurist(pair.Value);
+                        finalBid.BiArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Tomtarea":
-                        finalBid.PropertyArea = Utils.DigitPurist(pair.Value);
+                        finalBid.PropertyArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Byggår":
@@ -57,12 +57,12 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         string trimmedValue = pair.Value.Trim();
 
                         if (trimmedValue != "kr/mån" && trimmedValue != "kr/månad")
-                            finalBid.Fee = Utils.DigitPurist(pair.Value);
+                            finalBid.Fee = Utils.NumberPurist(pair.Value);
 
                         break;
 
                     case "Driftskostnad":
-                        finalBid.Utilities = Utils.DigitPurist(pair.Value);
+                        finalBid.Utilities = Utils.NumberPurist(pair.Value);
                         break;
                 }
             }
@@ -77,13 +77,13 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             finalBid.Href = driver.Url;
             finalBid.LastUpdated = DateTimeOffset.Now;
             finalBid.Street = DriverBehavior.FindElement(driver, By.CssSelector("h1.hcl-heading")).Text.Replace("Slutpris", "").Trim();
-            finalBid.Price = Utils.DigitPurist(DriverBehavior.FindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
+            finalBid.Price = Utils.NumberPurist(DriverBehavior.FindElement(driver, By.CssSelector("span.sold-property__price-value")).Text);
             finalBid.SoldDate = DateTime.Parse(DriverBehavior.FindElement(driver, By.CssSelector("time")).GetAttribute("datetime"));
 
             Regex postalCodePattern = new("(?<=\"property_zipcode\",\\s\")\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
-                finalBid.PostalCode = Utils.DigitPurist(postalCode);
+                finalBid.PostalCode = Utils.NumberPurist(postalCode);
 
             Regex redundantWhitespace = new("\\s{2,}");
             string city = DriverBehavior.FindElement(driver, By.CssSelector("p.sold-property__metadata.qa-sold-property-metadata")).Text.Replace("\n", "");

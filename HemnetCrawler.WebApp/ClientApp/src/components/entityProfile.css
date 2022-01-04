@@ -8,7 +8,7 @@ li {
 
 .property-name {
     font-weight: bold;
-    color: #980A57;
+    color: #4F1A55;
 }
 
 .final-bid {
@@ -23,70 +23,17 @@ li {
 .estimation > button {
     border: none;
     outline: none;
-    background-color: #980A57;
+    background-color: #5F72C2;
     color: white;
     padding: 5px 10px 5px 10px;
     margin: 6px;
 }
 
 .estimation > button:hover {
-    background-color: #FF963A;
+    background-color: #85B3FF;
 }
 
 .estimation-key {
     font-weight: bold;
     color: lightcoral;
-}
-
-div.delete {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.delete button {
-    background: none;
-    padding: 0px;
-}
-
-.delete h3 {
-    color: red;
-}
-
-.delete img {
-    background: none;
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-.overlay {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    height: 100%;
-    width: 100%;
-    z-index: 9;
-    background-color: rgba(00, 00, 00, 0.5);
-}
-
-.loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
 }

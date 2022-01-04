@@ -21,10 +21,9 @@ export default function Listings() {
         homeType: 'All',
         roomsMinimum: '',
         roomsMaximum: '',
-        street: '',
+        street: ''
     });
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
-    const hasRooms = homeTypeValuesWithRooms.includes(usersFilter.homeType);
 
     const fetchListings = () => {
         setLoading(true);
@@ -33,30 +32,24 @@ export default function Listings() {
             pageIndex: currentPageIndex,
             size: listingsPerPage,
             sortDirection: sortDirection,
-            orderByProperty: convertToFormalPropertyName(orderByProperty)
+            orderByProperty: convertToFormalPropertyName(orderByProperty),
+            homeType: usersFilter.homeType === 'All' ? '' : usersFilter.homeType,
+            roomsMinimum: usersFilter.roomsMinimum,
+            roomsMaximum: usersFilter.roomsMaximum,
+            street: usersFilter.street
         }))
             .then(resp => resp.json())
             .then(data => {
                 setListings(data.items);
                 setTotal(data.total);
             })
-            .then(setLoading(false));
+                .then(setLoading(false))
     };
 
     useEffect(() =>
         fetchListings(),
-        [currentPageIndex, listingsPerPage, sortDirection, orderByProperty]
+        [currentPageIndex, listingsPerPage, sortDirection, orderByProperty, usersFilter]
     );
-
-    const filterListings = (listings) => {
-        return listings
-            .filter(l =>
-                (usersFilter.homeType !== 'All' ? l.homeType === usersFilter.homeType : true) &&
-                (hasRooms && usersFilter.roomsMinimum !== '' ? parseInt(l.rooms) >= usersFilter.roomsMinimum : true) &&
-                (hasRooms && usersFilter.roomsMaximum !== '' ? parseInt(l.rooms) <= usersFilter.roomsMaximum : true) &&
-                (usersFilter.street !== '' ? l.street.toLowerCase().includes(usersFilter.street.toLowerCase()) : true)
-            );
-    }
 
     const deleteListing = (listingId) => {
         fetch('/ListingsData/deleteListing?' + new URLSearchParams({
@@ -67,7 +60,7 @@ export default function Listings() {
         ).then(() => fetchListings());
     }
 
-    const filledTableBody = filterListings(listings).map(l =>
+    const filledTableBody = listings.map(l =>
         <tr className="listing" key={l.id}>
             <td><Link className="id" to={`/listing/${l.id}`}>{l.id}</Link></td>
             <td>{l.street}</td>
@@ -85,10 +78,19 @@ export default function Listings() {
     );
 
     const handleHomeTypeFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            homeType: event.target.value,
-        });
+        let refreshedFilter =
+            homeTypeValuesWithRooms.includes(event.target.value) ?
+            {
+                ...usersFilter,
+                homeType: event.target.value,
+            } :
+            {
+                ...usersFilter,
+                homeType: event.target.value,
+                roomsMinimum: ''
+            }
+
+        setFilter(refreshedFilter);
     }
 
     const handleRoomsMinimumFilter = (event) => {
@@ -110,18 +112,25 @@ export default function Listings() {
             ...usersFilter,
             street: event.target.value
         });
-        console.log(event.target.value);
     }
 
-    const alternativeRoomsFilter = () => {
-        if (hasRooms) {
+    const resetRoomsFilter = () => {
+        setFilter({
+            ...usersFilter,
+            roomsMinimum: '',
+            roomsMaximum: ''
+        });
+    }
+
+    const optionalRoomsFilter = () => {
+        if (homeTypeValuesWithRooms.includes(usersFilter.homeType)) {
             return (
                 <form className="rooms-filters">
                     <label>Minimum rooms:</label>
                     <input
                         type="number"
                         onChange={handleRoomsMinimumFilter}
-                        min="1" max="50"
+                        min="0" max="50"
                         placeholder={usersFilter.roomsMinimum}
                     />
 
@@ -132,6 +141,8 @@ export default function Listings() {
                         min="1" max="50"
                         placeholder={usersFilter.roomsMaximum}
                     />
+
+                    <button className="reset" onClick={() => resetRoomsFilter}>Reset</button>
                 </form>
             );
         }
@@ -145,31 +156,38 @@ export default function Listings() {
     return (
         <div className="listings table-container">
             {loadingScreen(loading)}
-                <form>
-                    <label>Home type:</label>
-                    <select className="filter" onChange={handleHomeTypeFilter} >
-                        <option value="All">*</option>
-                        <option value="Tomt">Tomt</option>
-                        <option value="Villa">Villa</option>
-                        <option value="Lägenhet">Lägenhet</option>
-                        <option value="Gård med jordbruk">Gård med jordbruk</option>
-                    </select>
-                </form>
 
-                {alternativeRoomsFilter()}
+            <form>
+                <label>Home type:</label>
+                <select className="filter" onChange={handleHomeTypeFilter} >
+                    <option value="All">*</option>
+                    <option value="Tomt">Tomt</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Lägenhet">Lägenhet</option>
+                    <option value="Gård med jordbruk">Gård med jordbruk</option>
+                </select>
+            </form>
 
-                <form>
-                    <label>Street:</label>
-                    <input type="text" value={usersFilter.street} onChange={handleStreetFilter}/>
-                </form>
+            {optionalRoomsFilter()}
 
-                <table>
-                    {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
-                    <tbody>
-                        {filledTableBody}
-                    </tbody>
-                </table>
-                <Pagination entitiesPerPage={listingsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
-            </div>
+            <form>
+                <label>Street:</label>
+                <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>
+            </form>
+
+            <table>
+                {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
+                <tbody>
+                    {filledTableBody}
+                </tbody>
+            </table>
+
+            <Pagination
+                entitiesPerPage={listingsPerPage}
+                totalEntities={total}
+                currentPageZeroBased={currentPageIndex}
+                setCurrentPageIndex={setCurrentPageIndex}
+            />
+        </div>
     );
 }

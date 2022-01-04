@@ -19,7 +19,6 @@ namespace HemnetCrawler.Domain.Interactors
 
         private static EvaluatedFinalBidMatch GenerateEvaluatedMatch(Listing listing, FinalBid finalBid)
         {
-            static string makeRoomsComparable(string rooms) => rooms != null ? rooms.Replace(" rum", "") : rooms;
             static int binaryPrecisionValue(bool condition) => condition ? 1 : 0;
 
             double precisionRate = Fuzz.Ratio(listing.Street, finalBid.Street) / 100.0 +
@@ -28,7 +27,7 @@ namespace HemnetCrawler.Domain.Interactors
                 binaryPrecisionValue(listing.Price == finalBid.DemandedPrice) +
                 binaryPrecisionValue(listing.OwnershipType == finalBid.OwnershipType) +
                 binaryPrecisionValue(listing.Fee == finalBid.Fee) +
-                binaryPrecisionValue(makeRoomsComparable(listing.Rooms) == makeRoomsComparable(finalBid.Rooms));
+                binaryPrecisionValue(listing.Rooms == finalBid.Rooms);
 
             return new EvaluatedFinalBidMatch(finalBid.Id, precisionRate);
         }

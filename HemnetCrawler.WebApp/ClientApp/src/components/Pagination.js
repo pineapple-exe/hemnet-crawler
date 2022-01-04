@@ -46,26 +46,34 @@ export default function Pagination(props) {
         }
     }
 
+    const scrollAndPaginate = (pageNumber) => {
+        window.scrollTo(0, 0);
+        props.setCurrentPageIndex(pageNumber);
+    }
+
+    const pageItemAndLink = (key, paginateTo) => {
+        return (
+            <>
+                <li key={key} className="page-item">
+                    <button onClick={() => scrollAndPaginate(paginateTo)} className={`page-link ${currentPage === key ? 'selected' : ''}`}>
+                        {key}
+                    </button>
+                </li>
+            </>
+        );
+    }
+
     const head = () => {
         const theVisibles = currentVisibilityRange();
 
         if (!theVisibles.includes(1)) {
             return (
                 <>
-                    <li key={1} className="page-item">
-                        <button onClick={() => scrollAndPaginate(0)} className="page-link">
-                            {1}
-                        </button>
-                    </li>
+                    {pageItemAndLink(1, 0)}
                     {dotdotdot(theVisibles[0] > 2)}
                 </>
             );
         }
-    }
-
-    const scrollAndPaginate = (pageNumber) => {
-        window.scrollTo(0, 0);
-        props.setCurrentPageIndex(pageNumber);
     }
 
     const tail = () => {
@@ -76,11 +84,7 @@ export default function Pagination(props) {
             return (
                 <>
                     {dotdotdot(theVisibles[theVisibles.length - 1] < (lastPageNumber - 1))}
-                    <li key={lastPageNumber} className="page-item">
-                        <button onClick={() => scrollAndPaginate(lastPageNumber - 1)} className="page-link">
-                            {lastPageNumber}
-                        </button>
-                    </li>
+                    {pageItemAndLink(lastPageNumber, lastPageNumber - 1)}
                 </>
             );
         }
@@ -91,11 +95,7 @@ export default function Pagination(props) {
             <ul className="pagination">
                 {head()}
                 {currentVisibilityRange().map(pageNumber => (
-                    <li key={pageNumber} className="page-item">
-                        <button onClick={() => scrollAndPaginate(pageNumber - 1)} className="page-link">
-                            {pageNumber}
-                        </button>
-                    </li>
+                    pageItemAndLink(pageNumber, pageNumber - 1)
                 ))}
                 {tail()}
             </ul>

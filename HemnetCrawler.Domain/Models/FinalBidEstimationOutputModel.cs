@@ -13,7 +13,7 @@ namespace HemnetCrawler.Domain.Models
         public int DemandedPrice { get; init; }
         public string PriceDevelopment { get; init; }
         public string HomeType { get; init; }
-        public string Rooms { get; init; }
+        public double? Rooms { get; init; }
         public double? LivingArea { get; init; }
         public int? Fee { get; init; }
         public int? ListingId { get; init; }

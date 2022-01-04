@@ -33,7 +33,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                 switch (pair.Key)
                 {
                     case "Pris/m²":
-                        listing.PricePerSquareMeter = Utils.DigitPurist(pair.Value);
+                        listing.PricePerSquareMeter = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Bostadstyp":
@@ -45,19 +45,19 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         break;
 
                     case "Antal rum":
-                        listing.Rooms = pair.Value;
+                        listing.Rooms = Utils.NumberPuristDouble(pair.Value);
                         break;
 
                     case "Boarea":
-                        listing.LivingArea = Utils.DigitPurist(pair.Value);
+                        listing.LivingArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Biarea":
-                        listing.BiArea = Utils.DigitPurist(pair.Value);
+                        listing.BiArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Tomtarea":
-                        listing.PropertyArea = Utils.DigitPurist(pair.Value);
+                        listing.PropertyArea = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Balkong":
@@ -77,11 +77,11 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         break;
 
                     case "Avgift":
-                        listing.Fee = Utils.DigitPurist(pair.Value);
+                        listing.Fee = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Driftkostnad":
-                        listing.Utilities = Utils.DigitPurist(pair.Value);
+                        listing.Utilities = Utils.NumberPurist(pair.Value);
                         break;
 
                     case "Energiklass":
@@ -89,7 +89,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         break;
 
                     case "Antal besök":
-                        listing.Visits = Utils.DigitPurist(pair.Value);
+                        listing.Visits = Utils.NumberPurist(pair.Value);
                         break;
                 }
             }
@@ -109,7 +109,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
             Regex postalCodePattern = new("(?<=\"postalCode\":\\s)\\d{3}\\s?\\d{2}");
             string postalCode = postalCodePattern.Match(driver.PageSource).Value;
             if (postalCode != "")
-               listing.PostalCode = Utils.DigitPurist(postalCode);
+               listing.PostalCode = Utils.NumberPurist(postalCode);
 
             Regex publishedPattern = new("(?<=\"publication_date\":\")\\d{4}-\\d{2}-\\d{2}");
             string publishedDate = publishedPattern.Match(driver.PageSource).Value;

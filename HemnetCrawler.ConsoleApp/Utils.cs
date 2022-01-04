@@ -12,10 +12,19 @@ namespace HemnetCrawler.ConsoleApp
             return secondsDiff / secondsPerDay;
         }
 
-        public static int DigitPurist(string impure)
+        public static int NumberPurist(string impure)
         {
             Regex nonDigitPattern = new("\\D+");
             return int.Parse(nonDigitPattern.Replace(impure, ""));
+        }
+
+        public static double NumberPuristDouble(string impure)
+        {
+            Regex number = new("\\d+,\\d|\\d+");
+
+            if (!number.IsMatch(impure)) throw new Exception("Number was expected but not found.");
+
+            return double.Parse(number.Match(impure).ToString());
         }
     }
 }

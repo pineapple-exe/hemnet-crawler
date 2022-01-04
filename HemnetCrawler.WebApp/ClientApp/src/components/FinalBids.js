@@ -68,7 +68,7 @@ export default function FinalBids() {
     );
 
     const reEvaluateSortDirectionBy = (propertyName) => {
-        setSortDirection(orderByProperty != propertyName ? 0 : sortDirection == 0 ? 1 : 0);
+        setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
     }
     return (
@@ -80,7 +80,12 @@ export default function FinalBids() {
                     {filledTableBody}
                 </tbody>
             </table>
-            <Pagination entitiesPerPage={finalBidsPerPage} totalEntities={total} currentPageZeroBased={currentPageIndex} setCurrentPage={setCurrentPageIndex} />
+            <Pagination
+                entitiesPerPage={finalBidsPerPage}
+                totalEntities={total}
+                currentPageZeroBased={currentPageIndex}
+                setCurrentPageIndex={setCurrentPageIndex}
+            />
         </div>
     );
 }

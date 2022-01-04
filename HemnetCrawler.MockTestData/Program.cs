@@ -69,7 +69,7 @@ namespace HemnetCrawler.MockTestData
                 PriceDevelopment = "+100 kr(+100%)",
                 HomeType = "Lägenhet",
                 OwnershipType = "Bostadsrätt",
-                Rooms = "3 rum",
+                Rooms = 3,
                 PropertyArea = 75,
                 ConstructionYear = "2021"
             });
@@ -87,7 +87,7 @@ namespace HemnetCrawler.MockTestData
                 PriceDevelopment = "+100 kr(+100%)",
                 HomeType = "Lägenhet",
                 OwnershipType = "Bostadsrätt",
-                Rooms = "1,5 rum",
+                Rooms = 1.5,
                 PropertyArea = 75,
                 ConstructionYear = "2021"
             });
@@ -103,7 +103,7 @@ namespace HemnetCrawler.MockTestData
                 Description = "Nybyggt hem i ett lugnt men centralt område.",
                 HomeType = "Lägenhet",
                 OwnershipType = "Bostadsrätt",
-                Rooms = "3 rum",
+                Rooms = 3,
                 Balcony = false,
                 Floor = "Andra våningen",
                 PropertyArea = 75,
