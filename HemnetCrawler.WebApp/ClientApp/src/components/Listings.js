@@ -21,7 +21,7 @@ export default function Listings() {
         homeType: 'All',
         roomsMinimum: '',
         roomsMaximum: '',
-        street: '',
+        street: ''
     });
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
 
@@ -43,7 +43,7 @@ export default function Listings() {
                 setListings(data.items);
                 setTotal(data.total);
             })
-            .then(setLoading(false));
+                .then(setLoading(false))
     };
 
     useEffect(() =>
@@ -172,7 +172,7 @@ export default function Listings() {
 
             <form>
                 <label>Street:</label>
-                <input type="text" value={usersFilter.street} onChange={handleStreetFilter}/>
+                <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>
             </form>
 
             <table>
