@@ -5,6 +5,7 @@ import './listingsMisc.css';
 import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
+import _ from 'lodash';
 import EntityFiltering from './EntityFiltering.js';
 
 export default function Listings() {
@@ -17,6 +18,8 @@ export default function Listings() {
     const [listingsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
     const [orderByProperty, setOrderByProperty] = React.useState(propertyAliases[0]);
+    const [reload, setReload] = React.useState(true);
+    const debouncedTriggerSetReload = React.useCallback(_.debounce(() => setReload(true), 1000), [setReload]);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
@@ -28,6 +31,7 @@ export default function Listings() {
     const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
 
     const fetchListings = () => {
+        if (reload) {
         setLoading(true);
 
         fetch('/ListingsData/listings?' + new URLSearchParams({
@@ -45,12 +49,14 @@ export default function Listings() {
                 setListings(data.items);
                 setTotal(data.total);
             })
-                .then(setLoading(false))
+            .then(setLoading(false))
+                .then(setReload(false))
+        }
     };
 
     useEffect(() =>
         fetchListings(),
-        [currentPageIndex, listingsPerPage, sortDirection, orderByProperty, usersFilter]
+        [currentPageIndex, listingsPerPage, sortDirection, orderByProperty, reload]
     );
 
     const deleteListing = (listingId) => {
@@ -93,6 +99,8 @@ export default function Listings() {
             }
 
         setFilter(refreshedFilter);
+
+        debouncedTriggerSetReload();
     }
 
     const handleRoomsMinimumFilter = (event) => {
@@ -100,6 +108,8 @@ export default function Listings() {
             ...usersFilter,
             roomsMinimum: event.target.value,
         });
+
+        debouncedTriggerSetReload();
     }
 
     const handleRoomsMaximumFilter = (event) => {
@@ -107,6 +117,8 @@ export default function Listings() {
             ...usersFilter,
             roomsMaximum: event.target.value
         });
+
+        debouncedTriggerSetReload();
     }
 
     const handleStreetFilter = (event) => {
@@ -114,6 +126,8 @@ export default function Listings() {
             ...usersFilter,
             street: event.target.value
         });
+
+        debouncedTriggerSetReload();
     }
 
     const resetRoomsFilter = () => {
@@ -122,6 +136,8 @@ export default function Listings() {
             roomsMinimum: '',
             roomsMaximum: ''
         });
+
+        debouncedTriggerSetReload();
     }
 
     //const optionalRoomsFilter = () => {
