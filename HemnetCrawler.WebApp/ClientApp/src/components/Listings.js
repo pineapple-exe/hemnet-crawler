@@ -18,7 +18,7 @@ export default function Listings() {
     const [sortDirection, setSortDirection] = React.useState(0);
     const [orderByProperty, setOrderByProperty] = React.useState(propertyAliases[0]);
     const [reload, setReload] = React.useState(true);
-    const debouncedTriggerSetReload = React.useCallback(_.debounce(() => setReload(true), 1000), []);
+    const debouncedTriggerSetReload = React.useCallback(_.debounce(() => setReload(true), 1000), [setReload]);
 
     const [usersFilter, setFilter] = React.useState({
         homeType: 'All',
