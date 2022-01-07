@@ -28,8 +28,6 @@ export default function Listings() {
         street: ''
     });
 
-    const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
-
     const fetchListings = () => {
         if (reload) {
         setLoading(true);
@@ -85,87 +83,6 @@ export default function Listings() {
         </tr>
     );
 
-    const handleHomeTypeFilter = (event) => {
-        let refreshedFilter =
-            homeTypeValuesWithRooms.includes(event.target.value) ?
-            {
-                ...usersFilter,
-                homeType: event.target.value,
-            } :
-            {
-                ...usersFilter,
-                homeType: event.target.value,
-                roomsMinimum: ''
-            }
-
-        setFilter(refreshedFilter);
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleRoomsMinimumFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            roomsMinimum: event.target.value,
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleRoomsMaximumFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            roomsMaximum: event.target.value
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleStreetFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            street: event.target.value
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const resetRoomsFilter = () => {
-        setFilter({
-            ...usersFilter,
-            roomsMinimum: '',
-            roomsMaximum: ''
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    //const optionalRoomsFilter = () => {
-    //    if (homeTypeValuesWithRooms.includes(usersFilter.homeType)) {
-    //        return (
-    //            <form className="rooms-filters">
-    //                <label>Minimum rooms:</label>
-    //                <input
-    //                    type="number"
-    //                    onChange={handleRoomsMinimumFilter}
-    //                    min="0" max="50"
-    //                    placeholder={usersFilter.roomsMinimum}
-    //                />
-
-    //                <label>Maximum rooms:</label>
-    //                <input
-    //                    type="number"
-    //                    onChange={handleRoomsMaximumFilter}
-    //                    min="1" max="50"
-    //                    placeholder={usersFilter.roomsMaximum}
-    //                />
-
-    //                <button className="reset" onClick={() => resetRoomsFilter}>Reset</button>
-    //            </form>
-    //        );
-    //    }
-    //}
-
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
@@ -177,33 +94,9 @@ export default function Listings() {
 
             <EntityFiltering
                 filter={usersFilter}
-                homeTypeValuesWithRooms={homeTypeValuesWithRooms}
-                handleHomeTypeFilter={handleHomeTypeFilter}
-                handleRoomsMaximumFilter={handleRoomsMaximumFilter}
-                handleRoomsMinimumFilter={handleRoomsMinimumFilter}
-                handleStreetFilter={handleStreetFilter}
-                resetRoomsFilter={resetRoomsFilter}
+                setFilter={setFilter}
+                debouncedTriggerSetReload={debouncedTriggerSetReload}
             />
-
-            {/*<div className="entity-filters">*/}
-            {/*    <form>*/}
-            {/*        <label>Home type:</label>*/}
-            {/*        <select className="filter" onChange={handleHomeTypeFilter} >*/}
-            {/*            <option value="All">*</option>*/}
-            {/*            <option value="Tomt">Tomt</option>*/}
-            {/*            <option value="Villa">Villa</option>*/}
-            {/*            <option value="Lägenhet">Lägenhet</option>*/}
-            {/*            <option value="Gård med jordbruk">Gård med jordbruk</option>*/}
-            {/*        </select>*/}
-            {/*    </form>*/}
-
-            {/*    {optionalRoomsFilter()}*/}
-
-            {/*    <form>*/}
-            {/*        <label>Street:</label>*/}
-            {/*        <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>*/}
-            {/*    </form>*/}
-            {/*</div>*/}
 
             <table>
                 {tableHead(propertyAliases, reEvaluateSortDirectionBy)}

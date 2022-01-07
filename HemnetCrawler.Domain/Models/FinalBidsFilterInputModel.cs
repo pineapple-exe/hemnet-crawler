@@ -1,7 +1,7 @@
 ﻿
 namespace HemnetCrawler.Domain.Models
 {
-    public class ListingsFilterInputModel
+    public class FinalBidsFilterInputModel
     {
         public string HomeType { get; set; }
         public int? RoomsMinimum { get; set; }

@@ -5,6 +5,8 @@ import './tables.css';
 import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from './Utils.js';
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
+import _ from 'lodash';
+import EntityFiltering from './EntityFiltering.js';
 
 export default function FinalBids() {
     const propertyAliases = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee', 'Sold date', 'Demanded price'];
@@ -16,27 +18,43 @@ export default function FinalBids() {
     const [finalBidsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
     const [orderByProperty, setOrderByProperty] = React.useState(propertyAliases[0]);
+    const [reload, setReload] = React.useState(true);
+    const debouncedTriggerSetReload = React.useCallback(_.debounce(() => setReload(true), 1000), [setReload]);
+
+    const [usersFilter, setFilter] = React.useState({
+        homeType: 'All',
+        roomsMinimum: '',
+        roomsMaximum: '',
+        street: ''
+    });
 
     const fetchFinalBids = () => {
-        setLoading(true);
+        if (reload) {
+            setLoading(true);
 
-        fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
-            pageIndex: currentPageIndex,
-            size: finalBidsPerPage,
-            sortDirection: sortDirection,
-            orderByProperty: convertToFormalPropertyName(orderByProperty)
-        }))
-            .then(resp => resp.json())
-            .then(data => {
-                setFinalBids(data.items);
-                setTotal(data.total);
-            })
-            .then(setLoading(false))
+            fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
+                pageIndex: currentPageIndex,
+                size: finalBidsPerPage,
+                sortDirection: sortDirection,
+                orderByProperty: convertToFormalPropertyName(orderByProperty),
+                homeType: usersFilter.homeType === 'All' ? '' : usersFilter.homeType,
+                roomsMinimum: usersFilter.roomsMinimum,
+                roomsMaximum: usersFilter.roomsMaximum,
+                street: usersFilter.street
+            }))
+                .then(resp => resp.json())
+                .then(data => {
+                    setFinalBids(data.items);
+                    setTotal(data.total);
+                })
+                .then(setLoading(false))
+                .then(setReload(false))
+        }
     }
 
     useEffect(() =>
         fetchFinalBids(),
-        [currentPageIndex, finalBidsPerPage, sortDirection, orderByProperty]
+        [currentPageIndex, finalBidsPerPage, sortDirection, orderByProperty, reload]
     );
 
     const deleteFinalBid = (finalBidId) => {
@@ -74,12 +92,20 @@ export default function FinalBids() {
     return (
         <div className="finalbids table-container">
             {loadingScreen(loading)}
+
+            <EntityFiltering
+                filter={usersFilter}
+                setFilter={setFilter}
+                debouncedTriggerSetReload={debouncedTriggerSetReload}
+            />
+
             <table>
                 {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
                 <tbody>
                     {filledTableBody}
                 </tbody>
             </table>
+
             <Pagination
                 entitiesPerPage={finalBidsPerPage}
                 totalEntities={total}
