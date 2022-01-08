@@ -203,6 +203,7 @@ export default function Listings() {
                 totalEntities={total}
                 currentPageZeroBased={currentPageIndex}
                 setCurrentPageIndex={setCurrentPageIndex}
+                setReload={setReload}
             />
         </div>
     );
