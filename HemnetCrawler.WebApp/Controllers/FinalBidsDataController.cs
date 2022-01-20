@@ -25,9 +25,9 @@ namespace HemnetCrawler.WebApp.Controllers
         }
 
         [HttpGet("finalBids")]
-        public ItemsPage<FinalBidOutputModel> GetFinalBids(int page, int size, SortDirection sortDirection, string orderByProperty)
+        public ItemsPage<FinalBidOutputModel> GetFinalBids(int page, int size, [FromQuery] FinalBidsFilterInputModel filter, SortDirection sortDirection, string orderByProperty)
         {
-            return _fetchFinalBids.ListFinalBids(page, size, sortDirection, orderByProperty);
+            return _fetchFinalBids.ListFinalBids(page, size, filter, sortDirection, orderByProperty);
         }
 
         [HttpGet("relevantFinalBids")]
