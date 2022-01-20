@@ -29,6 +29,7 @@ export default function Listings() {
     });
 
     const fetchListings = () => {
+        console.log(reload);
         if (reload) {
             setLoading(true);
 
@@ -86,6 +87,7 @@ export default function Listings() {
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
+        setReload(true);
     }
 
     return (
