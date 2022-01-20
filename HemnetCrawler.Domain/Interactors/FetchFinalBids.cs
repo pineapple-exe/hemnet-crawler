@@ -53,15 +53,45 @@ namespace HemnetCrawler.Domain.Interactors
             return MapFinalBidToOutputModel(finalBid, listing);
         }
 
-        public ItemsPage<FinalBidOutputModel> ListFinalBids(int pageIndex, int size, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
+        internal static IQueryable<FinalBid> ApplyFilter(FinalBidsFilterInputModel filter, IQueryable<FinalBid> unfiltered)
         {
-            List<FinalBid> allFinalBids = _finalBidRepository.GetAll().OrderBy(sortDirection, orderByProperty).Skip(pageIndex * size).Take(size).ToList();
+            IQueryable<FinalBid> filtered = unfiltered;
+
+            if (!string.IsNullOrEmpty(filter.HomeType))
+            {
+                filtered = filtered.Where(l => l.HomeType == filter.HomeType);
+            }
+            if (filter.RoomsMinimum != null)
+            {
+                filtered = filtered.Where(l => l.Rooms >= (double)filter.RoomsMinimum);
+            }
+            if (filter.RoomsMaximum != null)
+            {
+                filtered = filtered.Where(l => l.Rooms <= (double)filter.RoomsMaximum);
+            }
+            if (!string.IsNullOrEmpty(filter.Street))
+            {
+                filtered = filtered.Where(l => l.Street.ToLower().Contains(filter.Street.ToLower()));
+            }
+
+            return filtered;
+        }
+
+        public ItemsPage<FinalBidOutputModel> ListFinalBids(int pageIndex, int size, FinalBidsFilterInputModel filter, SortDirection sortDirection = SortDirection.Ascending, string orderByProperty = "Id")
+        {
+            IQueryable<FinalBid> allFilteredFinalBids = ApplyFilter(filter, _finalBidRepository.GetAll());
+            List<FinalBid> finalBids = allFilteredFinalBids
+                .OrderBy(sortDirection, orderByProperty)
+                .Skip(pageIndex * size)
+                .Take(size)
+                .ToList();
+
             int total = _finalBidRepository.GetAll().Count();
 
-            List<int> allFinalBidsId = allFinalBids.Select(fb => fb.Id).ToList();
+            List<int> allFinalBidsId = finalBids.Select(fb => fb.Id).ToList();
             List<Listing> connectedListings = _listingRepository.GetAllListings().Where(l => allFinalBidsId.Contains((int)l.FinalBidId)).ToList();
 
-            IEnumerable<FinalBidOutputModel> outputModels = allFinalBids.Select(fb =>
+            IEnumerable<FinalBidOutputModel> outputModels = finalBids.Select(fb =>
                 MapFinalBidToOutputModel(fb, connectedListings.FirstOrDefault(l => l.FinalBidId == fb.Id))
                 );
 

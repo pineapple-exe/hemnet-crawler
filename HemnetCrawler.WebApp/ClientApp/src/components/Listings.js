@@ -6,6 +6,7 @@ import { prettySEK, loadingScreen, tableHead, convertToFormalPropertyName } from
 import Pagination from './Pagination.js';
 import DeleteEntity from './DeleteEntity.js';
 import _ from 'lodash';
+import EntityFiltering from './EntityFiltering.js';
 
 export default function Listings() {
     const propertyAliases = ['Id', 'Street', 'City', 'Postal code', 'Price', 'Rooms', 'Home type', 'Living area', 'Fee'];
@@ -26,7 +27,6 @@ export default function Listings() {
         roomsMaximum: '',
         street: ''
     });
-    const homeTypeValuesWithRooms = ['All', 'Fritidshus', 'Lägenhet', 'Villa'];
 
     const fetchListings = () => {
         if (reload) {
@@ -83,87 +83,6 @@ export default function Listings() {
         </tr>
     );
 
-    const handleHomeTypeFilter = (event) => {
-        let refreshedFilter =
-            homeTypeValuesWithRooms.includes(event.target.value) ?
-            {
-                ...usersFilter,
-                homeType: event.target.value,
-            } :
-            {
-                ...usersFilter,
-                homeType: event.target.value,
-                roomsMinimum: ''
-            }
-
-        setFilter(refreshedFilter);
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleRoomsMinimumFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            roomsMinimum: event.target.value,
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleRoomsMaximumFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            roomsMaximum: event.target.value
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const handleStreetFilter = (event) => {
-        setFilter({
-            ...usersFilter,
-            street: event.target.value
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const resetRoomsFilter = () => {
-        setFilter({
-            ...usersFilter,
-            roomsMinimum: '',
-            roomsMaximum: ''
-        });
-
-        debouncedTriggerSetReload();
-    }
-
-    const optionalRoomsFilter = () => {
-        if (homeTypeValuesWithRooms.includes(usersFilter.homeType)) {
-            return (
-                <form className="rooms-filters">
-                    <label>Minimum rooms:</label>
-                    <input
-                        type="number"
-                        onChange={handleRoomsMinimumFilter}
-                        min="0" max="50"
-                        placeholder={usersFilter.roomsMinimum}
-                    />
-
-                    <label>Maximum rooms:</label>
-                    <input
-                        type="number"
-                        onChange={handleRoomsMaximumFilter}
-                        min="1" max="50"
-                        placeholder={usersFilter.roomsMaximum}
-                    />
-
-                    <button className="reset" onClick={() => resetRoomsFilter}>Reset</button>
-                </form>
-            );
-        }
-    }
-
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
@@ -173,23 +92,11 @@ export default function Listings() {
         <div className="listings table-container">
             {loadingScreen(loading)}
 
-            <form>
-                <label>Home type:</label>
-                <select className="filter" onChange={handleHomeTypeFilter} >
-                    <option value="All">*</option>
-                    <option value="Tomt">Tomt</option>
-                    <option value="Villa">Villa</option>
-                    <option value="Lägenhet">Lägenhet</option>
-                    <option value="Gård med jordbruk">Gård med jordbruk</option>
-                </select>
-            </form>
-
-            {optionalRoomsFilter()}
-
-            <form>
-                <label>Street:</label>
-                <input type="text" value={usersFilter.street.street} onChange={handleStreetFilter}/>
-            </form>
+            <EntityFiltering
+                filter={usersFilter}
+                setFilter={setFilter}
+                debouncedTriggerSetReload={debouncedTriggerSetReload}
+            />
 
             <table>
                 {tableHead(propertyAliases, reEvaluateSortDirectionBy)}
