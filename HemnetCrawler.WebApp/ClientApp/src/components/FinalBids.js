@@ -111,6 +111,7 @@ export default function FinalBids() {
                 totalEntities={total}
                 currentPageZeroBased={currentPageIndex}
                 setCurrentPageIndex={setCurrentPageIndex}
+                setReload={setReload}
             />
         </div>
     );

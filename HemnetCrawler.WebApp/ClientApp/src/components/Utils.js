@@ -25,12 +25,12 @@ export const entityProperty = (propertyValue) => {
     }
 }
 
-export const tableHead = (propertyNames, reEvaluateOrderBy) => {
+export const tableHead = (propertyNames, reEvaluateSortDirectionBy) => {
     const clickables = (names) => (
         <>
             {names.map(name => (
                 <th key={name}>
-                    <button className="order-by" onClick={() => reEvaluateOrderBy(name)}>
+                    <button className="order-by" onClick={() => reEvaluateSortDirectionBy(name)}>
                         {name}
                     </button>
                 </th>
