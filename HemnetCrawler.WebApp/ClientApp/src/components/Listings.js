@@ -30,25 +30,25 @@ export default function Listings() {
 
     const fetchListings = () => {
         if (reload) {
-        setLoading(true);
+            setLoading(true);
 
-        fetch('/ListingsData/listings?' + new URLSearchParams({
-            pageIndex: currentPageIndex,
-            size: listingsPerPage,
-            sortDirection: sortDirection,
-            orderByProperty: convertToFormalPropertyName(orderByProperty),
-            homeType: usersFilter.homeType === 'All' ? '' : usersFilter.homeType,
-            roomsMinimum: usersFilter.roomsMinimum,
-            roomsMaximum: usersFilter.roomsMaximum,
-            street: usersFilter.street
-        }))
-            .then(resp => resp.json())
-            .then(data => {
-                setListings(data.items);
-                setTotal(data.total);
-            })
-            .then(setLoading(false))
-                .then(setReload(false))
+            fetch('/ListingsData/listings?' + new URLSearchParams({
+                pageIndex: currentPageIndex,
+                size: listingsPerPage,
+                sortDirection: sortDirection,
+                orderByProperty: convertToFormalPropertyName(orderByProperty),
+                homeType: usersFilter.homeType === 'All' ? '' : usersFilter.homeType,
+                roomsMinimum: usersFilter.roomsMinimum,
+                roomsMaximum: usersFilter.roomsMaximum,
+                street: usersFilter.street
+            }))
+                .then(resp => resp.json())
+                .then(data => {
+                    setListings(data.items);
+                    setTotal(data.total);
+                })
+                .then(setLoading(false))
+                    .then(setReload(false))
         }
     };
 
@@ -86,6 +86,7 @@ export default function Listings() {
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
+        setReload(true);
     }
 
     return (
@@ -110,6 +111,7 @@ export default function Listings() {
                 totalEntities={total}
                 currentPageZeroBased={currentPageIndex}
                 setCurrentPageIndex={setCurrentPageIndex}
+                setReload={setReload}
             />
         </div>
     );

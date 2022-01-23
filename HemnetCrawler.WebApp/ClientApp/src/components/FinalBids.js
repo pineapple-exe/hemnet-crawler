@@ -88,6 +88,7 @@ export default function FinalBids() {
     const reEvaluateSortDirectionBy = (propertyName) => {
         setSortDirection(orderByProperty !== propertyName ? 0 : sortDirection === 0 ? 1 : 0);
         setOrderByProperty(propertyName);
+        setReload(true);
     }
     return (
         <div className="finalbids table-container">
@@ -111,6 +112,7 @@ export default function FinalBids() {
                 totalEntities={total}
                 currentPageZeroBased={currentPageIndex}
                 setCurrentPageIndex={setCurrentPageIndex}
+                setReload={setReload}
             />
         </div>
     );

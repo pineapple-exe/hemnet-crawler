@@ -49,6 +49,7 @@ export default function Pagination(props) {
     const scrollAndPaginate = (pageNumber) => {
         window.scrollTo(0, 0);
         props.setCurrentPageIndex(pageNumber);
+        props.setReload(true);
     }
 
     const pageItemAndLink = (key, paginateTo) => {
