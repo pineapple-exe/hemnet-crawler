@@ -29,7 +29,6 @@ export default function Listings() {
     });
 
     const fetchListings = () => {
-        console.log(reload);
         if (reload) {
             setLoading(true);
 
