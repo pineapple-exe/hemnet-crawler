@@ -4,8 +4,8 @@ using OpenQA.Selenium.Chrome;
 using System;
 using HemnetCrawler.Domain.Repositories;
 using HemnetCrawler.Domain;
-using HemnetCrawler.Data.Repositories;
 using HemnetCrawler.Domain.Interactors;
+using HemnetCrawler.Data.Repositories;
 
 namespace HemnetCrawler.ConsoleApp.PageInteractives
 {
