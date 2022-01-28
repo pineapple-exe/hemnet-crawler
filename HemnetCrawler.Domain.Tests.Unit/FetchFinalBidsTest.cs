@@ -156,7 +156,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             FinalBidOutputModel outputModel = fetchFinalBids.GetFinalBid(3);
 
             //Assert
-            Assert.Equal(3, outputModel.Id);
+            Assert.Equal(4, outputModel.Id); //3
         }
 
         [Fact]
