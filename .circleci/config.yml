@@ -8,6 +8,15 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  test:
+    description: Setup and run application tests
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: "Run Application Tests"
+          command: dotnet.exe test -v n --results-directory:test_coverage --collect:"Code Coverage"
   build:
     description: Build application with Release configuration
     executor:
@@ -22,4 +31,7 @@ jobs:
 workflows:
   hemnetcrawler-workflow:
     jobs:
+      - test
       - build
+        requires:
+          - test
