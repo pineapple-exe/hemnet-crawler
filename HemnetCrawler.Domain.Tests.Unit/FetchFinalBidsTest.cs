@@ -81,6 +81,8 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
 
+            FinalBidsFilterInputModel filter = new();
+
             finalBidRepository.FinalBids.Add(new()
             {
                 Id = 1,
@@ -93,7 +95,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20).Items.First();
+            FinalBidOutputModel output = fetchFinalBids.ListFinalBids(0, 20, filter, SortDirection.Ascending).Items.First();
 
             //Assert
             Assert.Null(output.ListingId);
@@ -109,6 +111,8 @@ namespace HemnetCrawler.Domain.Tests.Unit
 
             FetchFinalBids fetchFinalBids = new(finalBidRepository, listingRepository, listingRatingRepository);
 
+            FinalBidsFilterInputModel filter = new();
+
             finalBidRepository.FinalBids.AddRange(new List<FinalBid>() 
             {
                 new FinalBid() { Id = 1 },
@@ -120,7 +124,7 @@ namespace HemnetCrawler.Domain.Tests.Unit
             });
 
             //Act
-            ItemsPage<FinalBidOutputModel> output = fetchFinalBids.ListFinalBids(1, 2);
+            ItemsPage<FinalBidOutputModel> output = fetchFinalBids.ListFinalBids(1, 2, filter, SortDirection.Ascending);
 
             //Assert
             Assert.Equal(2, output.Items.Count);
