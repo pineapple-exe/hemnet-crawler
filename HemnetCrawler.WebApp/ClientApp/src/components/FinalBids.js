@@ -13,7 +13,6 @@ export default function FinalBids() {
 
     const [finalBids, setFinalBids] = React.useState([]);
     const [total, setTotal] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [finalBidsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
@@ -30,8 +29,6 @@ export default function FinalBids() {
 
     const fetchFinalBids = () => {
         if (reload) {
-            setLoading(true);
-
             fetch("/FinalBidsData/finalBids?" + new URLSearchParams({
                 pageIndex: currentPageIndex,
                 size: finalBidsPerPage,
@@ -47,7 +44,6 @@ export default function FinalBids() {
                     setFinalBids(data.items);
                     setTotal(data.total);
                 })
-                .then(setLoading(false))
                 .then(setReload(false))
         }
     }
@@ -92,7 +88,7 @@ export default function FinalBids() {
     }
     return (
         <div className="finalbids table-container">
-            {loadingScreen(loading)}
+            {loadingScreen(reload)}
 
             <EntityFiltering
                 filter={usersFilter}

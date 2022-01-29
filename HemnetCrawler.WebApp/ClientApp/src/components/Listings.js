@@ -13,7 +13,6 @@ export default function Listings() {
 
     const [listings, setListings] = React.useState([]);
     const [total, setTotal] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
     const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
     const [listingsPerPage] = React.useState(50);
     const [sortDirection, setSortDirection] = React.useState(0);
@@ -30,8 +29,6 @@ export default function Listings() {
 
     const fetchListings = () => {
         if (reload) {
-            setLoading(true);
-
             fetch('/ListingsData/listings?' + new URLSearchParams({
                 pageIndex: currentPageIndex,
                 size: listingsPerPage,
@@ -47,7 +44,6 @@ export default function Listings() {
                     setListings(data.items);
                     setTotal(data.total);
                 })
-                .then(setLoading(false))
                     .then(setReload(false))
         }
     };
@@ -91,7 +87,7 @@ export default function Listings() {
 
     return (
         <div className="listings table-container">
-            {loadingScreen(loading)}
+            {loadingScreen(reload)}
 
             <EntityFiltering
                 filter={usersFilter}
