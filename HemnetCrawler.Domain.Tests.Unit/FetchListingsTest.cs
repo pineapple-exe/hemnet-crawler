@@ -2,8 +2,8 @@
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Models;
+using HemnetCrawler.Domain.Tests.Unit.FakeRepositories;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HemnetCrawler.Domain.Tests.Unit
 {

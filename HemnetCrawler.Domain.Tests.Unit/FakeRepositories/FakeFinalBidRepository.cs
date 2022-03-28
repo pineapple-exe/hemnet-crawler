@@ -3,7 +3,7 @@ using System.Linq;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Repositories;
 
-namespace HemnetCrawler.Domain.Tests.Unit
+namespace HemnetCrawler.Domain.Tests.Unit.FakeRepositories
 {
     internal class FakeFinalBidRepository : IFinalBidRepository
     {

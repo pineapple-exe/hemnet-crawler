@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HemnetCrawler.Domain.Tests.Unit
+namespace HemnetCrawler.Domain.Tests.Unit.FakeRepositories
 {
     class FakeListingRatingRepository : IListingRatingRepository
     {
