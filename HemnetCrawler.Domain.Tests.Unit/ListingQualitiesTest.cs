@@ -2,6 +2,7 @@
 using HemnetCrawler.Domain.Interactors;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Models;
+using HemnetCrawler.Domain.Tests.Unit.FakeRepositories;
 using System.Linq;
 using System;
 

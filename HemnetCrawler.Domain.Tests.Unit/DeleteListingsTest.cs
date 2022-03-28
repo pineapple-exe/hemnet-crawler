@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using HemnetCrawler.Domain.Entities;
 using HemnetCrawler.Domain.Interactors;
+using HemnetCrawler.Domain.Tests.Unit.FakeRepositories;
 using System.Linq;
 
 namespace HemnetCrawler.Domain.Tests.Unit
