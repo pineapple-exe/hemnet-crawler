@@ -38,7 +38,7 @@ Click on "Estimate Final Price" to get the estimation.
 ## Architecture
 
 Hemnet Crawler is built in the pattern of hexagonal architecture / ports and adapters architecture.
-The following diagram shows the most central components and dependencies.
+The following diagram illustrates the most important components and dependencies.
 
 ![image](https://user-images.githubusercontent.com/70913967/160587075-1bc0f1d6-aa54-41c3-add8-5016a4d5cd3f.png)
 
