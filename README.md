@@ -1,6 +1,6 @@
 # Hemnet Crawler
 
-## How to use it
+## How to use
 
 #### Setup
 - Create a database.
@@ -8,14 +8,14 @@
 
 ![image](https://user-images.githubusercontent.com/70913967/160587312-67cc75e8-7774-40ff-992c-fd7eaba1d3f2.png)
 
-#### Using it
+#### Usage
 1. Set **HemnetCrawler.ConsoleApp** as *Startup Project*.
-2. Run the project until it is finished on its own accord. The data of all listings and final bids will now be stored in your database.
+2. Gather listing and final bids by running the project until it is finished on its own accord. The data of all listings and final bids will now be stored in your database.
 3. Set **HemnetCrawler.WebApp** as *Startup Project*.
 4. Run the project to access the UI.
 
 Listings and final bids are presented in separate tables, in the form of simplified data structures drawn from the database.
-Use the search function to filter entities. Click on a property (table header) to order the results by given property. Click on the same property again to reverse the order.
+Use the search function to filter entities. Click on a property (table header) to sort the results by given property. Click on the same property again to reverse the order.
 
 ![image](https://user-images.githubusercontent.com/70913967/160587273-7f59af4b-a372-47fa-8f6e-33789ab67aef.png)
 
@@ -36,6 +36,7 @@ Click on "Estimate Final Price" to get the estimation.
 ***Disclaimer:*** The algorithm behind the estimation feature is quite naive at the moment and therefore most likely not very competent. 
 
 ## Architecture
+Technologies used: C#, React.js, Entity Framework Core, MS SQL Server, xUnit, Cypress.
 
 Hemnet Crawler is built in the pattern of hexagonal architecture / ports and adapters architecture.
 The following diagram illustrates the most important components and dependencies.
