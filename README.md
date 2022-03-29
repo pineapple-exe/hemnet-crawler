@@ -1,4 +1,5 @@
 # Hemnet Crawler
+Crawls Hemnet.se, stores listings and presents them in a React frontend for the purpose of price prediction.
 
 ## How to use
 
