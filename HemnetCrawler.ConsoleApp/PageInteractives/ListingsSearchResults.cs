@@ -15,7 +15,8 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             string sortByText = "Äldst först";
 
-            IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("select.form-control__select"));
+            //IWebElement sortBy = DriverBehavior.FindElement(driver, By.CssSelector("select.form-control__select"));
+            IWebElement sortBy = DriverBehavior.FindElement(driver, By.Id("search-results-sort-by"));
             sortBy.Click();
             IReadOnlyCollection<IWebElement> sortOptions = DriverBehavior.FindElements(sortBy, By.CssSelector("option"));
             sortOptions.Where(o => o.Text == sortByText).First().Click();
@@ -112,7 +113,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
 
                 if (repository.GetAllListings().Any(l => l.HemnetId == listingLinkId))
                 {
-                    logger.Log($"Listing with HemnetId {listingLinkId} was skipped because it already existed in the database.");
+                    logger.Log($"Listing with HemnetId {listingLinkId} was skipped because it already existed in database.");
                     continue;
                 }
 

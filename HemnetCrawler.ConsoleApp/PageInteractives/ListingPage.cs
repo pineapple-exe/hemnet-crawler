@@ -98,6 +98,16 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             if (driver.PageSource.Contains("removed-listing")) return null;
 
+            IWebElement optionalElement = DriverBehavior.FindElement(driver, By.CssSelector("hcl-heading"), true);
+
+            if (optionalElement != null)
+            {
+                if (optionalElement.Text == "Sidan hittades inte")
+                {
+                    driver.Navigate();
+                }
+            }
+
             Listing listing = new();
 
             listing.LastUpdated = DateTimeOffset.Now;
@@ -202,7 +212,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                                 imgSrc = new Uri(potentiallyLegitUri);
                                 break;
                             }
-                            else if (urlSearchAttempts > 9)
+                            else if (urlSearchAttempts > 10)
                             {
                                 throw new Exception("Never ending loop de loop");
                             }
