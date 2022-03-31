@@ -11,7 +11,7 @@ Crawls Hemnet.se, stores listings and presents them in a React frontend for the 
 
 #### Usage
 1. Set **HemnetCrawler.ConsoleApp** as *Startup Project*.
-2. Gather listing and final bids by running the project until it is finished on its own accord. The data of all listings and final bids will now be stored in your database.
+2. Gather listings and final bids by running the project until it is finished on its own accord. The data of all listings and final bids will now be stored in your database.
 3. Set **HemnetCrawler.WebApp** as *Startup Project*.
 4. Run the project to access the UI.
 
