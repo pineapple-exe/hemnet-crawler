@@ -88,7 +88,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
                         break;
 
                     case "Antal besök":
-                        listing.Visits = Utils.NumberPurist(pair.Value);
+                        listing.Visits = String.IsNullOrEmpty(pair.Value) ? 0 : Utils.NumberPurist(pair.Value);
                         break;
                 }
             }
@@ -98,15 +98,7 @@ namespace HemnetCrawler.ConsoleApp.PageInteractives
         {
             if (driver.PageSource.Contains("removed-listing")) return null;
 
-            IWebElement optionalElement = DriverBehavior.FindElement(driver, By.CssSelector("hcl-heading"), true);
-
-            if (optionalElement != null)
-            {
-                if (optionalElement.Text == "Sidan hittades inte")
-                {
-                    driver.Navigate();
-                }
-            }
+            if (driver.PageSource.Contains("page-not-found-illustration")) driver.Navigate().Refresh();
 
             Listing listing = new();
 
